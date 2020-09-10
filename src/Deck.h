@@ -9,8 +9,8 @@ class Deck {
 public:
     Deck(int numOfEachCard  = 2);
     void shuffle();
-    Card takeOne();
-    int getNumRemaining();
+    Card takeOneFromTop();
+    size_t getNumRemaining();
 private:
     std::vector<Card> cards;
     const int numOfEachCard;
