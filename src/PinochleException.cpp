@@ -1,4 +1,4 @@
-#include <PinochleException.h>
+#include "PinochleException.h"
 
 PinochleException::PinochleException() {
     this->message = "unspecified exception";
