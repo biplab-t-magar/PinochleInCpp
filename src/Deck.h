@@ -10,7 +10,7 @@ public:
     Deck(int numOfEachCard  = 2);
     void shuffle();
     Card takeOne();
-    unsigned int getNumRemaining();
+    int getNumRemaining();
 private:
     std::vector<Card> cards;
     const int numOfEachCard;
