@@ -22,10 +22,10 @@ private:
     std::vector<Card> capturePile;
     std::vector<std::vector<Card>> meldsUsed;
     Card playFromHand();
-    void playMeld();
+    void playMeld(std::vector<Card> cards);
     void suggestNextMeld();
     void suggestNextThrow();
-    void getPotentialMelds();
+    std::vector<std::vector<Card>> findPotentialMeldsFromHand();
     size_t getMeldPoints();
     bool isValidMeld(std::vector<Card> cards, Meld *whatMeld);
     bool hasMeldBeenUsed();

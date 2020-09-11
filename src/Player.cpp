@@ -11,6 +11,11 @@ bool Player::setTrumpSuit(Suit trumpSuit) {
     return true;
 }
 
+std::vector<std::vector<Card>> Player::findPotentialMeldsFromHand() {
+    
+}
+
+
 
 bool Player::isValidMeld(std::vector<Card> cards, Meld* whatMeld) {
     //if the given cards do not create a valid meld, then whatMeld is return with a NULL value
