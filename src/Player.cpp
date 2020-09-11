@@ -21,16 +21,82 @@ bool Player::isValidMeld(std::vector<Card> cards, Meld* whatMeld) {
     }
 
     //checking melds from most common to least common
-    
+
+    //check if Dix
+    if(isDix(cards)) {
+        *whatMeld = Meld::Dix;
+        return true;
+    }
+
+    //check if Marriage
+    if(isMarriage(cards)) {
+        *whatMeld = Meld::Marriage;
+        return true;
+    }
+
+    //check if Royal Marriage
+    if(isRoyalMarriage(cards)) {
+        *whatMeld = Meld::RoyalMarriage;
+        return true;
+    }
+
+    //check if Royal Marriage
+    if(isRoyalMarriage(cards)) {
+        *whatMeld = Meld::RoyalMarriage;
+        return true;
+    }
+
+    //check if Pinochle
+    if(isPinochle(cards)) {
+        *whatMeld = Meld::Pinochle;
+        return true;
+    }
+
+    //check if Four Aces
+    if(cards[0].getRank() == Rank::Ace && isFours(cards)) {
+        *whatMeld = Meld::FourAces;
+        return true;
+    }
+
+    //check if Four Kings
+    if(cards[0].getRank() == Rank::King && isFours(cards)) {
+        *whatMeld = Meld::FourKings;
+        return true;
+    }
+
+    //check if Four Queens
+    if(cards[0].getRank() == Rank::Queen && isFours(cards)) {
+        *whatMeld = Meld::FourQueens;
+        return true;
+    }
+
+    //check if Four Jacks
+    if(cards[0].getRank() == Rank::Jack && isFours(cards)) {
+        *whatMeld = Meld::FourJacks;
+        return true;
+    }
+
+    //check if Flush
+    if(isFlush(cards)) {
+        *whatMeld = Meld::Flush;
+        return true;
+    }
+
+    //if none of the Melds match
+    return false;
 
 }
 
-bool Player::isDix(Card card) {
-    //unlike other Meld checkers, Dix is a single-card meld, so it does not receive
-    //a vector of cards, but just a single Card object
+bool Player::isDix(std::vector<Card> cards) {
+    //Note: A Dix is a card of rank Nine and a suit the same as the trump suit
+
+    //check size
+    if(cards.size() != 1) {
+        return false;
+    }
 
     //if card is not of rank Nine or not of trump suit, return false
-    if(card.getRank() != Rank::Nine || card.getSuit() != trumpSuit) {
+    if(cards[0].getRank() != Rank::Nine || cards[0].getSuit() != trumpSuit) {
         return false;
     }
     return true;

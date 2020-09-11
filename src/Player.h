@@ -30,7 +30,7 @@ private:
     bool isValidMeld(std::vector<Card> cards, Meld *whatMeld);
     bool hasMeldBeenUsed();
     bool isMeldValid();
-    bool isDix(Card card);
+    bool isDix(std::vector<Card> cards);
     bool isMarriage(std::vector<Card> cards);
     bool isRoyalMarriage(std::vector<Card> cards);
     bool isPinochle(std::vector<Card> cards);
