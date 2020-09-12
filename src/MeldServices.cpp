@@ -1,16 +1,130 @@
 #include "MeldServices.h"
 
+MeldServices::MeldServices() {
+   this->trumpSuitSpecified = false;
+}
 
-std::vector<std::vector<Card>> MeldServices::findPotentialMeldsFromHand() {
-    //look for each possible meld from the given hand
+MeldServices::MeldServices(Suit trumpSuit) {
+   this->trumpSuit = trumpSuit;
+   this->trumpSuitSpecified = true;
+}
 
-    //start searching from most common meld to most rare
-    //i.e. start by searching for a Dix
+bool MeldServices::setTrumpSuit(Suit trumpSuit) {
+   this->trumpSuit = trumpSuit;
+   this->trumpSuitSpecified = true;
+   return true;
+}
+
+bool MeldServices::findAllPlayableMeldsFromHand(std::vector<Card> handPile, std::vector<Card> meldPile, Suit trumpSuit){
+   if(!trumpSuitSpecified) {
+      throw PinochleException("Trump Suit has not been specified for this round. Use setTrumpSuit() to specify trump suit");
+   }
+
+   //first empty out previously calculated possible melds   
+   possibleMelds.clear();
+   cardsForCreatingPossibleMelds.clear();
+
+   //start searching from most common meld to most rare
+
+   //i.e. start by searching for all possible Dix's
+   //for each dix returned, add to possible Melds and cardsForCreatingPossibleMelds
+   std::vector<std::vector<Card>> dixes = searchForDixes(handPile);
+   for(int i = 0; i < dixes.size(); i++) {
+      possibleMelds.push_back(Meld::Dix);
+      cardsForCreatingPossibleMelds.push_back(dixes[i]);
+   }
+
+   
+
+   
+}
+
+
+std::vector<std::vector<Card>> MeldServices::searchForDixes(std::vector<Card> handPile) {
+   //since dix is a single card Meld, we need to only search for it in the handPile and not the meldPile
+   //because any dix found in the meld pile has already been used and is therefore invalid
+
+   if(!trumpSuitSpecified) {
+      throw PinochleException("Trump Suit has not been specified for this round. Use setTrumpSuit() to specify trump suit");
+   }
+
+   std::vector<std::vector<Card>> dixesInHand;
+   
+   std::vector<Card> aDixMeld;
+
+   //loop through the handPile 
+   for(int i = 0; i < handPile.size(); i++) {
+      //if any card is a 9 of Trump card, add it into the result
+      if(handPile[i].getRank() == Rank::Nine && handPile[i].getSuit() == trumpSuit) {
+         //push card into meld
+         aDixMeld.push_back(handPile[i]);
+
+         //push meld into vector of melds
+         dixesInHand.push_back(aDixMeld);
+      }
+   }
+
+   return dixesInHand;
+}
+
+std::vector<std::vector<Card>> MeldServices::searchForPlayableRoyalMarriages(std::vector<Card> handPile, std::vector<Card> meldPile) {
+
+}
+
+
+
+bool MeldServices::meldPlayedFirstTime(Meld meld) {
+   //loop through all melds that have been previously played by the player
+   for(int i = 0; i < meldsPlayed.size(); i++) {
+      //if matching meld found, return false
+      if(meldsPlayed[i] == meld) {
+         return false;
+      }
+   }
+   return true;
+}
+
+bool MeldServices::meldUsesOnlyHandPile(std::vector<Card> handPile, std::vector<Card> meld) {
+   //if any card in the given meld is not in hand pile, return false
+   //Assumption: meld sent by user is a valid meld. Can use isValidMeld() to check
+   //Given our assumption, we know that no card is repeated in the given meld
+
+   bool cardIsPresent;
+   //loop through each card in meld
+   for(int i = 0; i < meld.size(); i++) {
+      //loop through handPile to check if card is in the hand pile
+      cardIsPresent = false; 
+      for(int j = 0; j < handPile.size(); j++) {
+         if (meld[i].getSuit() == handPile[j].getSuit() && meld[i].getRank() == handPile[j].getRank()) {
+            cardIsPresent = true;
+         }
+         //if the card is missing, return false
+         if(!cardIsPresent) {
+            return false;
+         }
+      }
+   }
+   return true;
+}
+
+bool MeldServices::meldHasCardFromHandPile(std::vector<Card> handPile, std::vector<Card> meld) {
+   //if any card in the given meld is in hand pile, return true
+
+   //loop through each card in meld
+   for(int i = 0; i < meld.size(); i++) {
+      //loop through handPile to check if card is in the hand pile
+      for(int j = 0; j < handPile.size(); j++) {
+         if (meld[i].getSuit() == handPile[j].getSuit() && meld[i].getRank() == handPile[j].getRank()) {
+            return true;
+         }
+      }
+   }
+   return false;
 
 }
 
 bool MeldServices::isValidMeld(std::vector<Card> cards, Meld* whatMeld) {
-    //if the given cards do not create a valid meld, then whatMeld is return with a NULL value
+    //if the given cards do not create a valid meld, then whatMeld is returned with a NULL value
     whatMeld = NULL;
     //if the number of cards does not correspond to any possible meld, return false
     if(cards.size() < 1 || cards.size() == 3 || cards.size() > 5) {
@@ -28,12 +142,6 @@ bool MeldServices::isValidMeld(std::vector<Card> cards, Meld* whatMeld) {
     //check if Marriage
     if(isMarriage(cards)) {
         *whatMeld = Meld::Marriage;
-        return true;
-    }
-
-    //check if Royal Marriage
-    if(isRoyalMarriage(cards)) {
-        *whatMeld = Meld::RoyalMarriage;
         return true;
     }
 
