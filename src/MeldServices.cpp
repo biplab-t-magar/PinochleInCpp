@@ -28,7 +28,7 @@ bool MeldServices::findAllPlayableMeldsFromHand(std::vector<Card> handPile, std:
 
    //i.e. start by searching for all possible Dix's
    //for each dix returned, add to possible Melds and cardsForCreatingPossibleMelds
-   std::vector<std::vector<Card>> dixes = searchForDixes(handPile);
+   std::vector<std::vector<Card>> dixes = findDixes(handPile);
    for(int i = 0; i < dixes.size(); i++) {
       possibleMelds.push_back(Meld::Dix);
       cardsForCreatingPossibleMelds.push_back(dixes[i]);
@@ -40,7 +40,7 @@ bool MeldServices::findAllPlayableMeldsFromHand(std::vector<Card> handPile, std:
 }
 
 
-std::vector<std::vector<Card>> MeldServices::searchForDixes(std::vector<Card> handPile) {
+std::vector<std::vector<Card>> MeldServices::findDixes(std::vector<Card> handPile) {
    //since dix is a single card Meld, we need to only search for it in the handPile and not the meldPile
    //because any dix found in the meld pile has already been used and is therefore invalid
 
@@ -48,8 +48,7 @@ std::vector<std::vector<Card>> MeldServices::searchForDixes(std::vector<Card> ha
       throw PinochleException("Trump Suit has not been specified for this round. Use setTrumpSuit() to specify trump suit");
    }
 
-   std::vector<std::vector<Card>> dixesInHand;
-   
+   std::vector<std::vector<Card>> dixesFound;
    std::vector<Card> aDixMeld;
 
    //loop through the handPile 
@@ -60,20 +59,33 @@ std::vector<std::vector<Card>> MeldServices::searchForDixes(std::vector<Card> ha
          aDixMeld.push_back(handPile[i]);
 
          //push meld into vector of melds
-         dixesInHand.push_back(aDixMeld);
+         dixesFound.push_back(aDixMeld);
       }
    }
 
-   return dixesInHand;
+   return dixesFound;
 }
 
-std::vector<std::vector<Card>> MeldServices::searchForPlayableRoyalMarriages(std::vector<Card> handPile, std::vector<Card> meldPile) {
+std::vector<std::vector<Card>> MeldServices::findRoyalMarriages(std::vector<Card> handPile, std::vector<Card> meldPile) {
+   if(!trumpSuitSpecified) {
+      throw PinochleException("Trump Suit has not been specified for this round. Use setTrumpSuit() to specify trump suit");
+   }
 
+   std::vector<std::vector<Card>> royalsFound;
+   std::vector<Card> aRoyalMarriage;
+
+   //we will look for all possible Royal marriages by order. So we will find the  
+   //king first and then the queen
+
+    
+}
+
+std::vector<Card> MeldServices::search(std::vector<Card> cards, int numOfCards, Card firstCard, bool sameSuit, Suit whatSuit) {
+   //loop through 
 }
 
 
-
-bool MeldServices::meldPlayedFirstTime(Meld meld) {
+bool MeldServices::meldTypePlayedFirstTime(Meld meld) {
    //loop through all melds that have been previously played by the player
    for(int i = 0; i < meldsPlayed.size(); i++) {
       //if matching meld found, return false
@@ -207,119 +219,127 @@ bool MeldServices::isDix(std::vector<Card> cards) {
     return true;
 }
 
+bool MeldServices::isAnyMarriage(std::vector<Card> cards) {
+
+   //check size of meld
+   if(cards.size() != 2) {
+      return false;
+   }
+
+   //If cards are not of the same suit, return false
+   if(cards[0].getSuit() != cards[1].getSuit()) {
+      return false;
+   }
+
+   //if one card is a King and the other a Queen, return true
+   if(cards[0].getRank() == Rank::King && cards[1].getRank() == Rank::Queen) {
+      return true;
+   }
+   if(cards[1].getRank() == Rank::King && cards[0].getRank() == Rank::Queen) {
+      return true;
+   }
+
+   //if none of the conditions match return false
+   return false;
+}
+
 bool MeldServices::isMarriage(std::vector<Card> cards) {
-    //Note: A Marriage contains a King and Queen of any other suit besides the Trump suit
+   //Note: A Marriage contains a King and Queen of any other suit besides the Trump suit
 
-    //check size of meld
-    if(cards.size() != 2) {
-        return false;
-    }
+   if(!isAnyMarriage(cards)) {
+      return false;
+   }
+   
+   //If first card is trump suit, return false (only first card is checked because both cards are the same suit)
+   //ensured by isAnyMarriage
+   if(cards[0].getSuit() == trumpSuit) {
+      return false;
+   }
 
-    //If both cards are trump suit, return false
-    if(cards[0].getSuit() == trumpSuit && cards[1].getSuit() == trumpSuit) {
-        return false;
-    }
-
-    //if one card is a King and the other a Queen, return true
-    if(cards[0].getRank() == Rank::King && cards[1].getRank() == Rank::Queen) {
-        return true;
-    }
-    if(cards[1].getRank() == Rank::King && cards[0].getRank() == Rank::Queen) {
-        return true;
-    }
-
-    //if none of the conditions match return false
-    return false;
+   return false;
 
 }
 
 bool MeldServices::isRoyalMarriage(std::vector<Card> cards) {
-     //Note: A Royal Marriage contains a King and Queen of the Trump suit
+   //Note: A Royal Marriage contains a King and Queen of the Trump suit
 
-    //check size of meld
-    if(cards.size() != 2) {
-        return false;
-    }
+   if(!isAnyMarriage(cards)) {
+      return false;
+   }
+   
+   //If first card is trump suit, return false (only first card is checked because both cards are the same suit)
+   //ensured by isAnyMarriage   
+   if(cards[0].getSuit() != trumpSuit) {
+      return false;
+   }
 
-    //check if both are trump suit
-    if(cards[0].getSuit() == trumpSuit && cards[1].getSuit() == trumpSuit) {
-        //if one card is a King and the other a Queen, return true
-        if(cards[0].getRank() == Rank::King && cards[1].getRank() == Rank::Queen) {
-            return true;
-        }
-        if(cards[1].getRank() == Rank::King && cards[0].getRank() == Rank::Queen) {
-            return true;
-        }
-    }
-
-    //if none of the conditions match return false
-    return false;
+   return false;
 }
 
 bool MeldServices::isPinochle(std::vector<Card> cards) {
-    //Note: A flush contains Queen of Spades and Jack of Diamonds 
-    
-    //check size
-    if(cards.size() != 2) {
-        return false;
-    } 
+   //Note: A flush contains Queen of Spades and Jack of Diamonds 
+   
+   //check size
+   if(cards.size() != 2) {
+      return false;
+   } 
 
-    //if one card is queen of spades and the other is jack of diamonds, return true
-    if(cards[0].getRank() == Rank::Queen && cards[0].getSuit() == Suit::Spades) {
-        if(cards[1].getRank() == Rank::Jack && cards[1].getSuit() == Suit::Diamonds) {
-            return true;
-        }
-    }
-    //checking for vice versa 
-    if(cards[1].getRank() == Rank::Queen && cards[1].getSuit() == Suit::Spades) {
-        if(cards[0].getRank() == Rank::Jack && cards[0].getSuit() == Suit::Diamonds) {
-            return true;
-        }
-    }
-    return false;
+   //if one card is queen of spades and the other is jack of diamonds, return true
+   if(cards[0].getRank() == Rank::Queen && cards[0].getSuit() == Suit::Spades) {
+      if(cards[1].getRank() == Rank::Jack && cards[1].getSuit() == Suit::Diamonds) {
+         return true;
+      }
+   }
+   //checking for vice versa 
+   if(cards[1].getRank() == Rank::Queen && cards[1].getSuit() == Suit::Spades) {
+      if(cards[0].getRank() == Rank::Jack && cards[0].getSuit() == Suit::Diamonds) {
+         return true;
+      }
+   }
+   return false;
 }
 
 
 
 bool MeldServices::isFours(std::vector<Card> cards) {
-    //Note: Fours are types of melds consisting of Four melds of the same Rank but of different suits
-    //These melds are: Four Aces, Four Kings, Four Queens, and Four Jacks
-    //This general function checks only checks whether it is a Fours type of meld, 
-    //it does not care what the specific meld is
+   //Note: Fours are types of melds consisting of Four melds of the same Rank but of different suits
+   //These melds are: Four Aces, Four Kings, Four Queens, and Four Jacks
+   //This general function checks only checks whether it is a Fours type of meld, 
+   //it does not care what the specific meld is
 
-    //check card size
-    if(cards.size() != 4) {
-        return false;
-    }
-    //we are comparing the ranks of the remaining three card with that of the first card
-    Rank whatRank = cards[0].getRank();
-    
-    //this array of flags is used to keep track of the different suits encountered 
-    //as we go through the vector of cards
-    //it tells us if any suit has been repeated, in which case, it is not a Fours type meld 
-    //and so, we can return false
-    //flag[0] corresponds to Clubs, flag[1] to Diamonds, flag[2] to Hearts, and flag[3] to Spades (based
-    //on the order of enums as listed in Card.h)
-    //all flags set fo false initially
-    bool flags[4] = {false, false, false, false};
+   //check card size
+   if(cards.size() != 4) {
+      return false;
+   }
+   //we are comparing the ranks of the remaining three card with that of the first card
+   Rank whatRank = cards[0].getRank();
+   
+   //this array of flags is used to keep track of the different suits encountered 
+   //as we go through the vector of cards
+   //it tells us if any suit has been repeated, in which case, it is not a Fours type meld 
+   //and so, we can return false
+   //flag[0] corresponds to Clubs, flag[1] to Diamonds, flag[2] to Hearts, and flag[3] to Spades (based
+   //on the order of enums as listed in Card.h)
+   //all flags set fo false initially
+   bool flags[4] = {false, false, false, false};
 
-    //loop once for each card
-    for(int i = 0; i < 4; i++) {
-        //if rank doesn't match in even a single card, return false
-        if(cards[i].getRank() != whatRank) {
-            return false;
-        }
+   //loop once for each card
+   for(int i = 0; i < 4; i++) {
+      //if rank doesn't match in even a single card, return false
+      if(cards[i].getRank() != whatRank) {
+         return false;
+      }
 
-        //if the suit has already been encountered before, return false
-        if(flags[static_cast<int>(cards[i].getSuit())] == true) {
-            return false;
-        } 
+      //if the suit has already been encountered before, return false
+      if(flags[static_cast<int>(cards[i].getSuit())] == true) {
+         return false;
+      } 
 
-        //switch flag
-        flags[static_cast<int>(cards[i].getSuit())] == !flags[static_cast<int>(cards[i].getSuit())];
-    }
-    //if all the cards are of the same rank and all their suits are unique, it is a Fours meld
-    return true;
+      //switch flag
+      flags[static_cast<int>(cards[i].getSuit())] == !flags[static_cast<int>(cards[i].getSuit())];
+   }
+   //if all the cards are of the same rank and all their suits are unique, it is a Fours meld
+   return true;
 
 }
 
