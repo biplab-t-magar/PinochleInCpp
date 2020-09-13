@@ -15,27 +15,18 @@ bool MeldServices::setTrumpSuit(Suit trumpSuit) {
    return true;
 }
 
-bool MeldServices::findAllPlayableMeldsFromHand(std::vector<Card> handPile, std::vector<Card> meldPile, Suit trumpSuit){
+std::vector<int> MeldServices::findAllPlayableMeldsFromHand(std::vector<Card> handPile, std::vector<Card> meldPile, Suit trumpSuit){
    if(!trumpSuitSpecified) {
       throw PinochleException("Trump Suit has not been specified for this round. Use setTrumpSuit() to specify trump suit");
    }
+   
+   //vector to hold each 
+   std::vector<int> numOfEachMeld;
+   //initialize all values in vector to 0
 
-   //first empty out previously calculated possible melds   
-   possibleMelds.clear();
-   cardsForCreatingPossibleMelds.clear();
-
-   //start searching from most common meld to most rare
-
-   //i.e. start by searching for all possible Dix's
-   //for each dix returned, add to possible Melds and cardsForCreatingPossibleMelds
-   std::vector<std::vector<Card>> dixes = findDixes(handPile);
-   for(int i = 0; i < dixes.size(); i++) {
-      possibleMelds.push_back(Meld::Dix);
-      cardsForCreatingPossibleMelds.push_back(dixes[i]);
-   }
 }
 
-int MeldServices::howManyDixes(std::vector<Card> handPile, Suit trumpSuit) {
+int MeldServices::howManyDixes(std::vector<Card> handPile) {
     //since dix is a single card Meld, we need to only search for it in the handPile and not the meldPile
    //because any dix found in the meld pile has already been used and is therefore invalid
 
@@ -55,34 +46,27 @@ int MeldServices::howManyDixes(std::vector<Card> handPile, Suit trumpSuit) {
 }
 
 
-int MeldServices::howManyMarriages(std::vector<Card> handPile, std::vector<Card> meldPile, std::vector<Card>) {
-   if(!trumpSuitSpecified) {
-      throw PinochleException("Trump Suit has not been specified for this round. Use setTrumpSuit() to specify trump suit");
-   }
-   int count = 0;
-
-
+int MeldServices::howManyMarriages(Suit suit, std::vector<Card> handPile, std::vector<Card> meldPile, std::vector<Card>) {
+   return countSameSuitMelds(Meld::Marriage, handPile, meldPile, suit, Rank::King, 2);
 }
 
-int MeldServices::countSameSuitMelds(std::vector<Card> handPile, std::vector<Card> meldPile, Suit suit, Rank startingRank, int howManyCards) {
+int MeldServices::howMany
+
+int MeldServices::countSameSuitMelds(Meld meld, std::vector<Card> handPile, std::vector<Card> meldPile, Suit suit, Rank startingRank, int howManyCards) {
    
    //if the number in howManyCards is more than the number of Ranks in the meld
    if((static_cast<int>(startingRank) - howManyCards + 1) <= 0 ) {
       throw PinochleException("Invalid starting rank or number of cards");
    }
-
    if(howManyCards <= 0) {
       throw PinochleException("There cannot be a meld with 0 cards");
    }
-
    //this vector counts the number of each rank of the specified suit
-   //only ranks relevant to the meld are counter
+   //only ranks relevant to the meld are counted
    std::vector<int> howManyOfEachRank;
    //this vectors holds the count of each rank of the specified suit that was found in the meld pile
    std::vector<int> howManyOfEachRankFromMeldPile;
-
-
-   //holds the current rank (int int form) being counted 
+   //holds the current rank (in int form) being counted 
    int rank = static_cast<int>(startingRank);
 
    //loop through all the ranks in the meld
@@ -91,6 +75,7 @@ int MeldServices::countSameSuitMelds(std::vector<Card> handPile, std::vector<Car
       howManyOfEachRank.push_back(0);
       //start counting number of current rank taken from meld pile, with count initialized to 0
       howManyOfEachRankFromMeldPile.push_back(0);
+
       //loop through the hand pile
       for(int j = 0; j <  handPile.size(); j++) {
          //if both rank and suit match
@@ -109,76 +94,106 @@ int MeldServices::countSameSuitMelds(std::vector<Card> handPile, std::vector<Car
       //go to the next rank of the meld
       rank--;
    }
-
    //now the number of *mutually exclusive* possible melds is calculated
    //the number of that constituent rank of the meld which occurs the least times in the meld is the actual 
    //number of mutually exclusive possible melds
    
-   //finding minimum value in howManyOfEachRank
-   int min = howManyOfEachRank[0];
-   for(int i = 1; i < howManyOfEachRank[i]; i++) {
-      if(min > howManyOfEachRank[i]) {
-         min = howManyOfEachRank[i];
-      } 
-   }
-
-   //now that the number of mutually exclusive possible melds has been found,
-   //those ranks that are in numbers greater than this number (i.e. when there are 3 
-   //Aces when there are only 2 possible Flushes possible) represent choices:
-   //we could select any 2 of those 3 possible Aces to create our 2 Flushes
-   //Despite choices like these, the possible number of melds is not affected.
-   //So, we can eliminate these extraneous choices (since the role of this function
-   //is to return only the number of possible mutually exclusive melds and does not take into account
-   //the choices of cards in the meld). 
-   //If we have a choice like this, we want to take that choice that would eliminate the 
-   //uncertainty of our choice not producing a valid meld
-   //So, we want to choose from within the handPile and not the meldPile, if we have a choice
-   //This explains the decision below to subtract choices from the meldPile and not the handPile
-
-   //loop through each rank
-   while() {
-      //loop through all ranks and delete extraneous occurrences of each rank. 
-      for(int i = 0; i < howManyCards; i++) {
-         //removing all extraneous choices from the meldPile
-         howManyOfEachRankFromMeldPile[i] = howManyOfEachRankFromMeldPile[i] - (howManyOfEachRank[i] - min);
-         //removing all extraneous chocies from whole hand
-         howManyOfEachRank[i] = min;
-      }  
-
-      //Now, for each possible occurence of the meld, we want to eliminate those that 
-      //use cards from the meldPile if the meld has already been used by the user
-      for(int i = 0; i < howManyCards; i++) {
-
-      } 
-   }
-
-
    
-
-
+   return removeExtraneousChoices(meld, howManyOfEachRank, howManyOfEachRankFromMeldPile);
 }
 
 int MeldServices::countSameRankMelds(Meld meld, std::vector<Card> handPile, std::vector<Card> meldPile, Rank rank) {
+   //this vector counts the number of each suit of the specified rank
+   std::vector<int> howManyOfEachSuit;
+   //this vectors holds the count of each rank of the specified suit that was found in the meld pile
+   std::vector<int> howManyOfEachSuitFromMeldPile;
+   //holds the current suit (in int form) being counted (always start with clubs and increase to other suits from there)
+   int suit = static_cast<int>(Suit::Clubs);
 
+   //loop through all the suits in the meld
+   for(int i = 0; i < 4; i++) {
+      //start counting number of current rank, with count initialized to 0
+      howManyOfEachSuit.push_back(0);
+      //start counting number of current rank taken from meld pile, with count initialized to 0
+      howManyOfEachSuitFromMeldPile.push_back(0);
+      //loop through the hand pile
+      for(int j = 0; j <  handPile.size(); j++) {
+         //if both rank and suit match
+         if(handPile[j].getRank() == rank && static_cast<int>(handPile[j].getSuit()) == suit) {
+            howManyOfEachSuit[i]++;
+         }
+      }
+      //loop through the meld pile
+      for(int j = 0; j <  meldPile.size(); j++) {
+         //if both rank and suit match
+         if(handPile[j].getRank() == rank && static_cast<int>(handPile[j].getSuit()) == suit) {
+            howManyOfEachSuit[i]++;
+            howManyOfEachSuitFromMeldPile[i]++;
+         }
+      }
+      //go to the next rank of the meld
+      suit++;
+   }
+
+   return removeExtraneousChoices(meld, howManyOfEachSuit, howManyOfEachSuitFromMeldPile);
 }
+
+
+int MeldServices::removeExtraneousChoices(Meld meld, std::vector<int> howManyOfEachCard, std::vector<int> howManyFromMeldPile) {
+   if(howManyOfEachCard.size() != howManyFromMeldPile.size()) {
+      throw PinochleException("howManyOfEachCard and howManyFromMeldPile must have same size");
+   }
+   if(howManyOfEachCard.size() <= 0) {
+      throw PinochleException("Arguments cannot be empty vectors");
+   }
+   //finding minimum value in howManyOfEachCard
+   //any card with occurence more than that minimum value has extraneous cards
+   //which represent choices we can make when we create melds
+   //min represents number of mutually exclusive possible melds
+   int mutuallyExclusivePossibleMelds = howManyOfEachCard[0];
+   for(int i = 1; i < howManyOfEachCard.size(); i++) {
+      if(mutuallyExclusivePossibleMelds > howManyOfEachCard[i]) {
+         mutuallyExclusivePossibleMelds = howManyOfEachCard[i];
+      } 
+   }
+
+   //Despite choices, the possible number of mutually exclusive melds is not affected.
+   //So, we can eliminate these extraneous choices 
+   
+   //If any extraneous choices are in meld pile we want to remove from the meldPile because choosing 
+   //from the meldPile might make an invalid meld
+   //This explains the decision below to subtract choices from the meldPile as we eliminate choices
+
+   //loop through all cards and delete extraneous occurrences (choices) of each card from vector 
+   //representing the meldPile and from the vector representing the entire hand
+   for(int i = 0; i < howManyOfEachCard.size(); i++) {
+      howManyFromMeldPile[i] = howManyFromMeldPile[i] - (howManyOfEachCard[i] - mutuallyExclusivePossibleMelds);
+      howManyOfEachCard[i] = mutuallyExclusivePossibleMelds;
+   }  
+   //Now, for each possible occurence of the meld, we want to eliminate those that 
+   //use cards from the meldPile if the meld has already been used by the user
+   for(int i = 0; i < howManyOfEachCard.size(); i++) {
+      if(howManyFromMeldPile[i] > 0 && !meldTypePlayedFirstTime(meld)) {
+         //removing choices decreases the card with the least occurences
+         //and thus decreases the possible mutually exclusive melds
+         if(mutuallyExclusivePossibleMelds > (howManyOfEachCard[i] - howManyFromMeldPile[i])) {
+            mutuallyExclusivePossibleMelds = howManyOfEachCard[i] - howManyFromMeldPile[i];
+         }
+      }
+   } 
+   //min represents the 
+   return mutuallyExclusivePossibleMelds;
+   
+}
+
+
 
 
 void MeldServices::getMeldCoordinates(std::vector<Card>* handPile, std::vector<Card>* meldPile, Meld meld) {
+
 }
 
-std::vector<std::vector<Card>> MeldServices::findRoyalMarriages(std::vector<Card> handPile, std::vector<Card> meldPile) {
-   if(!trumpSuitSpecified) {
-      throw PinochleException("Trump Suit has not been specified for this round. Use setTrumpSuit() to specify trump suit");
-   }
 
-   std::vector<std::vector<Card>> royalsFound;
-   std::vector<Card> aRoyalMarriage;
-
-   //we will look for all possible Royal marriages by order. So we will find the  
-   //king first and then the queen
-
-    
-}
 
 
 bool MeldServices::meldTypePlayedFirstTime(Meld meld) {

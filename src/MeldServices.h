@@ -31,9 +31,12 @@ private:
 
    bool hasMeldBeenUsed();
 
-   int HowManyDixes(std::vector<Card> handPile, Suit trumpSuit);
-   int howManyMarriages(std::vector<Card> handPile, std::vector<Card> meldPile, std::vector<Card>);
-   int 
+   int howManyDixes(std::vector<Card> handPile);
+   int howManyMarriages(Suit suit, std::vector<Card> handPile, std::vector<Card> meldPile, std::vector<Card>);
+   
+   int countSameSuitMelds(Meld meld, std::vector<Card> handPile, std::vector<Card> meldPile, Suit suit, Rank startingRank, int howManyCards);
+   int countSameRankMelds(Meld meld, std::vector<Card> handPile, std::vector<Card> meldPile, Rank rank);
+   int removeExtraneousChoices(Meld meld, std::vector<int> howManyOfEachCard, std::vector<int> howManyFromMeldPile);
 
    void getMeldCoordinates(std::vector<Card>* handPile, std::vector<Card>* meldPile, Meld meld);
 
