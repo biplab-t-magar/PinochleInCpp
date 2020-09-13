@@ -33,37 +33,137 @@ bool MeldServices::findAllPlayableMeldsFromHand(std::vector<Card> handPile, std:
       possibleMelds.push_back(Meld::Dix);
       cardsForCreatingPossibleMelds.push_back(dixes[i]);
    }
-
-   
-
-   
 }
 
-
-std::vector<std::vector<Card>> MeldServices::findDixes(std::vector<Card> handPile) {
-   //since dix is a single card Meld, we need to only search for it in the handPile and not the meldPile
+int MeldServices::howManyDixes(std::vector<Card> handPile, Suit trumpSuit) {
+    //since dix is a single card Meld, we need to only search for it in the handPile and not the meldPile
    //because any dix found in the meld pile has already been used and is therefore invalid
 
    if(!trumpSuitSpecified) {
       throw PinochleException("Trump Suit has not been specified for this round. Use setTrumpSuit() to specify trump suit");
    }
 
-   std::vector<std::vector<Card>> dixesFound;
-   std::vector<Card> aDixMeld;
-
+   int count = 0;
    //loop through the handPile 
    for(int i = 0; i < handPile.size(); i++) {
       //if any card is a 9 of Trump card, add it into the result
       if(handPile[i].getRank() == Rank::Nine && handPile[i].getSuit() == trumpSuit) {
-         //push card into meld
-         aDixMeld.push_back(handPile[i]);
-
-         //push meld into vector of melds
-         dixesFound.push_back(aDixMeld);
+         count++;
       }
    }
+   return count;
+}
 
-   return dixesFound;
+
+int MeldServices::howManyMarriages(std::vector<Card> handPile, std::vector<Card> meldPile, std::vector<Card>) {
+   if(!trumpSuitSpecified) {
+      throw PinochleException("Trump Suit has not been specified for this round. Use setTrumpSuit() to specify trump suit");
+   }
+   int count = 0;
+
+
+}
+
+int MeldServices::countSameSuitMelds(std::vector<Card> handPile, std::vector<Card> meldPile, Suit suit, Rank startingRank, int howManyCards) {
+   
+   //if the number in howManyCards is more than the number of Ranks in the meld
+   if((static_cast<int>(startingRank) - howManyCards + 1) <= 0 ) {
+      throw PinochleException("Invalid starting rank or number of cards");
+   }
+
+   if(howManyCards <= 0) {
+      throw PinochleException("There cannot be a meld with 0 cards");
+   }
+
+   //this vector counts the number of each rank of the specified suit
+   //only ranks relevant to the meld are counter
+   std::vector<int> howManyOfEachRank;
+   //this vectors holds the count of each rank of the specified suit that was found in the meld pile
+   std::vector<int> howManyOfEachRankFromMeldPile;
+
+
+   //holds the current rank (int int form) being counted 
+   int rank = static_cast<int>(startingRank);
+
+   //loop through all the ranks in the meld
+   for(int i = 0; i < howManyCards; i++) {
+      //start counting number of current rank, with count initialized to 0
+      howManyOfEachRank.push_back(0);
+      //start counting number of current rank taken from meld pile, with count initialized to 0
+      howManyOfEachRankFromMeldPile.push_back(0);
+      //loop through the hand pile
+      for(int j = 0; j <  handPile.size(); j++) {
+         //if both rank and suit match
+         if(handPile[j].getSuit() == suit && static_cast<int>(handPile[j].getRank()) == rank) {
+            howManyOfEachRank[i]++;
+         }
+      }
+      //loop through the meld pile
+      for(int j = 0; j <  meldPile.size(); j++) {
+         //if both rank and suit match
+         if(handPile[j].getSuit() == suit && static_cast<int>(handPile[j].getRank()) == rank) {
+            howManyOfEachRank[i]++;
+            howManyOfEachRankFromMeldPile[i]++;
+         }
+      }
+      //go to the next rank of the meld
+      rank--;
+   }
+
+   //now the number of *mutually exclusive* possible melds is calculated
+   //the number of that constituent rank of the meld which occurs the least times in the meld is the actual 
+   //number of mutually exclusive possible melds
+   
+   //finding minimum value in howManyOfEachRank
+   int min = howManyOfEachRank[0];
+   for(int i = 1; i < howManyOfEachRank[i]; i++) {
+      if(min > howManyOfEachRank[i]) {
+         min = howManyOfEachRank[i];
+      } 
+   }
+
+   //now that the number of mutually exclusive possible melds has been found,
+   //those ranks that are in numbers greater than this number (i.e. when there are 3 
+   //Aces when there are only 2 possible Flushes possible) represent choices:
+   //we could select any 2 of those 3 possible Aces to create our 2 Flushes
+   //Despite choices like these, the possible number of melds is not affected.
+   //So, we can eliminate these extraneous choices (since the role of this function
+   //is to return only the number of possible mutually exclusive melds and does not take into account
+   //the choices of cards in the meld). 
+   //If we have a choice like this, we want to take that choice that would eliminate the 
+   //uncertainty of our choice not producing a valid meld
+   //So, we want to choose from within the handPile and not the meldPile, if we have a choice
+   //This explains the decision below to subtract choices from the meldPile and not the handPile
+
+   //loop through each rank
+   while() {
+      //loop through all ranks and delete extraneous occurrences of each rank. 
+      for(int i = 0; i < howManyCards; i++) {
+         //removing all extraneous choices from the meldPile
+         howManyOfEachRankFromMeldPile[i] = howManyOfEachRankFromMeldPile[i] - (howManyOfEachRank[i] - min);
+         //removing all extraneous chocies from whole hand
+         howManyOfEachRank[i] = min;
+      }  
+
+      //Now, for each possible occurence of the meld, we want to eliminate those that 
+      //use cards from the meldPile if the meld has already been used by the user
+      for(int i = 0; i < howManyCards; i++) {
+
+      } 
+   }
+
+
+   
+
+
+}
+
+int MeldServices::countSameRankMelds(Meld meld, std::vector<Card> handPile, std::vector<Card> meldPile, Rank rank) {
+
+}
+
+
+void MeldServices::getMeldCoordinates(std::vector<Card>* handPile, std::vector<Card>* meldPile, Meld meld) {
 }
 
 std::vector<std::vector<Card>> MeldServices::findRoyalMarriages(std::vector<Card> handPile, std::vector<Card> meldPile) {
@@ -78,10 +178,6 @@ std::vector<std::vector<Card>> MeldServices::findRoyalMarriages(std::vector<Card
    //king first and then the queen
 
     
-}
-
-std::vector<Card> MeldServices::search(std::vector<Card> cards, int numOfCards, Card firstCard, bool sameSuit, Suit whatSuit) {
-   //loop through 
 }
 
 
@@ -136,87 +232,87 @@ bool MeldServices::meldHasCardFromHandPile(std::vector<Card> handPile, std::vect
 }
 
 bool MeldServices::isValidMeld(std::vector<Card> cards, Meld* whatMeld) {
-    //if the given cards do not create a valid meld, then whatMeld is returned with a NULL value
-    whatMeld = NULL;
-    //if the number of cards does not correspond to any possible meld, return false
-    if(cards.size() < 1 || cards.size() == 3 || cards.size() > 5) {
-        return false;
-    }
+   //if the given cards do not create a valid meld, then whatMeld is returned with a NULL value
+   whatMeld = NULL;
+   //if the number of cards does not correspond to any possible meld, return false
+   if(cards.size() < 1 || cards.size() == 3 || cards.size() > 5) {
+      return false;
+   }
 
-    //checking melds from most common to least common
+   //checking melds from most common to least common
 
-    //check if Dix
-    if(isDix(cards)) {
-        *whatMeld = Meld::Dix;
-        return true;
-    }
+   //check if Dix
+   if(isDix(cards)) {
+      *whatMeld = Meld::Dix;
+      return true;
+   }
 
-    //check if Marriage
-    if(isMarriage(cards)) {
-        *whatMeld = Meld::Marriage;
-        return true;
-    }
+   //check if Marriage
+   if(isMarriage(cards)) {
+      *whatMeld = Meld::Marriage;
+      return true;
+   }
 
-    //check if Royal Marriage
-    if(isRoyalMarriage(cards)) {
-        *whatMeld = Meld::RoyalMarriage;
-        return true;
-    }
+   //check if Royal Marriage
+   if(isRoyalMarriage(cards)) {
+      *whatMeld = Meld::RoyalMarriage;
+      return true;
+   }
 
-    //check if Pinochle
-    if(isPinochle(cards)) {
-        *whatMeld = Meld::Pinochle;
-        return true;
-    }
+   //check if Pinochle
+   if(isPinochle(cards)) {
+      *whatMeld = Meld::Pinochle;
+      return true;
+   }
 
-    //check if Four Aces
-    if(cards[0].getRank() == Rank::Ace && isFours(cards)) {
-        *whatMeld = Meld::FourAces;
-        return true;
-    }
+   //check if Four Aces
+   if(cards[0].getRank() == Rank::Ace && isFours(cards)) {
+      *whatMeld = Meld::FourAces;
+      return true;
+   }
 
-    //check if Four Kings
-    if(cards[0].getRank() == Rank::King && isFours(cards)) {
-        *whatMeld = Meld::FourKings;
-        return true;
-    }
+   //check if Four Kings
+   if(cards[0].getRank() == Rank::King && isFours(cards)) {
+      *whatMeld = Meld::FourKings;
+      return true;
+   }
 
-    //check if Four Queens
-    if(cards[0].getRank() == Rank::Queen && isFours(cards)) {
-        *whatMeld = Meld::FourQueens;
-        return true;
-    }
+   //check if Four Queens
+   if(cards[0].getRank() == Rank::Queen && isFours(cards)) {
+      *whatMeld = Meld::FourQueens;
+      return true;
+   }
 
-    //check if Four Jacks
-    if(cards[0].getRank() == Rank::Jack && isFours(cards)) {
-        *whatMeld = Meld::FourJacks;
-        return true;
-    }
+   //check if Four Jacks
+   if(cards[0].getRank() == Rank::Jack && isFours(cards)) {
+      *whatMeld = Meld::FourJacks;
+      return true;
+   }
 
-    //check if Flush
-    if(isFlush(cards)) {
-        *whatMeld = Meld::Flush;
-        return true;
-    }
+   //check if Flush
+   if(isFlush(cards)) {
+      *whatMeld = Meld::Flush;
+      return true;
+   }
 
-    //if none of the Melds match
-    return false;
+   //if none of the Melds match
+   return false;
 
 }
 
 bool MeldServices::isDix(std::vector<Card> cards) {
-    //Note: A Dix is a card of rank Nine and a suit the same as the trump suit
+   //Note: A Dix is a card of rank Nine and a suit the same as the trump suit
 
-    //check size
-    if(cards.size() != 1) {
-        return false;
-    }
+   //check size
+   if(cards.size() != 1) {
+      return false;
+   }
 
-    //if card is not of rank Nine or not of trump suit, return false
-    if(cards[0].getRank() != Rank::Nine || cards[0].getSuit() != trumpSuit) {
-        return false;
-    }
-    return true;
+   //if card is not of rank Nine or not of trump suit, return false
+   if(cards[0].getRank() != Rank::Nine || cards[0].getSuit() != trumpSuit) {
+      return false;
+   }
+   return true;
 }
 
 bool MeldServices::isAnyMarriage(std::vector<Card> cards) {

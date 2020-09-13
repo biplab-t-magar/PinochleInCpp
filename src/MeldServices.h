@@ -31,10 +31,11 @@ private:
 
    bool hasMeldBeenUsed();
 
-   std::vector<Card> search(std::vector<Card> cards, int numOfCards, Card firstCard, bool sameSuit, Suit whatSuit);
+   int HowManyDixes(std::vector<Card> handPile, Suit trumpSuit);
+   int howManyMarriages(std::vector<Card> handPile, std::vector<Card> meldPile, std::vector<Card>);
+   int 
 
-   std::vector<std::vector<Card>> findDixes(std::vector<Card> handPile);
-   std::vector<std::vector<Card>> findRoyalMarriages(std::vector<Card> handPile, std::vector<Card> meldPile);
+   void getMeldCoordinates(std::vector<Card>* handPile, std::vector<Card>* meldPile, Meld meld);
 
    bool isDix(std::vector<Card> cards);
    bool isMarriage(std::vector<Card> cards);
