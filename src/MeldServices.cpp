@@ -111,16 +111,18 @@ int MeldServices::countSameSuitMelds(Meld meld, std::vector<Card> handPile, std:
    //only ranks relevant to the meld are counted
    std::vector<int> howManyOfEachRank;
    //this vectors holds the count of each rank of the specified suit that was found in the meld pile
-   std::vector<int> howManyOfEachRankFromMeldPile;
+   // std::vector<int> howManyOfEachRankFromMeldPile;
    //holds the current rank (in int form) being counted 
    int rank = static_cast<int>(startingRank);
+
+   bool meldHasBeenPlayedBefore = !meldTypePlayedFirstTime(meld);
 
    //loop through all the ranks in the meld
    for(int i = 0; i < howManyCards; i++) {
       //start counting number of current rank, with count initialized to 0
       howManyOfEachRank.push_back(0);
       //start counting number of current rank taken from meld pile, with count initialized to 0
-      howManyOfEachRankFromMeldPile.push_back(0);
+      // howManyOfEachRankFromMeldPile.push_back(0);
 
       //loop through the hand pile
       for(int j = 0; j <  handPile.size(); j++) {
@@ -129,39 +131,64 @@ int MeldServices::countSameSuitMelds(Meld meld, std::vector<Card> handPile, std:
             howManyOfEachRank[i]++;
          }
       }
-      //loop through the meld pile
-      for(int j = 0; j <  meldPile.size(); j++) {
-         //if both rank and suit match
-         if(handPile[j].getSuit() == suit && static_cast<int>(handPile[j].getRank()) == rank) {
-            howManyOfEachRank[i]++;
-            howManyOfEachRankFromMeldPile[i]++;
-         }
-      }
+      //loop through the meld pile only if this meld has not been previously created by player
+      // if(!meldHasBeenPlayedBefore) {
+      //    for(int j = 0; j <  meldPile.size(); j++) {
+      //    //if both rank and suit match
+      //       if(handPile[j].getSuit() == suit && static_cast<int>(handPile[j].getRank()) == rank) {
+      //          howManyOfEachRank[i]++;
+      //          howManyOfEachRankFromMeldPile[i]++;
+      //       }
+      //    }
+      // }
       //go to the next rank of the meld
       rank--;
    }
+   for(int i = 0; i < howManyCards; i++) {
+      if(!meldHasBeenPlayedBefore) {
+         for(int j = 0; j <  meldPile.size(); j++) {
+         //if both rank and suit match
+            if(handPile[j].getSuit() == suit && static_cast<int>(handPile[j].getRank()) == rank) {
+               howManyOfEachRank[i]++;
+               // howManyOfEachRankFromMeldPile[i]++;
+            }
+         }
+      }
+      rank--;
+   }
+
+
    //now the number of *mutually exclusive* possible melds is calculated
    //the number of that constituent rank of the meld which occurs the least times in the meld is the actual 
    //number of mutually exclusive possible melds
-   
-   
-   return removeExtraneousChoices(meld, howManyOfEachRank, howManyOfEachRankFromMeldPile);
+
+   //finding minimum value in howManyOfEachRank
+   int min = howManyOfEachRank[0];
+   for(int i = 1; i < howManyOfEachRank.size(); i++) {
+      if(min > howManyOfEachRank[i]) {
+         min = howManyOfEachRank[i];
+      } 
+   }
+   return min;
 }
 
 int MeldServices::countSameRankMelds(Meld meld, std::vector<Card> handPile, std::vector<Card> meldPile, Rank rank) {
    //this vector counts the number of each suit of the specified rank
    std::vector<int> howManyOfEachSuit;
    //this vectors holds the count of each rank of the specified suit that was found in the meld pile
-   std::vector<int> howManyOfEachSuitFromMeldPile;
+   // std::vector<int> howManyOfEachSuitFromMeldPile;
    //holds the current suit (in int form) being counted (always start with clubs and increase to other suits from there)
-   int suit = static_cast<int>(Suit::Clubs);
+   int suit = 0;
+
+   bool meldHasBeenPlayedBefore = !meldTypePlayedFirstTime(meld);
+
 
    //loop through all the suits in the meld
    for(int i = 0; i < 4; i++) {
       //start counting number of current rank, with count initialized to 0
       howManyOfEachSuit.push_back(0);
       //start counting number of current rank taken from meld pile, with count initialized to 0
-      howManyOfEachSuitFromMeldPile.push_back(0);
+      // howManyOfEachSuitFromMeldPile.push_back(0);
       //loop through the hand pile
       for(int j = 0; j <  handPile.size(); j++) {
          //if both rank and suit match
@@ -169,68 +196,85 @@ int MeldServices::countSameRankMelds(Meld meld, std::vector<Card> handPile, std:
             howManyOfEachSuit[i]++;
          }
       }
-      //loop through the meld pile
-      for(int j = 0; j <  meldPile.size(); j++) {
-         //if both rank and suit match
-         if(handPile[j].getRank() == rank && static_cast<int>(handPile[j].getSuit()) == suit) {
-            howManyOfEachSuit[i]++;
-            howManyOfEachSuitFromMeldPile[i]++;
-         }
-      }
       //go to the next rank of the meld
       suit++;
    }
-
-   return removeExtraneousChoices(meld, howManyOfEachSuit, howManyOfEachSuitFromMeldPile);
-}
-
-
-int MeldServices::removeExtraneousChoices(Meld meld, std::vector<int> howManyOfEachCard, std::vector<int> howManyFromMeldPile) {
-   if(howManyOfEachCard.size() != howManyFromMeldPile.size()) {
-      throw PinochleException("howManyOfEachCard and howManyFromMeldPile must have same size");
+   //now do the same for the meld pile
+   suit = 0;
+   for(int i = 0; i < 4; i++) {
+      //loop through the meld pile only if this meld has not been played by player before
+      if(!meldHasBeenPlayedBefore) {
+         for(int j = 0; j <  meldPile.size(); j++) {
+            //if both rank and suit match
+            if(handPile[j].getRank() == rank && static_cast<int>(handPile[j].getSuit()) == suit) {
+               howManyOfEachSuit[i]++;
+               // howManyOfEachSuitFromMeldPile[i]++;
+            }
+         }
+      }
+      suit++;
    }
-   if(howManyOfEachCard.size() <= 0) {
-      throw PinochleException("Arguments cannot be empty vectors");
-   }
-   //finding minimum value in howManyOfEachCard
+   //finding minimum value in howManyOfEachSuit
    //any card with occurence more than that minimum value has extraneous cards
    //which represent choices we can make when we create melds
    //min represents number of mutually exclusive possible melds
-   int mutuallyExclusivePossibleMelds = howManyOfEachCard[0];
-   for(int i = 1; i < howManyOfEachCard.size(); i++) {
-      if(mutuallyExclusivePossibleMelds > howManyOfEachCard[i]) {
-         mutuallyExclusivePossibleMelds = howManyOfEachCard[i];
+   int min = howManyOfEachSuit[0];
+   for(int i = 1; i < howManyOfEachSuit.size(); i++) {
+      if(min > howManyOfEachSuit[i]) {
+         min = howManyOfEachSuit[i];
       } 
    }
-
-   //Despite choices, the possible number of mutually exclusive melds is not affected.
-   //So, we can eliminate these extraneous choices 
    
-   //If any extraneous choices are in meld pile we want to remove from the meldPile because choosing 
-   //from the meldPile might make an invalid meld
-   //This explains the decision below to subtract choices from the meldPile as we eliminate choices
 
-   //loop through all cards and delete extraneous occurrences (choices) of each card from vector 
-   //representing the meldPile and from the vector representing the entire hand
-   for(int i = 0; i < howManyOfEachCard.size(); i++) {
-      howManyFromMeldPile[i] = howManyFromMeldPile[i] - (howManyOfEachCard[i] - mutuallyExclusivePossibleMelds);
-      howManyOfEachCard[i] = mutuallyExclusivePossibleMelds;
-   }  
-   //Now, for each possible occurence of the meld, we want to eliminate those that 
-   //use cards from the meldPile if the meld has already been used by the user
-   for(int i = 0; i < howManyOfEachCard.size(); i++) {
-      if(howManyFromMeldPile[i] > 0 && !meldTypePlayedFirstTime(meld)) {
-         //removing choices decreases the card with the least occurences
-         //and thus decreases the possible mutually exclusive melds
-         if(mutuallyExclusivePossibleMelds > (howManyOfEachCard[i] - howManyFromMeldPile[i])) {
-            mutuallyExclusivePossibleMelds = howManyOfEachCard[i] - howManyFromMeldPile[i];
-         }
-      }
-   } 
-   //min represents the 
-   return mutuallyExclusivePossibleMelds;
-   
+   return min
 }
+
+
+// int MeldServices::removeExtraneousChoices(Meld meld, std::vector<int> howManyOfEachCard, std::vector<int> howManyFromMeldPile) {
+//    if(howManyOfEachCard.size() != howManyFromMeldPile.size()) {
+//       throw PinochleException("howManyOfEachCard and howManyFromMeldPile must have same size");
+//    }
+//    if(howManyOfEachCard.size() <= 0) {
+//       throw PinochleException("Arguments cannot be empty vectors");
+//    }
+//    //finding minimum value in howManyOfEachCard
+//    //any card with occurence more than that minimum value has extraneous cards
+//    //which represent choices we can make when we create melds
+//    //min represents number of mutually exclusive possible melds
+//    int mutuallyExclusivePossibleMelds = howManyOfEachCard[0];
+//    for(int i = 1; i < howManyOfEachCard.size(); i++) {
+//       if(mutuallyExclusivePossibleMelds > howManyOfEachCard[i]) {
+//          mutuallyExclusivePossibleMelds = howManyOfEachCard[i];
+//       } 
+//    }
+
+//    //Despite choices, the possible number of mutually exclusive melds is not affected.
+//    //So, we can eliminate these extraneous choices 
+   
+//    //If any extraneous choices are in meld pile we want to remove from the meldPile because choosing 
+//    //from the meldPile might make an invalid meld
+//    //This explains the decision below to subtract choices from the meldPile as we eliminate choices
+
+//    //loop through all cards and delete extraneous occurrences (choices) of each card from vector 
+//    //representing the meldPile and from the vector representing the entire hand
+//    // for(int i = 0; i < howManyOfEachCard.size(); i++) {
+//    //    howManyFromMeldPile[i] = howManyFromMeldPile[i] - (howManyOfEachCard[i] - mutuallyExclusivePossibleMelds);
+//    //    howManyOfEachCard[i] = mutuallyExclusivePossibleMelds;
+//    // }  
+//    // //Now, for each possible occurence of the meld, we want to eliminate those that 
+//    // //use cards from the meldPile if the meld has already been used by the user
+//    // for(int i = 0; i < howManyOfEachCard.size(); i++) {
+//    //    if(howManyFromMeldPile[i] > 0 && !meldTypePlayedFirstTime(meld)) {
+//    //       //removing choices decreases the card with the least occurences
+//    //       //and thus decreases the possible mutually exclusive melds
+//    //       if(mutuallyExclusivePossibleMelds > (howManyOfEachCard[i] - howManyFromMeldPile[i])) {
+//    //          mutuallyExclusivePossibleMelds = howManyOfEachCard[i] - howManyFromMeldPile[i];
+//    //       }
+//    //    }
+//    // } 
+//    return mutuallyExclusivePossibleMelds;
+   
+// }
 
 
 
