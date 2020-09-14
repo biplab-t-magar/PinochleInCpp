@@ -32,6 +32,12 @@ public:
    std::string getCardString() const;
    bool setRank(Rank rank);
    bool setSuit(Suit suit);
+   inline bool operator==(const Card& otherCard) {
+      return (this->rank == otherCard.getRank() && this->suit == otherCard.getSuit());
+   }
+   inline bool operator!=(const Card& otherCard) {
+      return (this->rank != otherCard.getRank() || this->suit != otherCard.getSuit());
+   }
 private:
    Rank rank;
    Suit suit;

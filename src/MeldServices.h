@@ -14,13 +14,13 @@ public:
    MeldServices();
    MeldServices(Suit trumpSuit);
    bool setTrumpSuit(Suit trumpSuit);
-   bool findAllPlayableMeldsFromHand(std::vector<Card> hand, std::vector<Card> meldPile, Suit trumpSuit);
-   size_t getMeldPoints(Meld meld);
+   std::vector<int> countMeldsFromHand(std::vector<Card> handPile, std::vector<Card> meldPile);
+   int getMeldPoints(Meld meld);
    bool isValidMeld(std::vector<Card> cards, Meld *whatMeld);
    bool meldTypePlayedFirstTime(Meld meld);
-   bool meldUsesOnlyHandPile(std::vector<Card> handPile, std::vector<Card> meld);
+   bool meldCanNeglectMeldPile(std::vector<Card> handPile, std::vector<Card> meld);
    bool meldHasCardFromHandPile(std::vector<Card> handPile, std::vector<Card> meld);
-
+   bool playMeld(std::vector<Card> meldToBePlayed, std::vector<Card>* handPile, std::vector<Card>* meldPile);
 private:
    std::vector<Meld> meldsPlayed;
    std::vector<std::vector<Card>> cardsUsedForCreatingPlayedMelds;
@@ -30,7 +30,6 @@ private:
    bool trumpSuitSpecified;
 
    bool hasMeldBeenUsed();
-   std::vector<int> countMeldsFromHand(std::vector<Card> handPile, std::vector<Card> meldPile, Suit trumpSuit);
    int howManyDixes(std::vector<Card> handPile);
    int howManyPinochles(std::vector<Card> handPile, std::vector<Card> meldPile);
    
@@ -38,7 +37,7 @@ private:
    int countSameRankMelds(Meld meld, std::vector<Card> handPile, std::vector<Card> meldPile, Rank rank);
    // int removeExtraneousChoices(Meld meld, std::vector<int> howManyOfEachCard, std::vector<int> howManyFromMeldPile);
 
-   void getMeldCoordinates(std::vector<Card>* handPile, std::vector<Card>* meldPile, Meld meld);
+   // void getMeldCoordinates(std::vector<Card>* handPile, std::vector<Card>* meldPile, Meld meld);
 
    bool isDix(std::vector<Card> cards);
    bool isMarriage(std::vector<Card> cards);

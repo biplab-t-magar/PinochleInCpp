@@ -15,7 +15,36 @@ bool MeldServices::setTrumpSuit(Suit trumpSuit) {
    return true;
 }
 
-std::vector<int> MeldServices::countMeldsFromHand(std::vector<Card> handPile, std::vector<Card> meldPile, Suit trumpSuit){
+bool MeldServices::playMeld(std::vector<Card> cardsToBePlayed, std::vector<Card>* handPile, std::vector<Card>* meldPile) {
+   Meld whatMeld;
+   if(!isValidMeld(cardsToBePlayed, &whatMeld)) {
+      return false;
+   }
+
+   //if at least one meld is possible in the player's entire hand
+   if(countMeldsFromHand(*handPile, *meldPile)[static_cast<int>(whatMeld)] <= 0) {
+      return false;
+   } 
+   //to keep track of the cards in cardsToBePlayed encountered in the meldPile
+   std::vector<bool> cardWasEncountered;
+   //initialize all indexes to false
+   for(int i = 0; i < cardsToBePlayed.size(); i++) {
+      cardWasEncountered[i] = false;
+   }
+   //we try to use the meldPile to find as much of the cards needed to build the meld as possible
+   //this we way the player has more possible melds in subsequent turns
+
+   //loop through all cards
+   for(int i = 0; i < cardsToBePlayed.size(); i++) {
+      for(int j = 0; j < (*meldPile).size(); j++) {
+         if(cardsToBePlayed[i] == (*meldPile)[j]) {
+            cardWasEncountered[j] = true;
+         }
+      }
+   }
+}
+
+std::vector<int> MeldServices::countMeldsFromHand(std::vector<Card> handPile, std::vector<Card> meldPile) {
    if(!trumpSuitSpecified) {
       throw PinochleException("Trump Suit has not been specified for this round. Use setTrumpSuit() to specify trump suit");
    }
@@ -226,7 +255,7 @@ int MeldServices::countSameRankMelds(Meld meld, std::vector<Card> handPile, std:
    }
    
 
-   return min
+   return min;
 }
 
 
@@ -277,10 +306,39 @@ int MeldServices::countSameRankMelds(Meld meld, std::vector<Card> handPile, std:
 // }
 
 
-
-
-void MeldServices::getMeldCoordinates(std::vector<Card>* handPile, std::vector<Card>* meldPile, Meld meld) {
-
+int MeldServices::getMeldPoints(Meld meld) {
+   switch(meld) {
+      case Meld::Flush:
+         return 150;
+         break;
+      case Meld::RoyalMarriage:
+         return 40;
+         break;
+      case Meld::Marriage:
+         return 20;
+         break;
+      case Meld::Dix:
+         return 10;
+         break;
+      case Meld::FourAces:
+         return 100;
+         break;
+      case Meld::FourKings:
+         return 80;
+         break;
+      case Meld::FourQueens:
+         return 60;
+         break;
+      case Meld::FourJacks:
+         return 40;
+         break;
+      case Meld::Pinochle:
+         return 40;
+         break;
+      default:
+         return 0;
+         break;
+   }
 }
 
 
@@ -295,7 +353,7 @@ bool MeldServices::meldTypePlayedFirstTime(Meld meld) {
    return true;
 }
 
-bool MeldServices::meldUsesOnlyHandPile(std::vector<Card> handPile, std::vector<Card> meld) {
+bool MeldServices::meldCanNeglectMeldPile(std::vector<Card> handPile, std::vector<Card> meld) {
    //if any card in the given meld is not in hand pile, return false
    //Assumption: meld sent by user is a valid meld. Can use isValidMeld() to check
    //Given our assumption, we know that no card is repeated in the given meld
