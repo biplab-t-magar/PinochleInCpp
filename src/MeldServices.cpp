@@ -15,14 +15,36 @@ bool MeldServices::setTrumpSuit(Suit trumpSuit) {
    return true;
 }
 
-std::vector<int> MeldServices::findAllPlayableMeldsFromHand(std::vector<Card> handPile, std::vector<Card> meldPile, Suit trumpSuit){
+std::vector<int> MeldServices::countMeldsFromHand(std::vector<Card> handPile, std::vector<Card> meldPile, Suit trumpSuit){
    if(!trumpSuitSpecified) {
       throw PinochleException("Trump Suit has not been specified for this round. Use setTrumpSuit() to specify trump suit");
    }
    
-   //vector to hold each 
+   //vector to hold each meld type (9 in total)
    std::vector<int> numOfEachMeld;
    //initialize all values in vector to 0
+   for(int i = 0; i < 9; i++) {
+      numOfEachMeld.push_back(0);
+   }
+
+   //now push the number of possible instances of each meld
+   numOfEachMeld[static_cast<int>(Meld::Dix)] = howManyDixes(handPile);
+   numOfEachMeld[static_cast<int>(Meld::Flush)] = countSameSuitMelds(Meld::Flush, handPile, meldPile, trumpSuit, Rank::Ace, 5);
+   //add marriages
+   for(int i = 0; i < 4; i++) {
+      if(static_cast<Suit>(i) == trumpSuit) {
+         numOfEachMeld[static_cast<int>(Meld::RoyalMarriage)] = countSameSuitMelds(Meld::RoyalMarriage, handPile, meldPile, trumpSuit, Rank::King, 2);
+      } else {
+         numOfEachMeld[static_cast<int>(Meld::Marriage)] += countSameSuitMelds(Meld::Marriage, handPile, meldPile, static_cast<Suit>(i), Rank::King, 2);
+      }
+   }
+   numOfEachMeld[static_cast<int>(Meld::FourAces)] = countSameRankMelds(Meld::FourAces, handPile, meldPile, Rank::Ace);
+   numOfEachMeld[static_cast<int>(Meld::FourJacks)] = countSameRankMelds(Meld::FourAces, handPile, meldPile, Rank::Jack);
+   numOfEachMeld[static_cast<int>(Meld::FourKings)] = countSameRankMelds(Meld::FourAces, handPile, meldPile, Rank::King);
+   numOfEachMeld[static_cast<int>(Meld::FourQueens)] = countSameRankMelds(Meld::FourAces, handPile, meldPile, Rank::Queen);
+   numOfEachMeld[static_cast<int>(Meld::FourAces)] = howManyPinochles(handPile, meldPile);
+
+   return numOfEachMeld;
 
 }
 
@@ -45,12 +67,36 @@ int MeldServices::howManyDixes(std::vector<Card> handPile) {
    return count;
 }
 
+int MeldServices::howManyPinochles(std::vector<Card> handPile, std::vector<Card> meldPile) {
+   int queenOfSpadesCount = 0;
+   int jackOfDiamondsCount = 0;
 
-int MeldServices::howManyMarriages(Suit suit, std::vector<Card> handPile, std::vector<Card> meldPile, std::vector<Card>) {
-   return countSameSuitMelds(Meld::Marriage, handPile, meldPile, suit, Rank::King, 2);
+   //first, look through handPile
+   for(int i = 0; i < handPile.size(); i++) {
+      if(handPile[i].getRank() == Rank::Jack && handPile[i].getSuit() == Suit::Diamonds) {
+         jackOfDiamondsCount++;
+      } else if (handPile[i].getRank() == Rank::Queen && handPile[i].getSuit() == Suit::Spades) {
+         queenOfSpadesCount++;
+      }
+   }
+   //if card meld has not been played already, look at meldPile too
+   if(meldTypePlayedFirstTime(Meld::Pinochle)) {
+      for(int i = 0; i < meldPile.size(); i++) {
+         if(meldPile[i].getRank() == Rank::Jack && meldPile[i].getSuit() == Suit::Diamonds) {
+            jackOfDiamondsCount++;
+         } else if (meldPile[i].getRank() == Rank::Queen && meldPile[i].getSuit() == Suit::Spades) {
+            queenOfSpadesCount++;
+         }
+      }
+   }
+   if (jackOfDiamondsCount <= queenOfSpadesCount) {
+      return jackOfDiamondsCount;
+   } else {
+      return queenOfSpadesCount;
+   }
+   
 }
 
-int MeldServices::howMany
 
 int MeldServices::countSameSuitMelds(Meld meld, std::vector<Card> handPile, std::vector<Card> meldPile, Suit suit, Rank startingRank, int howManyCards) {
    
@@ -192,8 +238,6 @@ int MeldServices::removeExtraneousChoices(Meld meld, std::vector<int> howManyOfE
 void MeldServices::getMeldCoordinates(std::vector<Card>* handPile, std::vector<Card>* meldPile, Meld meld) {
 
 }
-
-
 
 
 bool MeldServices::meldTypePlayedFirstTime(Meld meld) {

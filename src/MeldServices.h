@@ -30,9 +30,9 @@ private:
    bool trumpSuitSpecified;
 
    bool hasMeldBeenUsed();
-
+   std::vector<int> countMeldsFromHand(std::vector<Card> handPile, std::vector<Card> meldPile, Suit trumpSuit);
    int howManyDixes(std::vector<Card> handPile);
-   int howManyMarriages(Suit suit, std::vector<Card> handPile, std::vector<Card> meldPile, std::vector<Card>);
+   int howManyPinochles(std::vector<Card> handPile, std::vector<Card> meldPile);
    
    int countSameSuitMelds(Meld meld, std::vector<Card> handPile, std::vector<Card> meldPile, Suit suit, Rank startingRank, int howManyCards);
    int countSameRankMelds(Meld meld, std::vector<Card> handPile, std::vector<Card> meldPile, Rank rank);
