@@ -64,19 +64,15 @@ bool MeldServices::playMeld(std::vector<Card> cardsToBePlayed, std::vector<Card>
    }
 
    //variable to indicate what cards from handPile should be transferred to meldPile to create the meld
-   std::vector<int> whatCardsToTransfer;
+   std::vector<Card> whatCardsToTransfer;
 
-   //finding out what cards are not in meldPile but are in handPile
+   //finding out what cards are not in meldPile 
    for(int i = 0; i < cardsToBePlayed.size(); i++) {
-      //if the card is in the handPile but not the meld pile, then we need to transfer that card from hand to meldpile to create the meld
+      //if the card is not in the meld pile, then we need to transfer that card from the handPile to meldpile to create the meld
       if(isCardInMeldPile[i] == false) {
-         //finding what index of the handPile is that card in
-         for(int j = 0; j < (*handPile).size(); j++) {
-            if(cardsToBePlayed[i] == (*handPile)[j]) {
-               whatCardsToTransfer.push_back(j);
-               break;
-            }
-         }
+          //keeping track of the card once not found in the meldPile
+          //this is the card to be sought in the handPile 
+         whatCardsToTransfer.push_back(cardsToBePlayed[i]);
       } 
    }
    //if by any chance all the needed cards were in the meld pile already:
@@ -88,27 +84,86 @@ bool MeldServices::playMeld(std::vector<Card> cardsToBePlayed, std::vector<Card>
          for(int i = 0; i < cardsToBePlayed.size(); i++) {
             for(int j = 0; j < (*handPile).size(); j++) {
                if(cardsToBePlayed[i] == (*handPile)[j]) {
-                  whatCardsToTransfer.push_back(j);
+                  whatCardsToTransfer.push_back(cardsToBePlayed[i]);
                   break;
                }
             }
          }
-      //if not all the cards are found in the handPile (although they should, because we have checked that previously already), return false
+      //if not all the cards are found in the handPile (although they should be found there
+      //because we have checked that previously already), return false
          if(cardsToBePlayed.size() != whatCardsToTransfer.size()) {
             return false;
          }
 
       }
       //if the meld has not been played in the round before
-      //we need to selectively look for one card to bring from the handPile
+      //we need to selectively look for one eligible card to bring from the handPile
       else {   
-         
+         //get a list of all the cards  in the handPile that are eligible for the meld
+         std::vector<Card> eligibleHandCards;
+         for(int i = 0; i < cardsToBePlayed.size(); i++) {
+            if(isCardInHandPile[i]) {
+               eligibleHandCards.push_back(cardsToBePlayed[i]);
+            }
+         }
+         //create two mock handPiles and meldPiles so that we can know what card will bring about the
+         //the better situation in future melds 
+         std::vector<Card> idealHandPile = *handPile;
+         std::vector<Card> idealMeldPile = *meldPile;
+         std::vector<Card> contestantHandPile = *handPile;
+         std::vector<Card> contestantMeldPile = *meldPile;
+
+         //now, we hypothetically transfer each card in handPile to meldPile to create 
+         //as many prospective handPile/meldPile pairs as there are and compare them to each other
+         moveCardToMeldPile(&idealHandPile, &idealMeldPile, eligibleHandCards[0]);
+         whatCardsToTransfer.push_back(eligibleHandCards[0]);
+         for(int i = 1; i < eligibleHandCards.size(); i++) {
+            moveCardToMeldPile(&contestantHandPile, &contestantMeldPile, eligibleHandCards[i]);
+            //now compare prospective ideal hand and contestant hand
+            //if the latter has better prospects, make that hand into ideal hand
+            if(compareHands(idealHandPile, idealMeldPile, contestantHandPile, contestantMeldPile) == 2) {
+               idealHandPile = contestantHandPile;
+               idealMeldPile = contestantMeldPile;
+               //push that card which, when pushed to the meld would make the ideal hand, into the 
+               //emptied whatCardsToTransfer vector
+               whatCardsToTransfer.clear();
+               whatCardsToTransfer.push_back(eligibleHandCards[i]);
+            } 
+         }
       }
    }
+   //now we have a list of all the cards we need to transfer from hand pile to meld pile to 
+   //complete the playing of the meld
+   return moveCardsToMeldPile(handPile, meldPile, whatCardsToTransfer);
+
+
 }
 
-bool mockAddingToMeld(std::vector<Card>* handPile, std::vector<Card>* meldPile, Card card) {
-   
+
+bool MeldServices::moveCardToMeldPile(std::vector<Card>* handPile, std::vector<Card>* meldPile, Card card){
+   std::vector<Card> cards;
+   cards.push_back(card);
+   return moveCardsToMeldPile(handPile, meldPile, cards);
+}
+
+bool MeldServices::moveCardsToMeldPile(std::vector<Card>* handPile, std::vector<Card>* meldPile, std::vector<Card> cards) {
+   int initHandPileSize = (*handPile).size();
+   //all cards are looped through 
+   for(int i = 0; i < cards.size(); i++) {
+      //look for that card in handPile
+      for(int j = 0; j < (*handPile).size(); j++) {
+         if((*handPile)[j] == cards[i]) {
+            (*meldPile).push_back(cards[i]);
+            (*handPile).erase((*handPile).begin() + j);
+         } 
+      }
+   }
+   //if all cards were found and moved to meld pile, return true
+   if((initHandPileSize - (*handPile).size()) == cards.size()) {
+      return true;
+   } else {
+      return false;
+   }
 }
 
 int MeldServices::compareHands(std::vector<Card> handPile1, std::vector<Card>meldPile1, std::vector<Card> handPile2, std::vector<Card> meldPile2) {

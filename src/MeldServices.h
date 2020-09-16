@@ -31,6 +31,8 @@ private:
 
    std::vector<int> potentialPointsFromHand(std::vector<Card> handPile, std::vector<Card>meldPile1);
    int compareHands(std::vector<Card> handPile1, std::vector<Card>meldPile1, std::vector<Card> handPile2, std::vector<Card> meldPile2);
+   bool MeldServices::moveCardToMeldPile(std::vector<Card>* handPile, std::vector<Card>* meldPile, Card card);
+   bool MeldServices::moveCardsToMeldPile(std::vector<Card>* handPile, std::vector<Card>* meldPile, std::vector<Card> cards);
    bool hasMeldBeenUsed();
    int howManyDixes(std::vector<Card> handPile);
    int howManyPinochles(std::vector<Card> handPile, std::vector<Card> meldPile);
