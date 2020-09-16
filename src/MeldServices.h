@@ -29,10 +29,12 @@ private:
    Suit trumpSuit;
    bool trumpSuitSpecified;
 
+   std::vector<int> potentialPointsFromHand(std::vector<Card> handPile, std::vector<Card>meldPile1);
+   int compareHands(std::vector<Card> handPile1, std::vector<Card>meldPile1, std::vector<Card> handPile2, std::vector<Card> meldPile2);
    bool hasMeldBeenUsed();
    int howManyDixes(std::vector<Card> handPile);
    int howManyPinochles(std::vector<Card> handPile, std::vector<Card> meldPile);
-   
+   int howManyMarriages(Suit suit, std::vector<Card> handPile, std::vector<Card> meldPile);
    int countSameSuitMelds(Meld meld, std::vector<Card> handPile, std::vector<Card> meldPile, Suit suit, Rank startingRank, int howManyCards);
    int countSameRankMelds(Meld meld, std::vector<Card> handPile, std::vector<Card> meldPile, Rank rank);
    // int removeExtraneousChoices(Meld meld, std::vector<int> howManyOfEachCard, std::vector<int> howManyFromMeldPile);

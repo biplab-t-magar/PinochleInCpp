@@ -1,4 +1,5 @@
 #include "MeldServices.h"
+#include <algorithm>
 
 MeldServices::MeldServices() {
    this->trumpSuitSpecified = false;
@@ -21,27 +22,149 @@ bool MeldServices::playMeld(std::vector<Card> cardsToBePlayed, std::vector<Card>
       return false;
    }
 
-   //if at least one meld is possible in the player's entire hand
+   //if at least one meld of given meld is possible in the player's entire hand
    if(countMeldsFromHand(*handPile, *meldPile)[static_cast<int>(whatMeld)] <= 0) {
       return false;
    } 
-   //to keep track of the cards in cardsToBePlayed encountered in the meldPile
-   std::vector<bool> cardWasEncountered;
+   //marriages can be of 3 different types, for each 3 non-trump suits
+   //check if that specific marriage provided is present in hand
+   if(whatMeld == Meld::Marriage) {
+      //count how many of the marraig
+      if(howManyMarriages(cardsToBePlayed[0].getSuit(), *handPile, *meldPile) <= 0) {
+         return false;
+      }
+   }
+
+
+   //to keep track of the cards in handPile and meldPile
+   std::vector<bool> isCardInMeldPile;
+   std::vector<bool> isCardInHandPile;
    //initialize all indexes to false
    for(int i = 0; i < cardsToBePlayed.size(); i++) {
-      cardWasEncountered[i] = false;
+      isCardInMeldPile[i] = false;
+      isCardInHandPile[i] = false;
    }
-   //we try to use the meldPile to find as much of the cards needed to build the meld as possible
-   //this we way the player has more possible melds in subsequent turns
 
    //loop through all cards
    for(int i = 0; i < cardsToBePlayed.size(); i++) {
+      //check if the card is in the meld pile
       for(int j = 0; j < (*meldPile).size(); j++) {
          if(cardsToBePlayed[i] == (*meldPile)[j]) {
-            cardWasEncountered[j] = true;
+            isCardInMeldPile[i] = true;
+            break;
+         }
+      }
+      //check if the card is in the hand pile
+      for(int j = 0; j < (*handPile).size(); j++) {
+         if(cardsToBePlayed[i] == (*handPile)[j]) {
+            isCardInHandPile[i] = true;
+            break;
          }
       }
    }
+
+   //variable to indicate what cards from handPile should be transferred to meldPile to create the meld
+   std::vector<int> whatCardsToTransfer;
+
+   //finding out what cards are not in meldPile but are in handPile
+   for(int i = 0; i < cardsToBePlayed.size(); i++) {
+      //if the card is in the handPile but not the meld pile, then we need to transfer that card from hand to meldpile to create the meld
+      if(isCardInMeldPile[i] == false) {
+         //finding what index of the handPile is that card in
+         for(int j = 0; j < (*handPile).size(); j++) {
+            if(cardsToBePlayed[i] == (*handPile)[j]) {
+               whatCardsToTransfer.push_back(j);
+               break;
+            }
+         }
+      } 
+   }
+   //if by any chance all the needed cards were in the meld pile already:
+   if(whatCardsToTransfer.size() == 0) {
+      //first check if the meld has been played before in the round already.
+      if(!meldTypePlayedFirstTime) {
+         //if it has been played already, search for all the cards in the handPile and do not search for any in the meld pile
+         //finding what index of the handPile is each card in
+         for(int i = 0; i < cardsToBePlayed.size(); i++) {
+            for(int j = 0; j < (*handPile).size(); j++) {
+               if(cardsToBePlayed[i] == (*handPile)[j]) {
+                  whatCardsToTransfer.push_back(j);
+                  break;
+               }
+            }
+         }
+      //if not all the cards are found in the handPile (although they should, because we have checked that previously already), return false
+         if(cardsToBePlayed.size() != whatCardsToTransfer.size()) {
+            return false;
+         }
+
+      }
+      //if the meld has not been played in the round before
+      //we need to selectively look for one card to bring from the handPile
+      else {   
+         
+      }
+   }
+
+   
+
+
+}
+
+int MeldServices::compareHands(std::vector<Card> handPile1, std::vector<Card>meldPile1, std::vector<Card> handPile2, std::vector<Card> meldPile2) {
+   //get the points (from highest to lowest) for each possible meld in the two candidate hands
+
+   std::vector<int> hand1Points = potentialPointsFromHand(handPile1, meldPile1);
+   std::vector<int> hand2Points = potentialPointsFromHand(handPile2, meldPile2);
+   
+   //first, check which hand has the meld that provides the highest points
+   if (hand1Points[0] > hand2Points[0]) {
+      return 1;
+   } else if (hand1Points[0] > hand2Points[0]) {
+      return 2;
+   } 
+   //if the highest points of each is the same, compare the total points produced by all the melds of each hand
+   int totalHand1Points, totalHand2Points = 0;
+   for(int i = 0; i < hand1Points.size(); i++) {
+      totalHand1Points+= hand1Points[i];
+   }
+   for(int i = 0; i < hand2Points.size(); i++) {
+      totalHand1Points+= hand2Points[i];
+   }
+   if(totalHand1Points > totalHand2Points) {
+      return 1;
+   } else if(totalHand2Points > totalHand1Points) {
+      return 2;
+   }
+
+   //if again the total possible points of each hand are the same, compare the 2nd highest, 3rd highest,...
+   //and so on points of each meld until a winner is found
+   int i = 0;
+   while(i < hand1Points.size() && i < hand2Points.size()) {
+      if (hand1Points[i] > hand2Points[i]) {
+         return 1;
+      } else if (hand1Points[i] > hand2Points[i]) {
+         return 2;
+      } 
+   }
+
+   //if no difference between the possible points from each hand was found, return 0
+   return 0;
+}
+
+std::vector<int> MeldServices::potentialPointsFromHand(std::vector<Card> handPile, std::vector<Card> meldPile) {
+   std::vector<int> handMelds = countMeldsFromHand(handPile, meldPile);
+   //now, get the vector of points for each possible meld in the hand
+   std::vector<int> points;
+   for(int i = 0 ; i < handMelds.size(); i++) {
+      //loop through each instance of all the potential melds (there may be 2 or more instances of the same meld in the hand)
+      for(int  j = 0; j < handMelds[i]; j++) {
+         points.push_back(getMeldPoints(static_cast<Meld>(handMelds[i])));
+      }
+   }
+   //sort the vector
+   std::sort(points.begin(), points.end(), std::greater<>()); 
+   return points;
 }
 
 std::vector<int> MeldServices::countMeldsFromHand(std::vector<Card> handPile, std::vector<Card> meldPile) {
@@ -62,9 +185,9 @@ std::vector<int> MeldServices::countMeldsFromHand(std::vector<Card> handPile, st
    //add marriages
    for(int i = 0; i < 4; i++) {
       if(static_cast<Suit>(i) == trumpSuit) {
-         numOfEachMeld[static_cast<int>(Meld::RoyalMarriage)] = countSameSuitMelds(Meld::RoyalMarriage, handPile, meldPile, trumpSuit, Rank::King, 2);
+         numOfEachMeld[static_cast<int>(Meld::RoyalMarriage)] = howManyMarriages(static_cast<Suit>(i), handPile, meldPile);
       } else {
-         numOfEachMeld[static_cast<int>(Meld::Marriage)] += countSameSuitMelds(Meld::Marriage, handPile, meldPile, static_cast<Suit>(i), Rank::King, 2);
+         numOfEachMeld[static_cast<int>(Meld::Marriage)] += howManyMarriages(static_cast<Suit>(i), handPile, meldPile);
       }
    }
    numOfEachMeld[static_cast<int>(Meld::FourAces)] = countSameRankMelds(Meld::FourAces, handPile, meldPile, Rank::Ace);
@@ -122,6 +245,15 @@ int MeldServices::howManyPinochles(std::vector<Card> handPile, std::vector<Card>
       return jackOfDiamondsCount;
    } else {
       return queenOfSpadesCount;
+   }
+   
+}
+
+int MeldServices::howManyMarriages(Suit suit, std::vector<Card> handPile, std::vector<Card> meldPile) {
+   if(suit == trumpSuit) {
+      return countSameSuitMelds(Meld::RoyalMarriage, handPile, meldPile, suit, Rank::King, 2);
+   } else {
+      return countSameSuitMelds(Meld::Marriage, handPile, meldPile, suit, Rank::King, 2);
    }
    
 }
