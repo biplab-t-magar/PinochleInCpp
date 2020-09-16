@@ -105,10 +105,10 @@ bool MeldServices::playMeld(std::vector<Card> cardsToBePlayed, std::vector<Card>
          
       }
    }
+}
 
+bool mockAddingToMeld(std::vector<Card>* handPile, std::vector<Card>* meldPile, Card card) {
    
-
-
 }
 
 int MeldServices::compareHands(std::vector<Card> handPile1, std::vector<Card>meldPile1, std::vector<Card> handPile2, std::vector<Card> meldPile2) {
