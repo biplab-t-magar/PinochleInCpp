@@ -14,13 +14,13 @@ public:
    MeldServices();
    MeldServices(Suit trumpSuit);
    bool setTrumpSuit(Suit trumpSuit);
+   bool playMeld(std::vector<Card> meldToBePlayed, std::vector<Card>* handPile, std::vector<Card>* meldPile);
    std::vector<int> countMeldsFromHand(std::vector<Card> handPile, std::vector<Card> meldPile);
    int getMeldPoints(Meld meld);
    bool isValidMeld(std::vector<Card> cards, Meld *whatMeld);
    bool meldTypePlayedFirstTime(Meld meld);
    bool meldCanNeglectMeldPile(std::vector<Card> handPile, std::vector<Card> meld);
    bool meldHasCardFromHandPile(std::vector<Card> handPile, std::vector<Card> meld);
-   bool playMeld(std::vector<Card> meldToBePlayed, std::vector<Card>* handPile, std::vector<Card>* meldPile);
 private:
    std::vector<Meld> meldsPlayed;
    std::vector<std::vector<Card>> cardsUsedForCreatingPlayedMelds;
@@ -34,9 +34,9 @@ private:
    bool MeldServices::moveCardToMeldPile(std::vector<Card>* handPile, std::vector<Card>* meldPile, Card card);
    bool MeldServices::moveCardsToMeldPile(std::vector<Card>* handPile, std::vector<Card>* meldPile, std::vector<Card> cards);
    bool hasMeldBeenUsed();
-   int howManyDixes(std::vector<Card> handPile);
-   int howManyPinochles(std::vector<Card> handPile, std::vector<Card> meldPile);
-   int howManyMarriages(Suit suit, std::vector<Card> handPile, std::vector<Card> meldPile);
+   int countDixes(std::vector<Card> handPile);
+   int countPinochles(std::vector<Card> handPile, std::vector<Card> meldPile);
+   int countMarriages(Suit suit, std::vector<Card> handPile, std::vector<Card> meldPile);
    int countSameSuitMelds(Meld meld, std::vector<Card> handPile, std::vector<Card> meldPile, Suit suit, Rank startingRank, int howManyCards);
    int countSameRankMelds(Meld meld, std::vector<Card> handPile, std::vector<Card> meldPile, Rank rank);
    // int removeExtraneousChoices(Meld meld, std::vector<int> howManyOfEachCard, std::vector<int> howManyFromMeldPile);
