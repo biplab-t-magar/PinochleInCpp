@@ -35,7 +35,6 @@ bool MeldServices::playMeld(std::vector<Card> cardsToBePlayed, std::vector<Card>
       }
    }
 
-
    //to keep track of the cards in handPile and meldPile
    std::vector<bool> isCardInMeldPile;
    std::vector<bool> isCardInHandPile;
