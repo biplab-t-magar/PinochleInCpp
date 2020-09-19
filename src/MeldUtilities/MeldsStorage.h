@@ -11,18 +11,19 @@ public:
    bool addMeld(MeldInstance meldInstance);
    bool removeMeld( MeldInstance meldInstance);
    std::vector<std::vector<MeldInstance>> MeldsStorage::getAllPlayedMelds() const;
-   bool isCardUsedByMeld(int cardId, Meld meldType);
+   bool isCardUsedByMeld(Card card, Meld meldType);
+   int getNumOfMelds(Meld meldType);
 private:
    std::vector<std::vector<MeldInstance>> storage;
-   std::vector<MeldInstance> FlushStorage;
-   std::vector<MeldInstance> RoyalMarriageStorage;
-   std::vector<MeldInstance> MarriageStorage;
-   std::vector<MeldInstance> DixStorage;
-   std::vector<MeldInstance> FourAceStorage;
-   std::vector<MeldInstance> FourKingStorage;
-   std::vector<MeldInstance> FourQueenStorage;
-   std::vector<MeldInstance> FourJackStorage;
-   std::vector<MeldInstance> PinochleStorage;
+   // std::vector<MeldInstance> FlushStorage;
+   // std::vector<MeldInstance> RoyalMarriageStorage;
+   // std::vector<MeldInstance> MarriageStorage;
+   // std::vector<MeldInstance> DixStorage;
+   // std::vector<MeldInstance> FourAceStorage;
+   // std::vector<MeldInstance> FourKingStorage;
+   // std::vector<MeldInstance> FourQueenStorage;
+   // std::vector<MeldInstance> FourJackStorage;
+   // std::vector<MeldInstance> PinochleStorage;
 
    // bool removeMeldFromStorage(MeldInstance meldInstance, std::vector<MeldInstance> &storage);
 };

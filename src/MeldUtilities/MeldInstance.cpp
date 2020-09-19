@@ -1,7 +1,31 @@
 #include "MeldInstance.h"
 
 MeldInstance::MeldInstance(std::vector<Card> cards, Suit trumpSuit) : GroupOfCards(cards) {
-   meldIsValid = checkMeldValidity(trumpSuit);
+   this->trumpSuit = trumpSuit;
+   meldIsValid = checkMeldValidity();
+}
+
+bool MeldInstance::addCard(Card card) {
+   cards.push_back(card);
+   meldIsValid = checkMeldValidity();
+   return true;
+}
+bool MeldInstance::removeCardById(int id) {
+   for(int i = 0; i < cards.size(); i++) {
+      if(cards[i].getId() == id) {
+         cards.erase(cards.begin() + i);
+      }
+   }
+   meldIsValid = checkMeldValidity();
+   return true;
+}
+bool MeldInstance::removeCardByPosition(int position) {
+   if(position >= cards.size()) {
+      throw PinochleException("Given position is out of bounds");
+   }
+   cards.erase(cards.begin() + position);
+   meldIsValid = checkMeldValidity();
+   return true;
 }
 
 Meld MeldInstance::getMeldType() const {
@@ -12,7 +36,7 @@ bool MeldInstance::isValidMeld() const {
    return meldIsValid;
 }
 
-bool MeldInstance::checkMeldValidity(Suit trumpSuit) {
+bool MeldInstance::checkMeldValidity() {
    //if the number of cards does not correspond to any possible meld, return false
    if(cards.size() < 1 || cards.size() == 3 || cards.size() > 5) {
       return false;
@@ -20,19 +44,19 @@ bool MeldInstance::checkMeldValidity(Suit trumpSuit) {
 
    //checking melds from most common to least common
    //check if Dix
-   if(isDix(trumpSuit)) {
+   if(isDix()) {
       meldType = Meld::Dix;
       return true;
    }
 
    //check if Marriage
    if(isAnyMarriage()) {
-      meldType = typeOfMarriage(trumpSuit);
+      meldType = typeOfMarriage();
       return true;
    }
 
    //check if Pinochle
-   if(isPinochle(trumpSuit)) {
+   if(isPinochle()) {
       meldType = Meld::Pinochle;
       return true;
    }
@@ -62,7 +86,7 @@ bool MeldInstance::checkMeldValidity(Suit trumpSuit) {
    }
 
    //check if Flush
-   if(isFlush(trumpSuit)) {
+   if(isFlush()) {
       meldType = Meld::Flush;
       return true;
    }
@@ -72,7 +96,7 @@ bool MeldInstance::checkMeldValidity(Suit trumpSuit) {
 
 }
 
-bool MeldInstance::isDix(Suit trumpSuit) {
+bool MeldInstance::isDix() {
    //Note: A Dix is a card of rank Nine and a suit the same as the trump suit
 
    //check size
@@ -111,7 +135,7 @@ bool MeldInstance::isAnyMarriage() {
    return false;
 }
 
-Meld MeldInstance::typeOfMarriage(Suit trumpSuit) {
+Meld MeldInstance::typeOfMarriage() {
    //Note: A Marriage contains a King and Queen of any other suit besides the Trump suit
 
    if(!isAnyMarriage()) {
@@ -147,7 +171,7 @@ Meld MeldInstance::typeOfMarriage(Suit trumpSuit) {
 }
 
 
-bool MeldInstance::isPinochle(Suit trumpSuit) {
+bool MeldInstance::isPinochle() {
    //Note: A flush contains Queen of Spades and Jack of Diamonds 
    
    //check size
@@ -214,7 +238,7 @@ bool MeldInstance::isFours() {
 
 }
 
-bool MeldInstance::isFlush(Suit trumpSuit) {
+bool MeldInstance::isFlush() {
    //checking if the meld is a Flush
    //Note: A flush contains five cards: Ace, Ten, King, Queen, and Jack, all of Trump suit
    

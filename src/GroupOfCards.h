@@ -8,10 +8,17 @@
 
 class GroupOfCards {
 public: 
+   GroupOfCards();
    GroupOfCards(std::vector<Card> cards);
-   bool searchCardById(int id, Card* foundCard = NULL) const;
-   bool searchCardsByRank(Rank rank, std::vector<Card>* foundCards = NULL) const;
-   bool searchCardsBySuit(Suit suit, std::vector<Card>* foundCards = NULL) const;
+   bool addCard(Card card);
+   bool removeCardById(int id); 
+   bool removeCardByPosition(int position);
+   bool searchCardById(int id) const;
+   Card GroupOfCards::getCardById(int id) const;
+   std::vector<Card> getCardsByRank(Rank rank) const;
+   std::vector<Card> getCardsBySuit(Suit suit) const;
+   std::vector<Card> getCardsByRankAndSuit(Rank rank, Suit suit) const;
+   Card getCardByPosition(int position) const;
    int getNumOfCards() const;
    bool operator==(const GroupOfCards& otherGroupOfCards);
    bool operator!=(const GroupOfCards& otherGroupOfCards);

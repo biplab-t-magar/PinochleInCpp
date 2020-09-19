@@ -11,19 +11,23 @@ enum class Meld {
 class MeldInstance : public GroupOfCards {
 public:
    MeldInstance(std::vector<Card> cards, Suit trumpSuit);
+   bool addCard(Card card);
+   bool removeCardById(int id); 
+   bool removeCardByPosition(int position);
    Meld getMeldType() const;
    bool isValidMeld() const;
 private:
    Meld meldType;
    bool meldIsValid;
+   Suit trumpSuit;
 
-   bool checkMeldValidity(Suit trumpSuit);
-   bool isDix(Suit trumpSuit);
+   bool checkMeldValidity();
+   bool isDix();
    bool isAnyMarriage();
-   Meld typeOfMarriage(Suit trumpSuit);
-   bool isPinochle(Suit trumpSuit);
+   Meld typeOfMarriage();
+   bool isPinochle();
    bool isFours();
-   bool isFlush(Suit trumpSuit);
+   bool isFlush();
 };
 
 #endif

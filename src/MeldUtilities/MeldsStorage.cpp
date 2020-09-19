@@ -98,6 +98,7 @@ bool MeldsStorage::removeMeld(MeldInstance meldInstance) {
    // return true;
 }
 
+
 // bool MeldsStorage::removeMeldFromStorage(MeldInstance meldInstance, std::vector<MeldInstance> &storage) {
 //    for(int i = 0; i < storage.size(); i++) {
 //       if(storage[i] == meldInstance) {
@@ -107,6 +108,10 @@ bool MeldsStorage::removeMeld(MeldInstance meldInstance) {
 //    }
 //    return false;
 // }
+
+int MeldsStorage::getNumOfMelds(Meld meldType) {
+   return storage[static_cast<int>(meldType)].size();
+}
 
 std::vector<std::vector<MeldInstance>> MeldsStorage::getAllPlayedMelds() const {
    // std::vector<std::vector<MeldInstance>> allPlayedMelds;
@@ -125,19 +130,18 @@ std::vector<std::vector<MeldInstance>> MeldsStorage::getAllPlayedMelds() const {
 
 
 
-bool MeldsStorage::isCardUsedByMeld(int cardId, Meld meldType) {
+bool MeldsStorage::isCardUsedByMeld(Card card, Meld meldType) {
    //get int representation of the given meld
    int meldTypeInt = static_cast<int>(meldType);
-   //get the amount of melds of that particular meld type
+   //get the number of instances of that particular meld type
    int numOfMeldsPlayed = storage[meldTypeInt].size();
 
    for(int i = 0; i < numOfMeldsPlayed; i++) {
       //if that card is found in a meld instance, return true
-      if(storage[meldTypeInt][i].searchCardById(cardId) == true) {
+      if(storage[meldTypeInt][i].searchCardById(card.getId()) == true) {
          return true;
       }
    }
    //return false;
    return false;
-   
 }
