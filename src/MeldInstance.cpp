@@ -1,7 +1,7 @@
 #include "MeldInstance.h"
 
 MeldInstance::MeldInstance(std::vector<Card> cards, Suit trumpSuit) : GroupOfCards(cards) {
-   checkMeldValidity(trumpSuit);
+   meldIsValid = checkMeldValidity(trumpSuit);
 }
 
 Meld MeldInstance::getMeldType() const {
@@ -15,7 +15,7 @@ bool MeldInstance::isValidMeld() const {
 bool MeldInstance::checkMeldValidity(Suit trumpSuit) {
    //if the number of cards does not correspond to any possible meld, return false
    if(cards.size() < 1 || cards.size() == 3 || cards.size() > 5) {
-      meldIsValid = false;
+      return false;
    }
 
    //checking melds from most common to least common

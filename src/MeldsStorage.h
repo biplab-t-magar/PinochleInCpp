@@ -10,9 +10,10 @@ public:
    MeldsStorage();
    bool addMeld(MeldInstance meldInstance);
    bool removeMeld( MeldInstance meldInstance);
-   bool isCardInMeld(int cardId, Meld meldType);
-
+   std::vector<std::vector<MeldInstance>> MeldsStorage::getAllPlayedMelds() const;
+   bool isCardUsedByMeld(int cardId, Meld meldType);
 private:
+   std::vector<std::vector<MeldInstance>> storage;
    std::vector<MeldInstance> FlushStorage;
    std::vector<MeldInstance> RoyalMarriageStorage;
    std::vector<MeldInstance> MarriageStorage;
@@ -23,7 +24,7 @@ private:
    std::vector<MeldInstance> FourJackStorage;
    std::vector<MeldInstance> PinochleStorage;
 
-   bool removeMeldFromStorage(MeldInstance meldInstance, std::vector<MeldInstance> &storage);
+   // bool removeMeldFromStorage(MeldInstance meldInstance, std::vector<MeldInstance> &storage);
 };
 
 #endif
