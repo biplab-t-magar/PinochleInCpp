@@ -8,21 +8,21 @@
 
 class Player {
 public:
-    Player();
-    void nextMove();
-    void takeOneCard(Card card);
-    bool setTrumpSuit(Suit trumpSuit);
+   Player();
+   void nextMove();
+   void takeOneCard(Card card);
+   bool setTrumpSuit(Suit trumpSuit);
 
 private:
-    Suit trumpSuit; 
-    std::vector<Card> handPile;
-    std::vector<Card> meldPile;
-    std::vector<Card> capturePile;
-    Card playFromHand();
-    void playMeld(std::vector<Card> cards);
-    void suggestNextMeld();
-    void suggestNextThrow();
-    bool cardsArePresentInHand(std::vector<Card> cards);
+   Suit trumpSuit; 
+   std::vector<Card> handPile;
+   std::vector<Card> meldPile;
+   std::vector<Card> capturePile;
+   Card playFromHand();
+   void playMeld(std::vector<Card> cards);
+   void suggestNextMeld();
+   void suggestNextThrow();
+   bool cardsArePresentInHand(std::vector<Card> cards);
 
 };
 

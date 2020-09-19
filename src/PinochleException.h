@@ -7,12 +7,12 @@
 
 class PinochleException : public std::exception {
 public:
-    PinochleException();
-    PinochleException(std::string message);
-    bool setMessage(std::string message);
-    std::string what();
+   PinochleException();
+   PinochleException(std::string message);
+   bool setMessage(std::string message);
+   std::string what();
 private:
-    std::string message;
+   std::string message;
 };
 
 
