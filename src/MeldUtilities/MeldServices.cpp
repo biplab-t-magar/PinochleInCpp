@@ -19,6 +19,33 @@ bool MeldServices::setTrumpSuit(Suit trumpSuit) {
    return true;
 }
 
+bool MeldServices::isLegalMeld(GroupOfCards hand, MeldInstance meldInstance) {
+   if(!meldInstance.isValidMeld()) {
+      return false;
+   }
+   
+   //loop through all the cards in the candidate meld
+   for(int i = 0; i < meldInstance.getNumOfCards(); i++) {
+      //check if each card in the candidate meld is present in the hand
+      if(hand.searchCardById(meldInstance.getCardByPosition(i).getId()) == false) {
+         return false;
+      }
+      //also check if any card in the candidate meld has been used to create this same meld type before
+      if(meldsPlayed.isCardUsedByMeld(meldInstance.getCardByPosition(i), meldInstance.getMeldType())) {
+         return false;
+      }
+   }
+   return true;
+}
+
+bool MeldServices::playMeld(GroupOfCards hand, MeldInstance meldInstance) {
+   if(!isLegalMeld(hand, meldInstance)) {
+      return false;
+   }
+   meldsPlayed.addMeld(meldInstance);
+   return true;  
+}
+
 // bool MeldServices::playMeld(std::vector<Card> cardsToBePlayed, std::vector<Card>* handPile, std::vector<Card>* meldPile) {
 //    Meld whatMeld;
 //    if(!isValidMeld(cardsToBePlayed, &whatMeld)) {
@@ -168,7 +195,7 @@ bool MeldServices::setTrumpSuit(Suit trumpSuit) {
 //    }
 // }
 
-int MeldServices::compareHands(GroupOfCards hand1, GroupOfCards hand2) {
+int MeldServices::compareHandsForMelds(GroupOfCards hand1, GroupOfCards hand2) {
    //get the points (from highest to lowest) for each possible meld in the two candidate hands
 
    std::vector<int> hand1Points = potentialPointsFromHand(hand1);

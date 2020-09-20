@@ -145,3 +145,13 @@ bool MeldsStorage::isCardUsedByMeld(Card card, Meld meldType) {
    //return false;
    return false;
 }
+
+bool MeldsStorage::isCardUsedByAnyMeld(Card card) {
+   
+   for(int meldType = 0; meldType < numOfMeldTypes; meldType++) {
+      if(isCardUsedByMeld(card, static_cast<Meld>(meldType))) {
+         return true;
+      }
+   }
+   return false;
+}

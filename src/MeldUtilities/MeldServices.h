@@ -20,7 +20,8 @@ public:
    // bool meldTypePlayedFirstTime(Meld meld);
    // bool meldCanNeglectMeldPile(std::vector<Card> handPile, std::vector<Card> meld);
    // bool meldHasCardFromHandPile(std::vector<Card> handPile, std::vector<Card> meld);
-   virtual bool playMeld() = 0;
+   bool MeldServices::playMeld(GroupOfCards hand, MeldInstance meldInstance);
+   bool isLegalMeld(GroupOfCards hand, MeldInstance meldInstance);
 private:
    MeldsStorage meldsPlayed;
    // std::vector<std::vector<Card>> cardsUsedForCreatingPlayedMelds;
@@ -30,7 +31,7 @@ private:
    bool trumpSuitSpecified;
 
    std::vector<int> potentialPointsFromHand(GroupOfCards hand);
-   int compareHands(GroupOfCards hand1, GroupOfCards hand2);
+   int compareHandsForMelds(GroupOfCards hand1, GroupOfCards hand2);
   
    int countDixes(GroupOfCards hand);
    int countPinochles(GroupOfCards hand);

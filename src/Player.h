@@ -5,6 +5,7 @@
 #include <vector>
 #include <Card.h>
 #include <MeldServices.h>
+#include <string>
 
 class Player {
 public:
@@ -12,18 +13,20 @@ public:
    void nextMove();
    void takeOneCard(Card card);
    bool setTrumpSuit(Suit trumpSuit);
-
 private:
+   GroupOfCards hand;
+   GroupOfCards capurePile;
    Suit trumpSuit; 
-   std::vector<Card> handPile;
-   std::vector<Card> meldPile;
-   std::vector<Card> capturePile;
+   MeldServices meldServices;
+   std::vector<std::string> handStrRep;
+   std::vector<std::string> meldStrRep;
+   std::vector<std::string> capturePileStrRep;
    Card playFromHand();
-   void playMeld(std::vector<Card> cards);
+   Card playCard(int position);
+   void playMeld(MeldInstance meldInstance);
    void suggestNextMeld();
    void suggestNextThrow();
    bool cardsArePresentInHand(std::vector<Card> cards);
-
 };
 
 #endif

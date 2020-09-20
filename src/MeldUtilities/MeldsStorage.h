@@ -12,6 +12,7 @@ public:
    bool removeMeld( MeldInstance meldInstance);
    std::vector<std::vector<MeldInstance>> MeldsStorage::getAllPlayedMelds() const;
    bool isCardUsedByMeld(Card card, Meld meldType);
+   bool isCardUsedByAnyMeld(Card card);
    int getNumOfMelds(Meld meldType);
 private:
    std::vector<std::vector<MeldInstance>> storage;
