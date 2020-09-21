@@ -20,3 +20,7 @@ void Player::playMeld(MeldInstance MeldInstance) {
 
 }
 
+int Player::numCardsInHand() {
+   return hand.getNumOfCards();
+}
+

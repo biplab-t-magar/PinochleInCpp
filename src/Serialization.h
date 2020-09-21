@@ -4,6 +4,7 @@
 
 #include <vector>
 #include "Card.h"
+#include "MeldInstance.h"
 
 class Serialization {
 public:
