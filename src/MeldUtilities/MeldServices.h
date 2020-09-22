@@ -33,15 +33,20 @@ private:
 
    std::vector<int> potentialPointsFromHand(GroupOfCards hand);
    std::vector<int> countMeldsFromHand(GroupOfCards hand);
-   
-   int countDixes(GroupOfCards hand);
-   int countPinochles(GroupOfCards hand);
-   int countMarriages(GroupOfCards hand);
-   int countSameSuitMelds(Meld meld, GroupOfCards hand, Suit suit, Rank startingRank, int howManyCards);
-   int countSameRankMelds(Meld meld, GroupOfCards hand, Rank rank);
+   MeldsStorage getMeldsFromHand(GroupOfCards hand);
+   // int countDixes(GroupOfCards hand);
+   // int countPinochles(GroupOfCards hand);
+   // int countMarriages(GroupOfCards hand);
 
-   std::vector<MeldInstance> MeldServices::getSameRankMelds(Meld meld, GroupOfCards hand, Rank rank);    
-   std::vector<MeldInstance> MeldServices::getSameSuitMelds(Meld meld, GroupOfCards hand, Suit suit, Rank startingRank, int howManyCards);
+   // int countSameSuitMelds(Meld meld, GroupOfCards hand, Suit suit, Rank startingRank, int howManyCards);
+   // int countSameRankMelds(Meld meld, GroupOfCards hand, Rank rank);
+
+   std::vector<MeldInstance> getDixes(GroupOfCards hand);
+   std::vector<MeldInstance> getPinochles(GroupOfCards hand);
+   std::vector<MeldInstance> getMarriages(GroupOfCards hand);
+   std::vector<MeldInstance> getSameRankMelds(Meld meld, GroupOfCards hand, Rank rank);    
+   std::vector<MeldInstance> getSameSuitMelds(Meld meld, GroupOfCards hand, Suit suit, Rank startingRank, int howManyCards);
+   std::vector<MeldInstance> createMeldsFromEligibleCards(std::vector<std::vector<Card>> cards);
    // bool hasMeldBeenUsed();
    // bool moveCardToMeldPile(std::vector<Card>* handPile, std::vector<Card>* meldPile, Card card);
    // bool moveCardsToMeldPile(std::vector<Card>* handPile, std::vector<Card>* meldPile, std::vector<Card> cards);

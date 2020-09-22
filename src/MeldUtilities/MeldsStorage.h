@@ -9,8 +9,9 @@ class MeldsStorage {
 public:
    MeldsStorage();
    bool addMeld(MeldInstance meldInstance);
+   bool addMelds(std::vector<MeldInstance> meldInstances);
    bool removeMeld( MeldInstance meldInstance);
-   std::vector<std::vector<MeldInstance>> MeldsStorage::getAllPlayedMelds() const;
+   std::vector<std::vector<MeldInstance>> MeldsStorage::getAllMelds() const;
    bool isCardUsedByMeld(Card card, Meld meldType);
    bool isCardUsedByAnyMeld(Card card);
    int getNumOfMelds(Meld meldType);

@@ -15,39 +15,16 @@ bool MeldsStorage::addMeld(MeldInstance meldInstance) {
 
    storage[static_cast<int>(meldInstance.getMeldType())].push_back(meldInstance);
    return true;
+}
 
-   // switch (meldInstance.getMeldType()) {
-   //    case Meld::Flush:
-   //       FlushStorage.push_back(meldInstance);
-   //       break;
-   //    case Meld::RoyalMarriage:
-   //       RoyalMarriageStorage.push_back(meldInstance);
-   //       break;
-   //    case Meld::Marriage:
-   //       MarriageStorage.push_back(meldInstance);
-   //       break;
-   //    case Meld::Dix:
-   //       DixStorage.push_back(meldInstance);
-   //       break;
-   //    case Meld::FourAces:
-   //       FourAceStorage.push_back(meldInstance);
-   //       break;
-   //    case Meld::FourKings:
-   //       FourKingStorage.push_back(meldInstance);
-   //       break;
-   //    case Meld::FourQueens:
-   //       FourQueenStorage.push_back(meldInstance);
-   //       break;
-   //    case Meld::FourJacks:
-   //       FourJackStorage.push_back(meldInstance);
-   //       break;
-   //    case Meld::Pinochle:
-   //       PinochleStorage.push_back(meldInstance);
-   //       break;
-   //    default:
-   //       return false;
-   // }
-   // return true;
+bool MeldsStorage::addMelds(std::vector<MeldInstance> meldInstances) {
+   bool allMeldsAdded = true;
+   for(int i = 0; i < meldInstances.size(); i++) {
+      if(addMeld(meldInstances[i]) == false) {
+         allMeldsAdded = false;
+      }
+   }
+   return allMeldsAdded;
 }
 
 
@@ -113,7 +90,7 @@ int MeldsStorage::getNumOfMelds(Meld meldType) {
    return storage[static_cast<int>(meldType)].size();
 }
 
-std::vector<std::vector<MeldInstance>> MeldsStorage::getAllPlayedMelds() const {
+std::vector<std::vector<MeldInstance>> MeldsStorage::getAllMelds() const {
    // std::vector<std::vector<MeldInstance>> allPlayedMelds;
    // allPlayedMelds.push_back(FlushStorage);
    // allPlayedMelds.push_back(RoyalMarriageStorage);

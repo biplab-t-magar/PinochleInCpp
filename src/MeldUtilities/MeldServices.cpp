@@ -264,53 +264,87 @@ std::vector<int> MeldServices::countMeldsFromHand(GroupOfCards hand) {
       numOfEachMeld.push_back(0);
    }
 
+   //now assign the number of possible instances for each meld
+   
+   //flush
+   numOfEachMeld[static_cast<int>(Meld::Flush)] = getSameSuitMelds(Meld::Flush, hand, trumpSuit, Rank::Ace, 5).size();
+   //royal marriage
+   numOfEachMeld[static_cast<int>(Meld::RoyalMarriage)] = getSameSuitMelds(Meld::RoyalMarriage, hand, trumpSuit, Rank::King, 2).size();
+   //marriage
+   numOfEachMeld[static_cast<int>(Meld::Marriage)] = getMarriages(hand).size();
+   //dix
+   numOfEachMeld[static_cast<int>(Meld::Dix)] = getDixes(hand).size();
+   //FourAces
+   numOfEachMeld[static_cast<int>(Meld::FourAces)] = getSameRankMelds(Meld::FourAces, hand, Rank::Ace).size();
+   //Four Kings
+   numOfEachMeld[static_cast<int>(Meld::FourKings)] = getSameRankMelds(Meld::FourKings, hand, Rank::King).size();
+   //Four Queens
+   numOfEachMeld[static_cast<int>(Meld::FourQueens)] = getSameRankMelds(Meld::FourQueens, hand, Rank::Queen).size();
+   //Four Jacks
+   numOfEachMeld[static_cast<int>(Meld::FourJacks)] = getSameRankMelds(Meld::FourJacks, hand, Rank::Jack).size();
+   //Pinochle
+   numOfEachMeld[static_cast<int>(Meld::Pinochle)] = getPinochles(hand).size();
+
+   return numOfEachMeld;
+}
+
+MeldsStorage MeldServices::getMeldsFromHand(GroupOfCards hand) {
+   if(!trumpSuitSpecified) {
+      throw PinochleException("Trump Suit has not been specified yet. Use MeldServices.setTrumpSuit() to specify trump suit");
+   }
+   
+   MeldsStorage allPossibleMelds;
+
    //now push the number of possible instances of each meld
    
    //flush
-   numOfEachMeld[static_cast<int>(Meld::Flush)] = countSameSuitMelds(Meld::Flush, hand, trumpSuit, Rank::Ace, 5);
+   // allPossibleMelds.addMelds(getSameSuitMelds(Meld::Flush, hand, trumpSuit, Rank::Ace, 5));
    //royal marriage
-   numOfEachMeld[static_cast<int>(Meld::RoyalMarriage)] = countSameSuitMelds(Meld::RoyalMarriage, hand, trumpSuit, Rank::King, 2);
+   allPossibleMelds.addMelds((Meld::RoyalMarriage, hand, trumpSuit, Rank::King, 2);
    //marriage
-   numOfEachMeld[static_cast<int>(Meld::Marriage)] = countMarriages(hand);
+   allPossibleMelds.addMelds(getMarriages(hand);
    //dix
-   numOfEachMeld[static_cast<int>(Meld::Dix)] = countDixes(hand);
+   allPossibleMelds.addMelds(getDixes(hand);
    //FourAces
-   numOfEachMeld[static_cast<int>(Meld::FourAces)] = countSameRankMelds(Meld::FourAces, hand, Rank::Ace);
+   allPossibleMelds.addMelds(getSameRankMelds(Meld::FourAces, hand, Rank::Ace);
    //Four Kings
-   numOfEachMeld[static_cast<int>(Meld::FourKings)] = countSameRankMelds(Meld::FourKings, hand, Rank::King);
+   allPossibleMelds.addMelds(getSameRankMelds(Meld::FourKings, hand, Rank::King);
    //Four Queens
-   numOfEachMeld[static_cast<int>(Meld::FourQueens)] = countSameRankMelds(Meld::FourQueens, hand, Rank::Queen);
+   allPossibleMelds.addMelds(getSameRankMelds(Meld::FourQueens, hand, Rank::Queen);
    //Four Jacks
-   numOfEachMeld[static_cast<int>(Meld::FourJacks)] = countSameRankMelds(Meld::FourJacks, hand, Rank::Jack);
+   allPossibleMelds.addMelds(getSameRankMelds(Meld::FourJacks, hand, Rank::Jack);
    //Pinochle
-   numOfEachMeld[static_cast<int>(Meld::Pinochle)] = countPinochles(hand);
+   allPossibleMelds.addMelds(getPinochles(hand);
 
-   return numOfEachMeld;
-
+   return allPossibleMelds;
 }
 
-int MeldServices::countDixes(GroupOfCards hand) {
+std::vector<MeldInstance> MeldServices::getDixes(GroupOfCards hand) {
    if(!trumpSuitSpecified) {
       throw PinochleException("Trump Suit has not been specified yet. Use setTrumpSuit() to specify trump suit");
    }
 
-   int dixCount = 0;
+   std::vector<MeldInstance> dixes;
    //get all the 9 of Trumps from the hand
    std::vector<Card> allDixes = hand.getCardsByRankAndSuit(Rank::Nine, trumpSuit);
 
    //go through each of these 9 of Trumps and discount those which have been used already to make a Dix
    for(int i = 0; i < allDixes.size(); i++) {
       if(meldsPlayed.isCardUsedByMeld(allDixes[i], Meld::Dix) == false) {
-         dixCount++;
+         //create a meld instance out of the eligible card and push it to dixes
+         dixes.push_back(MeldInstance(std::vector<Card>(allDixes.begin(), allDixes.begin() + 1), trumpSuit));
       }
    }
 
-   return dixCount;
+
+   return dixes;
 }
 
-int MeldServices::countPinochles(GroupOfCards hand) {
-   int queenOfSpadesCount = 0;
-   int jackOfDiamondsCount = 0;
+std::vector<MeldInstance> MeldServices::getPinochles(GroupOfCards hand) {
+   if(!trumpSuitSpecified) {
+      throw PinochleException("Trump Suit has not been specified yet. Use setTrumpSuit() to specify trump suit");
+   }
+   std::vector<std::vector<Card>> playableCards;
 
    std::vector<Card> allJackOfDiamonds = hand.getCardsByRankAndSuit(Rank::Jack, Suit::Diamonds);
    std::vector<Card> allQueenOfSpades = hand.getCardsByRankAndSuit(Rank::Queen, Suit::Spades);
@@ -318,36 +352,37 @@ int MeldServices::countPinochles(GroupOfCards hand) {
    //go through each Jack of Diamonds and discount those which have been used to make a Pinochle before
    for(int i = 0; i < allJackOfDiamonds.size(); i++) {
       if(meldsPlayed.isCardUsedByMeld(allJackOfDiamonds[i], Meld::Pinochle) == false) {
-         jackOfDiamondsCount++;
+         //store all Jack of Diamonds in the first position
+         playableCards[0].push_back(allJackOfDiamonds[i]);
       }
    }
    //do the same for Queen of Spades
    for(int i = 0; i < allQueenOfSpades.size(); i++) {
       if(meldsPlayed.isCardUsedByMeld(allQueenOfSpades[i], Meld::Pinochle) == false) {
-         queenOfSpadesCount++;
+         //store all Queen of Spades in the second position
+         playableCards[1].push_back(allQueenOfSpades[i]);
       }
    }
 
-   //return the lower count (between JD and QS) to get the number of mutually exclusive Pinochles
-   if (jackOfDiamondsCount <= queenOfSpadesCount) {
-      return jackOfDiamondsCount;
-   } else {
-      return queenOfSpadesCount;
-   }
+   return createMeldsFromEligibleCards(playableCards);
    
 }
 
-int MeldServices::countMarriages(GroupOfCards hand) {
-   int numOfMarriages = 0;
-
+std::vector<MeldInstance> MeldServices::getMarriages(GroupOfCards hand) {
+   if(!trumpSuitSpecified) {
+      throw PinochleException("Trump Suit has not been specified yet. Use setTrumpSuit() to specify trump suit");
+   }
+   std::vector<MeldInstance> marriages;
+   std::vector<MeldInstance> marriageStore;
    //loop through each suit
    for(int suit = 0; suit < 4; suit++) {
       if(static_cast<Suit>(suit) != trumpSuit) {
-         numOfMarriages += countSameSuitMelds(Meld::RoyalMarriage, hand, static_cast<Suit>(suit), Rank::King, 2);
+         marriageStore = getSameSuitMelds(Meld::RoyalMarriage, hand, static_cast<Suit>(suit), Rank::King, 2);
+         marriages.insert(marriages.begin(), marriageStore.begin(), marriageStore.end());
       }
    }
    
-   return numOfMarriages;
+   return marriages;
 }
 // int MeldServices::countSameSuitMelds(Meld meld, GroupOfCards hand, Suit suit, Rank startingRank, int howManyCards) {
    
@@ -486,35 +521,8 @@ std::vector<MeldInstance> MeldServices::getSameRankMelds(Meld meld, GroupOfCards
       //go to the next suit of the meld
       suit++;
    }
-   //finding the card type that has the least instances in cardsOfEachSuit (which card in the potential meld occurs the least number of times)
-   //any cards with occurence more than that minimum value have extraneous instances that represent choices we can make when we create melds
-   //min represents number of mutually exclusive possible melds
-   int min = cardsOfEachSuit[0].size();
-   for(int i = 1; i < cardsOfEachSuit.size(); i++) {
-      if(min > cardsOfEachSuit[i].size()) {
-         min = cardsOfEachSuit[i].size();
-      } 
-   }
 
-   if(min == 0) {
-      //if any card needed to create the meld is missing, return an empty vector
-      cardsOfEachSuit.clear();
-   } else {
-      //now, we simply disregard the extra instances of a given card type because it makes no difference which instance of the card 
-      //we use to create the meld
-      for(int i = 0; i < cardsOfEachSuit.size(); i++) {
-         //reduce size of each vector to be the same as min
-         cardsOfEachSuit[i] = std::vector<Card>(cardsOfEachSuit[i].begin(), cardsOfEachSuit[i].begin() + min); 
-      }
-   }
-
-   //now make a meld instance out of each card in cardsOfEachSuit and return
-   std::vector<MeldInstance> allPossibleMelds;
-   for(int i = 0; i < cardsOfEachSuit.size(); i++) {
-      allPossibleMelds.push_back(MeldInstance(cardsOfEachSuit[i], trumpSuit));
-   }
-
-   return allPossibleMelds;
+   return createMeldsFromEligibleCards(cardsOfEachSuit);
    
 }
 
@@ -564,36 +572,45 @@ std::vector<MeldInstance> MeldServices::getSameSuitMelds(Meld meld, GroupOfCards
       
    }
 
-   //finding the card type that has the least instances in cardsOfEachRank (which card in the potential meld occurs the least number of times)
-   //any cards with occurence more than that minimum value have extraneous instances that represent choices we can make when we create melds
+   return createMeldsFromEligibleCards(cardsOfEachRank);
+
+}
+
+std::vector<MeldInstance> MeldServices::createMeldsFromEligibleCards(std::vector<std::vector<Card>> cards) {
+   //finding the card type that has the least instances in cards (i.e. which card in the potential meld occurs the least number of times)
+   //Any cards with occurence more than that minimum value have extraneous instances that represent choices we can make when we create melds
    //min represents number of mutually exclusive possible melds
-   int min = cardsOfEachRank[0].size();
-   for(int i = 1; i < cardsOfEachRank.size(); i++) {
-      if(min > cardsOfEachRank[i].size()) {
-         min = cardsOfEachRank[i].size();
+   int min = cards[0].size();
+   for(int i = 1; i < cards.size(); i++) {
+      if(min > cards[i].size()) {
+         min = cards[i].size();
       } 
    }
    
    if(min == 0) {
       //if any card needed to create the meld is missing, return an empty vector
-      cardsOfEachRank.clear();
+      cards.clear();
    } else {
       //now, we simply disregard the extra instances of a given card type because it makes no difference which instance of the card 
       //we use to create the meld
-      for(int i = 0; i < cardsOfEachRank.size(); i++) {
+      for(int i = 0; i < cards.size(); i++) {
          //reduce size of each vector to be the same as min
-         cardsOfEachRank[i] = std::vector<Card>(cardsOfEachRank[i].begin(), cardsOfEachRank[i].begin() + min); 
+         cards[i] = std::vector<Card>(cards[i].begin(), cards[i].begin() + min); 
       }
    }
 
-   //now make a meld instance out of each card in cardsOfEachSuit and return
+   //now make a meld instance by combining cards
    std::vector<MeldInstance> allPossibleMelds;
-   for(int i = 0; i < cardsOfEachRank.size(); i++) {
-      allPossibleMelds.push_back(MeldInstance(cardsOfEachRank[i], trumpSuit));
+   MeldInstance meldStore;
+   //loop through all the instances of a card type
+   for(int i = 0; i < min; i++) {
+      //loop through each card type needed to create the meld
+      for(int j = 0; j < cards.size(); j++) {
+         meldStore.addCard(cards[j][i]);
+      }
    }
 
    return allPossibleMelds;
-
 }
 
 
