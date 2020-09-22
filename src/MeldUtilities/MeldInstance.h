@@ -10,6 +10,7 @@ enum class Meld {
 
 class MeldInstance : public GroupOfCards {
 public:
+   MeldInstance();
    MeldInstance(std::vector<Card> cards, Suit trumpSuit);
    bool addCard(Card card);
    bool removeCardById(int id); 

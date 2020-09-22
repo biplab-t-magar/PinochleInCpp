@@ -12,7 +12,7 @@ bool Player::setTrumpSuit(Suit trumpSuit) {
    return true;
 }
 
-std::vector<Card> Player::findBestCardsToThrow() {
+std::vector<Card> Player::bestCardsForLeadThrow() {
    
    //make sure hand is not empty
    if(hand.getNumOfCards() == 0) {
@@ -24,19 +24,7 @@ std::vector<Card> Player::findBestCardsToThrow() {
 
    //these are all the cards that yield the best hand when thrown
    std::vector<Card> bestCardsToThrow;
-   
-   //set the initial bestHand to the hand produced by removing the card in the first position
-   int index = 0;
 
-   // //if we are preserving trump suits, first find the first card in hand that is not of trump suit
-   // if(preserveTrumpSuits) {
-   //    for(int index = 0; index < hand.getNumOfCards(); index++) {
-   //       if(hand.getCardByPosition(index).getSuit() != trumpSuit) {
-   //          break;
-   //       }
-   //    }
-   // }
-   
    bestHand = hand;
    bestHand.removeCardByPosition(0);
    bestCardsToThrow.push_back(hand.getCardByPosition(0));
@@ -66,7 +54,7 @@ Card Player::suggestLeadCard(std::string &reasoning) {
    //we simulate throwing every single card in the hand to create as many possible hands as there are cards in the hand
    std::vector<Card> bestCardsToThrow;
    try {
-      bestCardsToThrow = findBestCardsToThrow();
+      bestCardsToThrow = bestCardsForLeadThrow();
    } catch(PinochleException &e) {
       std::cout << e.what() << std::endl;
    }
@@ -122,22 +110,23 @@ Card Player::getLeastRankedCard() {
             leastRankedCard = hand.getCardByPosition(i);
          }
       }
-   }
-   //if there are non-trump suit cards, find the least ranked among them   
-   //first, get the first card in hand that's not a trump suit card
-   int index;
-   for(int index = 0; index < hand.getNumOfCards(); index++) {
-      if(hand.getCardByPosition(index).getSuit() != trumpSuit) {
-         leastRankedCard = hand.getCardByPosition(index);
+   } else {
+      //if there are non-trump suit cards, find the least ranked among them   
+      //first, get the first card in hand that's not a trump suit card
+      int index;
+      for(int index = 0; index < hand.getNumOfCards(); index++) {
+         if(hand.getCardByPosition(index).getSuit() != trumpSuit) {
+            leastRankedCard = hand.getCardByPosition(index);
+         }
+      }
+      //now find the least ranked card that's not of trump suit
+      for(int i = index + 1; i < hand.getNumOfCards(); i++) {
+         if(hand.getCardByPosition(i).getSuit() != trumpSuit && hand.getCardByPosition(i).hasLessRankThan(leastRankedCard)) {
+            leastRankedCard = hand.getCardByPosition(i);
+         }
       }
    }
-
-   //now find the least ranked card that's not of trump suit
-   for(int i = index + 1; i < hand.getNumOfCards(); i++) {
-      if(hand.getCardByPosition(i).getSuit() != trumpSuit && hand.getCardByPosition(i).hasLessRankThan(leastRankedCard)) {
-         leastRankedCard = hand.getCardByPosition(i);
-      }
-   }
+   
    return leastRankedCard;
 }
 
@@ -202,8 +191,9 @@ Card Player::suggestChaseCard(std::string &reasoning, Card opponentCard) {
          cardToThrow = getLeastRankedFrom(sameSuitCards);
          reasoning = "throwing the card of the same suit as the opponent but with a greater rank is the least expensive winning move";
       } else {
-         //if the there are no cards in hand having the same suit as that of the opponent card, and having a higher rank, then simply
+         //if the there are no cards in hand having the same suit as that of the opponent card, and having a higher rank,
          //then check if there is a trump-suit card in hand
+
          if(hand.getCardsBySuit(trumpSuit).size() == 0) {
             //if there are no trumps suits in hand either, there is no chance of winning; simply return the lowest ranked card in hand
             cardToThrow = getLeastRankedCard();
@@ -211,11 +201,17 @@ Card Player::suggestChaseCard(std::string &reasoning, Card opponentCard) {
          } else {
             //if there is at least one trump-suit card, return the lowest-ranked of the trump-suit cards 
             cardToThrow = getLeastRankedFrom(hand.getCardsBySuit(trumpSuit));
-            reasoning = "there is no way of winning without using a trump suit, so throwing the least ranked trump suit is the least expensive way of winning over the opponent's non-trump suit";
+            reasoning = "there is no way of winning without using a trump suit, so throwing the least ranked trump suit is the least expensive way of winning over the opponent's non-trump-suit card";
          }
       }
    }
    return cardToThrow;
+}
+
+MeldInstance Player::suggestNextMeld(std::string &reasoning) {
+   //first, get the count of all possible melds from the hand
+   std::vector<int> meldPoints = meldServices.countMeldsFromHand();
+   std::vector<MeldInstance
 }
 
 

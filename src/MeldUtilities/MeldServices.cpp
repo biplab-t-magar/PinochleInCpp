@@ -242,7 +242,7 @@ std::vector<int> MeldServices::potentialPointsFromHand(GroupOfCards hand) {
    std::vector<int> points;
    //loop through all the meld types
    for(int i = 0 ; i < countsOfEachMeldType.size(); i++) {
-      //for each occurence of a meld type, add a separate entry to points (entry should be the points a meld gives)
+      //add separate entry for each occurence of a meld type (what is entered into the vector should be the points a meld gives)
       for(int j = 0; j < countsOfEachMeldType[i]; j++) {
          points.push_back(getMeldPoints(static_cast<Meld>(i)));
       }
@@ -349,7 +349,176 @@ int MeldServices::countMarriages(GroupOfCards hand) {
    
    return numOfMarriages;
 }
-int MeldServices::countSameSuitMelds(Meld meld, GroupOfCards hand, Suit suit, Rank startingRank, int howManyCards) {
+// int MeldServices::countSameSuitMelds(Meld meld, GroupOfCards hand, Suit suit, Rank startingRank, int howManyCards) {
+   
+//    //if the number in howManyCards is more than the number of Ranks in the meld
+//    if((static_cast<int>(startingRank) - howManyCards + 1) <= 0 ) {
+//       throw PinochleException("Invalid starting rank or number of cards");
+//    }
+//    if(howManyCards <= 0) {
+//       throw PinochleException("There cannot be a meld with 0 cards");
+//    }
+
+//    //this vector counts the number of each rank of the specified suit in the hand
+//    //only ranks relevant to the meld are counted
+//    std::vector<int> howManyOfEachRank;
+
+//    int rank = static_cast<int>(startingRank);
+
+//    //for temporarily holding groups of candidate cards
+//    std::vector<Card> cardHolder;
+
+//    //for keeping count of the number of instances of a particular card eligible for the meld
+//    int eligibleCardsCount;
+
+//    //loop through all the ranks in the meld
+//    for(int i = 0; i < howManyCards; i++) {
+//       eligibleCardsCount = 0;
+      
+//       //get all the cards with the given rank and with the suit of the current loop
+//       cardHolder = hand.getCardsByRankAndSuit(static_cast<Rank>(rank), suit);
+      
+//       //now check how many of these cards have already been used to create this meld
+//       for(int i = 0; i < cardHolder.size(); i++) {
+//          //only add to count if the card has not already been used for this meld
+//          if(meldsPlayed.isCardUsedByMeld(cardHolder[i], meld) == false) {
+//             eligibleCardsCount++;
+//          }
+//       }
+
+//       //keep count of the number of the count for each suit of the given rank
+//       howManyOfEachRank.push_back(eligibleCardsCount);
+
+//       //go to the next rank in the meld
+//       rank--;
+      
+//    }
+
+//    //now the number of *mutually exclusive* possible melds is calculated
+//    //the number of that constituent rank of the meld which occurs the least times in the meld is the actual 
+//    //number of mutually exclusive possible melds
+
+//    //finding minimum value in howManyOfEachRank, which represents number of mutually exclusive possible melds
+//    int min = howManyOfEachRank[0];
+//    for(int i = 1; i < howManyOfEachRank.size(); i++) {
+//       if(min > howManyOfEachRank[i]) {
+//          min = howManyOfEachRank[i];
+//       } 
+//    }
+//    return min;
+// }
+
+// int MeldServices::countSameRankMelds(Meld meld, GroupOfCards hand, Rank rank) {
+//    //this vector counts the number of each suit of the specified rank
+//    std::vector<int> howManyOfEachSuit;
+//    //holds the current suit (in int form) being counted (always start with clubs and increase to other suits from there)
+//    int suit = 0;
+
+//    //for temporarily holding groups of candidate cards
+//    std::vector<Card> cardHolder;
+
+//    //for keeping count of the number of instances of a particular card eligible for the meld
+//    int eligibleCardsCount;
+//    //loop through all the suits
+//    for(int i = 0; i < 4; i++) {
+//       eligibleCardsCount = 0;
+      
+//       //get all the cards with the given rank and with the suit of the current loop
+//       cardHolder = hand.getCardsByRankAndSuit(rank, static_cast<Suit>(suit));
+      
+//       //now check how many of these cards have already been used to create this meld
+//       for(int i = 0; i < cardHolder.size(); i++) {
+//          //only add to count if the card has not already been used for this meld
+//          if(meldsPlayed.isCardUsedByMeld(cardHolder[i], meld) == false) {
+//             eligibleCardsCount++;
+//          }
+//       }
+
+//       //keep count of the number of the count for each suit of the given rank
+//       howManyOfEachSuit.push_back(eligibleCardsCount);
+
+//       //go to the next suit of the meld
+//       suit++;
+//    }
+//    //finding minimum value in howManyOfEachSuit (which card in the potential meld occurs the minimum number of times)
+//    //any cards with occurence more than that minimum value have extraneous instances
+//    //that represent choices we can make when we create melds
+//    //min represents number of mutually exclusive possible melds
+//    int min = howManyOfEachSuit[0];
+//    for(int i = 1; i < howManyOfEachSuit.size(); i++) {
+//       if(min > howManyOfEachSuit[i]) {
+//          min = howManyOfEachSuit[i];
+//       } 
+//    }
+
+//    return min;
+// }
+
+std::vector<MeldInstance> MeldServices::getSameRankMelds(Meld meld, GroupOfCards hand, Rank rank) {
+   //this vector holds all possible cards of each suit of the specified rank in the hand
+   std::vector<std::vector<Card>> cardsOfEachSuit;
+   //holds the current suit (in int form) being counted (always start with clubs and increase to other suits from there)
+   int suit = 0;
+
+   //for temporarily holding groups of candidate cards
+   std::vector<Card> cardHolder;
+
+   //for keeping track of the instances of a particular card eligible for the meld
+   std::vector<Card> eligibleCards;
+   //loop through all the suits
+   for(int i = 0; i < 4; i++) {
+      eligibleCards.clear();
+      
+      //get all the cards with the given rank and with the suit of the current loop
+      cardHolder = hand.getCardsByRankAndSuit(rank, static_cast<Suit>(suit));
+      
+      //now check how many of these cards have already been used to create this meld
+      for(int i = 0; i < cardHolder.size(); i++) {
+         //only add card to eligibleCards if the card has not already been used for this meld
+         if(meldsPlayed.isCardUsedByMeld(cardHolder[i], meld) == false) {
+            eligibleCards.push_back(cardHolder[i]);
+         }
+      }
+
+      //keep track of each instance of the suit of the given rank
+      cardsOfEachSuit.push_back(eligibleCards);
+
+      //go to the next suit of the meld
+      suit++;
+   }
+   //finding the card type that has the least instances in cardsOfEachSuit (which card in the potential meld occurs the least number of times)
+   //any cards with occurence more than that minimum value have extraneous instances that represent choices we can make when we create melds
+   //min represents number of mutually exclusive possible melds
+   int min = cardsOfEachSuit[0].size();
+   for(int i = 1; i < cardsOfEachSuit.size(); i++) {
+      if(min > cardsOfEachSuit[i].size()) {
+         min = cardsOfEachSuit[i].size();
+      } 
+   }
+
+   if(min == 0) {
+      //if any card needed to create the meld is missing, return an empty vector
+      cardsOfEachSuit.clear();
+   } else {
+      //now, we simply disregard the extra instances of a given card type because it makes no difference which instance of the card 
+      //we use to create the meld
+      for(int i = 0; i < cardsOfEachSuit.size(); i++) {
+         //reduce size of each vector to be the same as min
+         cardsOfEachSuit[i] = std::vector<Card>(cardsOfEachSuit[i].begin(), cardsOfEachSuit[i].begin() + min); 
+      }
+   }
+
+   //now make a meld instance out of each card in cardsOfEachSuit and return
+   std::vector<MeldInstance> allPossibleMelds;
+   for(int i = 0; i < cardsOfEachSuit.size(); i++) {
+      allPossibleMelds.push_back(MeldInstance(cardsOfEachSuit[i], trumpSuit));
+   }
+
+   return allPossibleMelds;
+   
+}
+
+std::vector<MeldInstance> MeldServices::getSameSuitMelds(Meld meld, GroupOfCards hand, Suit suit, Rank startingRank, int howManyCards) {
    
    //if the number in howManyCards is more than the number of Ranks in the meld
    if((static_cast<int>(startingRank) - howManyCards + 1) <= 0 ) {
@@ -359,100 +528,75 @@ int MeldServices::countSameSuitMelds(Meld meld, GroupOfCards hand, Suit suit, Ra
       throw PinochleException("There cannot be a meld with 0 cards");
    }
 
-   //this vector counts the number of each rank of the specified suit in the hand
-   //only ranks relevant to the meld are counted
-   std::vector<int> howManyOfEachRank;
+   //this vector holds all possible cards of each rank of the specified suit in the hand
+   //only ranks relevant to the meld are stored
+   std::vector<std::vector<Card>> cardsOfEachRank;
 
+   //holds the rank to be counted in each iteration
    int rank = static_cast<int>(startingRank);
 
    //for temporarily holding groups of candidate cards
    std::vector<Card> cardHolder;
 
    //for keeping count of the number of instances of a particular card eligible for the meld
-   int eligibleCardsCount;
+   std::vector<Card> eligibleCards;
 
    //loop through all the ranks in the meld
    for(int i = 0; i < howManyCards; i++) {
-      eligibleCardsCount = 0;
+      eligibleCards.clear();
       
       //get all the cards with the given rank and with the suit of the current loop
       cardHolder = hand.getCardsByRankAndSuit(static_cast<Rank>(rank), suit);
       
       //now check how many of these cards have already been used to create this meld
       for(int i = 0; i < cardHolder.size(); i++) {
-         //only add to count if the card has not already been used for this meld
+         //only add card to eligibleCards if the card has not already been used for this meld
          if(meldsPlayed.isCardUsedByMeld(cardHolder[i], meld) == false) {
-            eligibleCardsCount++;
+            eligibleCards.push_back(cardHolder[i]);
          }
       }
 
-      //keep count of the number of the count for each suit of the given rank
-      howManyOfEachRank.push_back(eligibleCardsCount);
+      //keep track of each instance of the rank of the given suit
+      cardsOfEachRank.push_back(eligibleCards);
 
       //go to the next rank in the meld
       rank--;
       
    }
 
-   //now the number of *mutually exclusive* possible melds is calculated
-   //the number of that constituent rank of the meld which occurs the least times in the meld is the actual 
-   //number of mutually exclusive possible melds
-
-   //finding minimum value in howManyOfEachRank, which represents number of mutually exclusive possible melds
-   int min = howManyOfEachRank[0];
-   for(int i = 1; i < howManyOfEachRank.size(); i++) {
-      if(min > howManyOfEachRank[i]) {
-         min = howManyOfEachRank[i];
-      } 
-   }
-   return min;
-}
-
-int MeldServices::countSameRankMelds(Meld meld, GroupOfCards hand, Rank rank) {
-   //this vector counts the number of each suit of the specified rank
-   std::vector<int> howManyOfEachSuit;
-   //holds the current suit (in int form) being counted (always start with clubs and increase to other suits from there)
-   int suit = 0;
-
-   //for temporarily holding groups of candidate cards
-   std::vector<Card> cardHolder;
-
-   //for keeping count of the number of instances of a particular card eligible for the meld
-   int eligibleCardsCount;
-   //loop through all the suits
-   for(int i = 0; i < 4; i++) {
-      eligibleCardsCount = 0;
-      
-      //get all the cards with the given rank and with the suit of the current loop
-      cardHolder = hand.getCardsByRankAndSuit(rank, static_cast<Suit>(suit));
-      
-      //now check how many of these cards have already been used to create this meld
-      for(int i = 0; i < cardHolder.size(); i++) {
-         //only add to count if the card has not already been used for this meld
-         if(meldsPlayed.isCardUsedByMeld(cardHolder[i], meld) == false) {
-            eligibleCardsCount++;
-         }
-      }
-
-      //keep count of the number of the count for each suit of the given rank
-      howManyOfEachSuit.push_back(eligibleCardsCount);
-
-      //go to the next suit of the meld
-      suit++;
-   }
-   //finding minimum value in howManyOfEachSuit (which card in the potential meld occurs the minimum number of times)
-   //any cards with occurence more than that minimum value have extraneous instances
-   //that represent choices we can make when we create melds
+   //finding the card type that has the least instances in cardsOfEachRank (which card in the potential meld occurs the least number of times)
+   //any cards with occurence more than that minimum value have extraneous instances that represent choices we can make when we create melds
    //min represents number of mutually exclusive possible melds
-   int min = howManyOfEachSuit[0];
-   for(int i = 1; i < howManyOfEachSuit.size(); i++) {
-      if(min > howManyOfEachSuit[i]) {
-         min = howManyOfEachSuit[i];
+   int min = cardsOfEachRank[0].size();
+   for(int i = 1; i < cardsOfEachRank.size(); i++) {
+      if(min > cardsOfEachRank[i].size()) {
+         min = cardsOfEachRank[i].size();
       } 
    }
+   
+   if(min == 0) {
+      //if any card needed to create the meld is missing, return an empty vector
+      cardsOfEachRank.clear();
+   } else {
+      //now, we simply disregard the extra instances of a given card type because it makes no difference which instance of the card 
+      //we use to create the meld
+      for(int i = 0; i < cardsOfEachRank.size(); i++) {
+         //reduce size of each vector to be the same as min
+         cardsOfEachRank[i] = std::vector<Card>(cardsOfEachRank[i].begin(), cardsOfEachRank[i].begin() + min); 
+      }
+   }
 
-   return min;
+   //now make a meld instance out of each card in cardsOfEachSuit and return
+   std::vector<MeldInstance> allPossibleMelds;
+   for(int i = 0; i < cardsOfEachRank.size(); i++) {
+      allPossibleMelds.push_back(MeldInstance(cardsOfEachRank[i], trumpSuit));
+   }
+
+   return allPossibleMelds;
+
 }
+
+
 
 // int MeldServices::countSameSuitMelds(Meld meld, std::vector<Card> handPile, std::vector<Card> meldPile, Suit suit, Rank startingRank, int howManyCards) {
    

@@ -1,5 +1,10 @@
 #include "MeldInstance.h"
 
+
+MeldInstance::MeldInstance() {
+   meldIsValid == false;
+}
+
 MeldInstance::MeldInstance(std::vector<Card> cards, Suit trumpSuit) : GroupOfCards(cards) {
    this->trumpSuit = trumpSuit;
    meldIsValid = checkMeldValidity();
@@ -14,13 +19,14 @@ bool MeldInstance::removeCardById(int id) {
    for(int i = 0; i < cards.size(); i++) {
       if(cards[i].getId() == id) {
          cards.erase(cards.begin() + i);
+         return true;
       }
    }
    meldIsValid = checkMeldValidity();
-   return true;
+   return false;
 }
 bool MeldInstance::removeCardByPosition(int position) {
-   if(position >= cards.size()) {
+   if(position >= cards.size() || position < 0) {
       throw PinochleException("Given position is out of bounds");
    }
    cards.erase(cards.begin() + position);
@@ -29,12 +35,15 @@ bool MeldInstance::removeCardByPosition(int position) {
 }
 
 Meld MeldInstance::getMeldType() const {
+   if(meldIsValid == false) {
+      throw PinochleException("This is not a valid meld");
+   }
    return meldType;
 }
 
 std::string MeldInstance::getMeldTypeString() const {
    if(!meldIsValid) {
-      return "";
+      throw PinochleException("This is not a valid meld");
    }
 
    //Flush, RoyalMarriage, Marriage, Dix, FourAces, FourKings, FourQueens, FourJacks, Pinochle

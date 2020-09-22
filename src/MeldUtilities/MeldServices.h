@@ -39,6 +39,9 @@ private:
    int countMarriages(GroupOfCards hand);
    int countSameSuitMelds(Meld meld, GroupOfCards hand, Suit suit, Rank startingRank, int howManyCards);
    int countSameRankMelds(Meld meld, GroupOfCards hand, Rank rank);
+
+   std::vector<MeldInstance> MeldServices::getSameRankMelds(Meld meld, GroupOfCards hand, Rank rank);    
+   std::vector<MeldInstance> MeldServices::getSameSuitMelds(Meld meld, GroupOfCards hand, Suit suit, Rank startingRank, int howManyCards);
    // bool hasMeldBeenUsed();
    // bool moveCardToMeldPile(std::vector<Card>* handPile, std::vector<Card>* meldPile, Card card);
    // bool moveCardsToMeldPile(std::vector<Card>* handPile, std::vector<Card>* meldPile, std::vector<Card> cards);

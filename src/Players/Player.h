@@ -31,10 +31,10 @@ protected:
    void createMeld(MeldInstance meldInstance);
 private:
    GroupOfCards hand;
-   GroupOfCards capurePile;
+   GroupOfCards capturePile;
    Suit trumpSuit; 
    MeldServices meldServices;
-   std::vector<Card> Player::findBestCardsToThrow();
+   std::vector<Card> Player::bestCardsForLeadThrow();
    Card getLeastRankedCard();
    Card getLeastRankedFrom(std::vector<Card> cards);
    // std::vector<std::string> handStrRep;

@@ -19,6 +19,7 @@ public:
    std::vector<Card> getCardsBySuit(Suit suit) const;
    std::vector<Card> getCardsByRankAndSuit(Rank rank, Suit suit) const;
    Card getCardByPosition(int position) const;
+   int getCardPosition(Card card);
    int getNumOfCards() const;
    bool operator==(const GroupOfCards& otherGroupOfCards);
    bool operator!=(const GroupOfCards& otherGroupOfCards);

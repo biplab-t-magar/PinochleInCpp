@@ -84,10 +84,20 @@ std::vector<Card> GroupOfCards::getCardsByRankAndSuit(Rank rank, Suit suit) cons
 
 
 Card GroupOfCards::getCardByPosition(int position) const {
-   if(position >= cards.size()) {
+   if(position >= cards.size() || position < 0) {
       throw PinochleException("Position is out of range, given the number of cards");
    }
    return cards[position];
+}
+
+int GroupOfCards::getCardPosition(Card card) {
+   for(int i = 0; i < cards.size(); i++) {
+      if(cards[i] == card) {
+         return i;
+      }
+   }
+   //if card not found, return -1
+   return -1;
 }
 
 int GroupOfCards::getNumOfCards() const {
