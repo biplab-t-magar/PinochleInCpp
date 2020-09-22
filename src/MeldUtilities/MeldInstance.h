@@ -15,6 +15,7 @@ public:
    bool removeCardById(int id); 
    bool removeCardByPosition(int position);
    Meld getMeldType() const;
+   std::string getMeldTypeString() const;
    bool isValidMeld() const;
 private:
    Meld meldType;

@@ -5,18 +5,23 @@
 #include "Card.h"
 #include "Player.h"
 
-class Human : Player{   
+class Human : public Player{   
 public:
    Human();
-   void nextMove();
    Card playLeadCard();
-   Card playChaseCard(Card card);
+   Card playChaseCard(Card opponentCard);
+   void playMeld();
+   std::string getHelpForLeadCard();
+   std::string getHelpForChaseCard(Card opponentCard);
+   std::string getHelpForMeld();
+   bool isMeldPossible();
 private:
    int promptUser();
-   void saveGameProgress();
-   void helpForNextMove();
    int promptCardThrow();
+   void saveGameProgress();
+   std::string Human::stripString(std::string str);
    std::string removeWhiteSpace(std::string str);
+   std::vector<int> parseMeldPositions(std::string str);
 };
 
 

@@ -32,6 +32,46 @@ Meld MeldInstance::getMeldType() const {
    return meldType;
 }
 
+std::string MeldInstance::getMeldTypeString() const {
+   if(!meldIsValid) {
+      return "";
+   }
+
+   //Flush, RoyalMarriage, Marriage, Dix, FourAces, FourKings, FourQueens, FourJacks, Pinochle
+   switch (meldType)
+   {
+   case Meld::Flush:
+      return "Flush";
+      break;
+   case Meld::RoyalMarriage:
+      return "Royal Marriage";
+      break;
+   case Meld::Marriage:
+      return "Marriage";
+      break;
+   case Meld::Dix:
+      return "Dix";
+      break;
+   case Meld::FourAces:
+      return "Four Aces";
+      break;
+   case Meld::FourKings:
+      return "Four Kings";
+      break;
+   case Meld::FourQueens:
+      return "Four Queens";
+      break;
+   case Meld::FourJacks:
+      return "Four Jacks";
+      break;
+   case Meld::Pinochle:
+      return "Pinochle";
+      break;
+   default:
+      break;
+   }
+}
+
 bool MeldInstance::isValidMeld() const {
    return meldIsValid;
 }
