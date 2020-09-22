@@ -1,6 +1,8 @@
 #include "Player.h"
 #include <iostream>
 
+#define numOfMeldTypes 9
+
 Player::Player() { }
 
 void Player::takeOneCard(Card card) {
@@ -209,9 +211,69 @@ Card Player::suggestChaseCard(std::string &reasoning, Card opponentCard) {
 }
 
 MeldInstance Player::suggestNextMeld(std::string &reasoning) {
-   //first, get the count of all possible melds from the hand
-   std::vector<int> meldPoints = meldServices.countMeldsFromHand();
-   std::vector<MeldInstance
+   //first, get all possible melds from the hand
+   MeldsStorage allPossibleMelds = meldServices.getMeldsFromHand(hand);
+
+   if(allPossibleMelds.getNumOfMelds() == 0) {
+      reasoning = "there are no possible melds to play with";
+      return MeldInstance();
+   }
+
+   //this stores all the meld instances that yield the highest points
+   std::vector<MeldInstance> highScoringMelds;
+
+   int highestPointsPossible = 0;
+   std::vector<MeldInstance> allMeldsOfGivenType;
+   int meldPoints;
+   //loop through all 9 meld types
+   for(int i = 0; i < numOfMeldTypes; i++) {
+      //if a particular meld yields the highest points so far, keep track of it
+      allMeldsOfGivenType = allPossibleMelds.getAllMeldsByType(static_cast<Meld>(i));
+      meldPoints = meldServices.getMeldPoints(static_cast<Meld>(i));
+      if(meldPoints > highestPointsPossible) {
+         highestPointsPossible = meldPoints;
+         highScoringMelds.clear();
+         //add all the instances of this meld type to highScoringMelds
+         highScoringMelds.insert(highScoringMelds.end(), allMeldsOfGivenType.begin(), allMeldsOfGivenType.end());
+      } else if (meldPoints == highestPointsPossible) {
+         //add all the instances of this meld type to highScoringMelds
+         highScoringMelds.insert(highScoringMelds.end(), allMeldsOfGivenType.begin(), allMeldsOfGivenType.end());
+      }
+   }
+
+   if(highScoringMelds.size() > 1) {
+      reasoning = "playing this meld will yield the highest possible points";
+      return highScoringMelds[0];
+   } else {
+      reasoning = "playing this meld will yield the highest possible points and will also ensure that the best melds are preserved for the next turn.";
+      return findBestMeldToPlay(highScoringMelds);
+   }
+
+}
+
+
+MeldInstance Player::findBestMeldToPlay(std::vector<MeldInstance> meldsToCompare) {
+   MeldServices mockServices1 = meldServices;
+   MeldServices mockServices2 = meldServices;
+
+   //simulate playing the first meld in meldsToCompare
+   MeldInstance bestMeld = meldsToCompare[0];
+   mockServices1.storeMeld(hand, bestMeld);
+
+   //now, loop through the rest of the melds and compare the potential points from hand after playing each meld
+   for(int i = 1; i < meldsToCompare.size(); i++) {
+      mockServices2.storeMeld(hand, meldsToCompare[i]);
+      //if melds stored in mockServices2 results in higher potential points from the hand
+      if(mockServices1.potentialPointsFromHand(hand) < mockServices2.potentialPointsFromHand(hand)) {
+         bestMeld = meldsToCompare[i];
+         mockServices1 = mockServices2;
+      }
+      //reset mockServices2
+      mockServices2 = meldServices;
+   }
+   
+   return bestMeld;
+
 }
 
 

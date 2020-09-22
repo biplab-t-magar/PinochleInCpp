@@ -23,6 +23,8 @@ public:
    bool MeldServices::storeMeld(GroupOfCards hand, MeldInstance meldInstance);
    bool isLegalMeld(GroupOfCards hand, MeldInstance meldInstance);
    int compareHandsForMelds(GroupOfCards hand1, GroupOfCards hand2);
+   std::vector<int> potentialPointsFromHand(GroupOfCards hand);
+   MeldsStorage getMeldsFromHand(GroupOfCards hand);
 private:
    MeldsStorage meldsPlayed;
    // std::vector<std::vector<Card>> cardsUsedForCreatingPlayedMelds;
@@ -31,9 +33,9 @@ private:
    Suit trumpSuit;
    bool trumpSuitSpecified;
 
-   std::vector<int> potentialPointsFromHand(GroupOfCards hand);
+   
    std::vector<int> countMeldsFromHand(GroupOfCards hand);
-   MeldsStorage getMeldsFromHand(GroupOfCards hand);
+   
    // int countDixes(GroupOfCards hand);
    // int countPinochles(GroupOfCards hand);
    // int countMarriages(GroupOfCards hand);

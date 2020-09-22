@@ -298,23 +298,23 @@ MeldsStorage MeldServices::getMeldsFromHand(GroupOfCards hand) {
    //now push the number of possible instances of each meld
    
    //flush
-   // allPossibleMelds.addMelds(getSameSuitMelds(Meld::Flush, hand, trumpSuit, Rank::Ace, 5));
+   allPossibleMelds.addMelds(getSameSuitMelds(Meld::Flush, hand, trumpSuit, Rank::Ace, 5));
    //royal marriage
-   allPossibleMelds.addMelds((Meld::RoyalMarriage, hand, trumpSuit, Rank::King, 2);
+   allPossibleMelds.addMelds(getSameSuitMelds(Meld::RoyalMarriage, hand, trumpSuit, Rank::King, 2));
    //marriage
-   allPossibleMelds.addMelds(getMarriages(hand);
+   allPossibleMelds.addMelds(getMarriages(hand));
    //dix
-   allPossibleMelds.addMelds(getDixes(hand);
+   allPossibleMelds.addMelds(getDixes(hand));
    //FourAces
-   allPossibleMelds.addMelds(getSameRankMelds(Meld::FourAces, hand, Rank::Ace);
+   allPossibleMelds.addMelds(getSameRankMelds(Meld::FourAces, hand, Rank::Ace));
    //Four Kings
-   allPossibleMelds.addMelds(getSameRankMelds(Meld::FourKings, hand, Rank::King);
+   allPossibleMelds.addMelds(getSameRankMelds(Meld::FourKings, hand, Rank::King));
    //Four Queens
-   allPossibleMelds.addMelds(getSameRankMelds(Meld::FourQueens, hand, Rank::Queen);
+   allPossibleMelds.addMelds(getSameRankMelds(Meld::FourQueens, hand, Rank::Queen));
    //Four Jacks
-   allPossibleMelds.addMelds(getSameRankMelds(Meld::FourJacks, hand, Rank::Jack);
+   allPossibleMelds.addMelds(getSameRankMelds(Meld::FourJacks, hand, Rank::Jack));
    //Pinochle
-   allPossibleMelds.addMelds(getPinochles(hand);
+   allPossibleMelds.addMelds(getPinochles(hand));
 
    return allPossibleMelds;
 }

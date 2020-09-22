@@ -11,10 +11,12 @@ public:
    bool addMeld(MeldInstance meldInstance);
    bool addMelds(std::vector<MeldInstance> meldInstances);
    bool removeMeld( MeldInstance meldInstance);
-   std::vector<std::vector<MeldInstance>> MeldsStorage::getAllMelds() const;
+   std::vector<std::vector<MeldInstance>> getAllMelds() const;
+   std::vector<MeldInstance> getAllMeldsByType(Meld meldType) const;
    bool isCardUsedByMeld(Card card, Meld meldType);
    bool isCardUsedByAnyMeld(Card card);
-   int getNumOfMelds(Meld meldType);
+   int getNumOfMeldsByType(Meld meldType);
+   int getNumOfMelds();
 private:
    std::vector<std::vector<MeldInstance>> storage;
    // std::vector<MeldInstance> FlushStorage;

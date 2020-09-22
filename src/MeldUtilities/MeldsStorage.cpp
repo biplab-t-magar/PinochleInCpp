@@ -86,8 +86,16 @@ bool MeldsStorage::removeMeld(MeldInstance meldInstance) {
 //    return false;
 // }
 
-int MeldsStorage::getNumOfMelds(Meld meldType) {
+int MeldsStorage::getNumOfMeldsByType(Meld meldType) {
    return storage[static_cast<int>(meldType)].size();
+}
+
+int MeldsStorage::getNumOfMelds() {
+   int numOfMelds = 0;
+   for(int i = 0; i < numOfMeldTypes; i++) {
+      numOfMelds += storage[i].size();
+   }
+   return numOfMelds;
 }
 
 std::vector<std::vector<MeldInstance>> MeldsStorage::getAllMelds() const {
@@ -103,6 +111,9 @@ std::vector<std::vector<MeldInstance>> MeldsStorage::getAllMelds() const {
    // allPlayedMelds.push_back(PinochleStorage);
 
    return storage;
+}
+std::vector<MeldInstance> MeldsStorage::getAllMeldsByType(Meld meldType) const {
+   return storage[static_cast<int>(meldType)];
 }
 
 

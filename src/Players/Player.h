@@ -37,6 +37,7 @@ private:
    std::vector<Card> Player::bestCardsForLeadThrow();
    Card getLeastRankedCard();
    Card getLeastRankedFrom(std::vector<Card> cards);
+   MeldInstance findBestMeldToPlay(std::vector<MeldInstance> meldsToCompare);
    // std::vector<std::string> handStrRep;
    // std::vector<std::string> meldStrRep;
    // std::vector<std::string> capturePileStrRep;
