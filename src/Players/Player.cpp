@@ -290,14 +290,58 @@ int Player::numCardsInHand() {
    return hand.getNumOfCards();
 }
 
+bool Player::isMeldPossible() {
+   std::string reasoning;
+   MeldInstance meldToPlay = suggestNextMeld(reasoning);
+   if(meldToPlay.getNumOfCards() == 0) {
+      return false;
+   } 
+   return true;
+}
+
 
 MeldInstance Player::createMeld(std::vector<int> positions) {
-   //be sure to check if all positions are valid
-// for(int i = 0; i < positions.size(); i++) {
-//    if (positions[i] < 0 || positions[i] >= numCardsInHand()) {
-//       std::cout << "All positions must be a valid position between 0 and " << (numCardsInHand() - 1) << ". Please try again." << std::endl; 
-//    } else {
-//       break;
-//    }
-// }
+   // be sure   to check if all positions are valid
+   for(int i = 0; i < positions.size(); i++) {
+      if (positions[i] < 0 || positions[i] >= numCardsInHand()) {
+         std::string errorMessage = "All positions must be a valid position between 0 and " + (numCardsInHand() - 1);
+         errorMessage += ". Please try again.";
+         throw PinochleException(errorMessage); 
+      } else {
+         break;
+      }
+   }
+
+   MeldInstance meldInstance;
+   //next, combine all cards from each position to create a MeldInstance object
+   for(int i = 0; i < positions.size(); i++) {
+      meldInstance.addCard(hand.getCardByPosition(positions[i]));
+   }
+   try {
+      createMeld(meldInstance);
+   } catch(PinochleException &e) {
+      throw e;
+   }
+   
+   return meldInstance;
+}
+
+
+void Player::createMeld(MeldInstance meldInstance) {
+   if(meldInstance.isValidMeld() == false) {
+      throw PinochleException("The cards you specified do not combine to make up a meld. Please try again.");
+   }   
+
+   if(!meldServices.allCardsPresentInHand(hand, meldInstance)) {
+      throw PinochleException("All the cards in the meld are not present in the player's hand.");
+   }
+
+   if(!meldServices.meldIsNotARepeat(meldInstance)) {
+      throw PinochleException("This meld is not valid because at least one card in it has been used to create an instance of this same meld type before.");
+   }
+
+   if (meldServices.storeMeld(hand, meldInstance) == false) {
+      throw PinochleException("Unable to store meld.");
+   }
+
 }

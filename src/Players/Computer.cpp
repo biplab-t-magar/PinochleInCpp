@@ -27,6 +27,9 @@ Card Computer::playChaseCard(Card opponentCard) {
 void Computer::playMeld() {
    std::string reasoning;
    MeldInstance meldToPlay = suggestNextMeld(reasoning);
+   if(meldToPlay.getNumOfCards() == 0) {
+      return;
+   }
    try {
       createMeld(meldToPlay);
    } catch(PinochleException &e) {

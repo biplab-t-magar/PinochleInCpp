@@ -19,18 +19,18 @@ bool MeldServices::setTrumpSuit(Suit trumpSuit) {
    return true;
 }
 
-bool MeldServices::isLegalMeld(GroupOfCards hand, MeldInstance meldInstance) {
-   if(!meldInstance.isValidMeld()) {
-      return false;
-   }
-   
-   //loop through all the cards in the candidate meld
+bool MeldServices::allCardsPresentInHand(GroupOfCards hand, MeldInstance meldInstance) {
    for(int i = 0; i < meldInstance.getNumOfCards(); i++) {
       //check if each card in the candidate meld is present in the hand
       if(hand.searchCardById(meldInstance.getCardByPosition(i).getId()) == false) {
          return false;
       }
-      //also check if any card in the candidate meld has been used to create this same meld type before
+   }
+   return true;
+}
+
+bool MeldServices::meldIsNotARepeat(MeldInstance meldInstance) {
+   for(int i = 0; i < meldInstance.getNumOfCards(); i++) {
       if(meldsPlayed.isCardUsedByMeld(meldInstance.getCardByPosition(i), meldInstance.getMeldType())) {
          return false;
       }
@@ -39,7 +39,7 @@ bool MeldServices::isLegalMeld(GroupOfCards hand, MeldInstance meldInstance) {
 }
 
 bool MeldServices::storeMeld(GroupOfCards hand, MeldInstance meldInstance) {
-   if(!isLegalMeld(hand, meldInstance)) {
+   if(!meldInstance.isValidMeld() || !allCardsPresentInHand(hand, meldInstance) || !meldIsNotARepeat(meldInstance)) {
       return false;
    }
    meldsPlayed.addMeld(meldInstance);

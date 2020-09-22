@@ -21,7 +21,9 @@ public:
    // bool meldCanNeglectMeldPile(std::vector<Card> handPile, std::vector<Card> meld);
    // bool meldHasCardFromHandPile(std::vector<Card> handPile, std::vector<Card> meld);
    bool MeldServices::storeMeld(GroupOfCards hand, MeldInstance meldInstance);
-   bool isLegalMeld(GroupOfCards hand, MeldInstance meldInstance);
+   // bool isLegalMeld(GroupOfCards hand, MeldInstance meldInstance);
+   bool allCardsPresentInHand(GroupOfCards hand, MeldInstance meldInstance);
+   bool meldIsNotARepeat(MeldInstance meldInstance);
    int compareHandsForMelds(GroupOfCards hand1, GroupOfCards hand2);
    std::vector<int> potentialPointsFromHand(GroupOfCards hand);
    MeldsStorage getMeldsFromHand(GroupOfCards hand);

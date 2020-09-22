@@ -17,6 +17,7 @@ public:
    virtual Card playChaseCard(Card opponentCard) = 0;
    virtual void playMeld() = 0;
    int numCardsInHand();
+   bool isMeldPossible();
 protected:
    Card suggestLeadCard(std::string &reasoning);
    Card suggestChaseCard(std::string &reasoning, Card opponentCard);

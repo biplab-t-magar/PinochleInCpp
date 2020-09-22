@@ -29,13 +29,6 @@ std::string Human::getHelpForMeld() {
    return reasoning;
 }
 
-bool Human::isMeldPossible() {
-   std::string reasoning;
-   MeldInstance meldToPlay = suggestNextMeld(reasoning);
-   if(meldToPlay.getNumOfCards() == 0) {
-      return false;
-   } 
-}
 
 
 Card Human::playLeadCard() {

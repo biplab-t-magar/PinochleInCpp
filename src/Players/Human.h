@@ -14,7 +14,6 @@ public:
    std::string getHelpForLeadCard();
    std::string getHelpForChaseCard(Card opponentCard);
    std::string getHelpForMeld();
-   bool isMeldPossible();
 private:
    int promptUser();
    int promptCardThrow();
