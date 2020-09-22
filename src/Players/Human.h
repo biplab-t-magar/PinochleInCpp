@@ -18,7 +18,7 @@ public:
 private:
    int promptUser();
    int promptCardThrow();
-   void saveGameProgress();
+   // void saveGameProgress();
    std::string Human::stripString(std::string str);
    std::string removeWhiteSpace(std::string str);
    std::vector<int> parseMeldPositions(std::string str);

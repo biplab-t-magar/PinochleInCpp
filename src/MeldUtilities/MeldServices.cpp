@@ -38,7 +38,7 @@ bool MeldServices::isLegalMeld(GroupOfCards hand, MeldInstance meldInstance) {
    return true;
 }
 
-bool MeldServices::playMeld(GroupOfCards hand, MeldInstance meldInstance) {
+bool MeldServices::storeMeld(GroupOfCards hand, MeldInstance meldInstance) {
    if(!isLegalMeld(hand, meldInstance)) {
       return false;
    }
@@ -46,7 +46,7 @@ bool MeldServices::playMeld(GroupOfCards hand, MeldInstance meldInstance) {
    return true;  
 }
 
-// bool MeldServices::playMeld(std::vector<Card> cardsToBePlayed, std::vector<Card>* handPile, std::vector<Card>* meldPile) {
+// bool MeldServices::storeMeld(std::vector<Card> cardsToBePlayed, std::vector<Card>* handPile, std::vector<Card>* meldPile) {
 //    Meld whatMeld;
 //    if(!isValidMeld(cardsToBePlayed, &whatMeld)) {
 //       return false;

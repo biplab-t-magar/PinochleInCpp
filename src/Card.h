@@ -34,6 +34,8 @@ public:
    std::string getCardString() const;
    bool setRank(Rank rank);
    bool setSuit(Suit suit);
+   bool hasGreaterRankThan(Card otherCard);
+   bool hasLessRankThan(Card otherCard);
    inline bool operator==(const Card& otherCard) {
       return (this->id == otherCard.getId() && this->rank == otherCard.getRank() && this->suit == otherCard.getSuit());
    }

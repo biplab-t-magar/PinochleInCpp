@@ -14,14 +14,15 @@ public:
    MeldServices(Suit trumpSuit);
    bool setTrumpSuit(Suit trumpSuit);
    // bool playMeld(std::vector<Card> meldToBePlayed, std::vector<Card>* handPile, std::vector<Card>* meldPile);
-   std::vector<int> countMeldsFromHand(GroupOfCards hand);
-   int getMeldPoints(Meld meld);
+   
+   static int getMeldPoints(Meld meld);
    // bool isValidMeld(std::vector<Card> cards, Meld *whatMeld);
    // bool meldTypePlayedFirstTime(Meld meld);
    // bool meldCanNeglectMeldPile(std::vector<Card> handPile, std::vector<Card> meld);
    // bool meldHasCardFromHandPile(std::vector<Card> handPile, std::vector<Card> meld);
-   bool MeldServices::playMeld(GroupOfCards hand, MeldInstance meldInstance);
+   bool MeldServices::storeMeld(GroupOfCards hand, MeldInstance meldInstance);
    bool isLegalMeld(GroupOfCards hand, MeldInstance meldInstance);
+   int compareHandsForMelds(GroupOfCards hand1, GroupOfCards hand2);
 private:
    MeldsStorage meldsPlayed;
    // std::vector<std::vector<Card>> cardsUsedForCreatingPlayedMelds;
@@ -31,8 +32,8 @@ private:
    bool trumpSuitSpecified;
 
    std::vector<int> potentialPointsFromHand(GroupOfCards hand);
-   int compareHandsForMelds(GroupOfCards hand1, GroupOfCards hand2);
-  
+   std::vector<int> countMeldsFromHand(GroupOfCards hand);
+   
    int countDixes(GroupOfCards hand);
    int countPinochles(GroupOfCards hand);
    int countMarriages(GroupOfCards hand);

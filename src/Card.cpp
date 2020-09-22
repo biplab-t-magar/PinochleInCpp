@@ -254,5 +254,21 @@ bool Card::setSuit(Suit suit) {
    this->suit = suit;
    //mark suit as being initialized
    suitInitialized = true;
-   return true;åå
+   return true;
+}
+
+bool Card::hasGreaterRankThan(Card otherCard) {
+   if(static_cast<int>(this->rank) > static_cast<int>(otherCard.getRank())) {
+      return true;
+   } else {
+      return false;
+   }
+}
+
+bool Card::hasLessRankThan(Card otherCard) {
+   if(static_cast<int>(this->rank) < static_cast<int>(otherCard.getRank())) {
+      return true;
+   } else {
+      return false;
+   }
 }

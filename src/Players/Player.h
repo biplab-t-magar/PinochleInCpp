@@ -22,19 +22,27 @@ protected:
    Card suggestChaseCard(std::string &reasoning, Card opponentCard);
    MeldInstance suggestNextMeld(std::string &reasoning);
    Card playFromHand(int position);
+   Card playFromHand(Card card);
+
+   //throw exception if not valid meld
    MeldInstance createMeld(std::vector<int> positions);
+
+   //throws exception if not valid meld
+   void createMeld(MeldInstance meldInstance);
 private:
    GroupOfCards hand;
    GroupOfCards capurePile;
    Suit trumpSuit; 
    MeldServices meldServices;
-   std::vector<std::string> handStrRep;
-   std::vector<std::string> meldStrRep;
-   std::vector<std::string> capturePileStrRep;
+   std::vector<Card> Player::findBestCardsToThrow();
+   Card getLeastRankedCard();
+   Card getLeastRankedFrom(std::vector<Card> cards);
+   // std::vector<std::string> handStrRep;
+   // std::vector<std::string> meldStrRep;
+   // std::vector<std::string> capturePileStrRep;
    
    // Card playCard(int position);
-
-   bool cardsArePresentInHand(std::vector<Card> cards);
+   // bool cardsArePresentInHand(std::vector<Card> cards);
 };
 
 #endif
