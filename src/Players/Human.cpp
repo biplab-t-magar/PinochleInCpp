@@ -8,24 +8,37 @@ Human::Human() {
 
 }
 
-std::string Human::getHelpForLeadCard() {
+void Human::getHelpForLeadCard() {
    Card suggestedCard;
    std::string reasoning;
    suggestedCard = suggestLeadCard(reasoning);
    std::cout << "I recomment that you present " << suggestedCard.getCardString() << " as your lead card because " << reasoning << "." << std::endl << std::endl;
-   return reasoning;
 }
-std::string Human::getHelpForChaseCard(Card opponentCard) {
+void Human::getHelpForChaseCard(Card opponentCard) {
    Card suggestedCard;
    std::string reasoning;
    suggestedCard = suggestChaseCard(reasoning, opponentCard);
    std::cout << "I recomment that you present " << suggestedCard.getCardString() << " as your chase card because " << reasoning << "." << std::endl << std::endl;
-   return reasoning;
 }
-std::string Human::getHelpForMeld() {
+void Human::getHelpForMeld() {
    std::string reasoning;
-   MeldInstance meldToPlay = suggestNextMeld(reasoning);
-   return reasoning;
+   MeldInstance meldToPlay = suggestMeld(reasoning);
+
+    std::string hint = "I recomment that you present "; 
+
+   //create reasoning string
+   for(int i = 0; i < meldToPlay.getNumOfCards() - 1; i++) {
+      hint += meldToPlay.getCardByPosition(i).getCardString();
+      hint += "(";
+      hint += getCardPositionInHand(meldToPlay.getCardByPosition(i));
+      hint += "), ";
+   }
+   hint += "and ";
+   hint += meldToPlay.getCardByPosition(meldToPlay.getNumOfCards() - 1).getCardString();
+   hint += "(";
+   hint += getCardPositionInHand(meldToPlay.getCardByPosition(meldToPlay.getNumOfCards() - 1));
+   hint = hint + ") because " + reasoning + ".";
+   std::cout << hint << std::endl << std::endl;
 }
 
 

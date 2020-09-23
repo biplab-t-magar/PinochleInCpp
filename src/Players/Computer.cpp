@@ -26,7 +26,7 @@ Card Computer::playChaseCard(Card opponentCard) {
 
 MeldInstance Computer::playMeld() {
    std::string reasoning;
-   MeldInstance meldToPlay = suggestNextMeld(reasoning);
+   MeldInstance meldToPlay = suggestMeld(reasoning);
    if(meldToPlay.getNumOfCards() == 0) {
       return;
    }

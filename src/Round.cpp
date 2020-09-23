@@ -9,23 +9,24 @@ Round::Round() {
 void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
    std::cout << "Welcome to Pinochle. Let's start the game." << std::endl << std::endl << std::endl;
    //storing players for the game:
-   Player players[2];
-
-   //there is a reason for storing these players in this order
-   //we can use the boolean variable humansTurn as the index for this array
    players[0] = Computer();
    players[1] = Human();
+   //there is a reason for storing these players in this order
+   //we can use the boolean variable humansTurn as the index for this array
+   
+   hRoundScore = 0;
+   cRoundScore = 0;
    
 
    std::cout << "Distributing cards:" << std::endl;
    for(int i = 0; i < 3; i++) {
       std::cout << "Giving human four cards..." << std::endl;
       for(int i = 0; i < 4; i++) {
-         human.takeOneCard(stock.takeOneFromTop());
+         players[1].takeOneCard(stock.takeOneFromTop());
       }
       std::cout << "Giving computer four cards..." << std::endl;
       for(int i = 0; i < 4; i++) {
-         computer.takeOneCard(stock.takeOneFromTop());
+         players[0].takeOneCard(stock.takeOneFromTop());
       }
    }
 
@@ -51,7 +52,7 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
    Card chaseCard;
    int userAction;
    //loop for each turn
-   while(human.numCardsInHand() != 0 || computer.numCardsInHand() != 0) {
+   while(players[1].numCardsInHand() != 0 || players[0].numCardsInHand() != 0) {
       //prompt user action
       switch (promptUser()) {
       case 1:
@@ -63,7 +64,7 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
          //simply proceed beyond switch statement if user wants to make a move
          break;
       case 3:
-         std::cout << players[1].getHelpForLeadCard();
+         players[1].getHelpForLeadCard();
          break;
       case 4: 
          std::cout << "Thank you for playing Pinochle! Exiting game..." << std::endl;
@@ -88,7 +89,7 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
          //simply proceed beyond switch statement if user wants to make a move
          break;
       case 3:
-         std::cout << players[1].getHelpForChaseCard(leadCard);
+         players[1].getHelpForChaseCard(leadCard);
          break;
       case 4: 
          std::cout << "Thank you for playing Pinochle! Exiting game..." << std::endl;
@@ -100,16 +101,50 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
 
       chaseCard = players[humansTurn].playChaseCard(leadCard);
 
-      leadVsChase(leadCard, chaseCard);
+      //this function also updates the value of humansTurn to reflect who the winner of the turn is
+      findWinnerAndGivePoints(leadCard, chaseCard);
 
       std::cout << "The winner takes both cards for their capture pile." << std::endl;
+
       players[humansTurn].addToCapturePile(leadCard, chaseCard);
 
-   }
+      //if the human won, ask if he wants help for meld or if he wants to play a meld
+      if(promptUser () == 2) {
+         players[1].getHelpForMeld();
+      }
 
+      //now ask the player to play a meld
+      players[humansTurn].playMeld();
+
+      //now each player takes one card from the stock
+      if(stock.getNumRemaining() > 0) {
+         std::cout << "Winner of the round picks a card from the stock pile first." << std::endl;
+         players[humansTurn].takeOneCard(stock.takeOneFromTop());
+         
+         //if the stock pile has been exhausted, take the last card from stock 
+         if(stock.getNumRemaining() == 0) {
+            players[!humansTurn].takeOneCard(trumpCard);
+         } else {
+            std::cout << "The other players also picks a card from the stock pile." << std::endl;
+            players[!humansTurn].takeOneCard(stock.takeOneFromTop());
+         }  
+      } else {
+         std::cout << "No more cards left in stock. Play until hand cards are exhausted." << std::endl;
+      }
+   }
+   std::cout << "Round ended. " << std::endl;
+   if(hRoundScore > cRoundScore) {
+      std::cout << "You won this round!" << std::endl << std::endl;
+   } else if(cRoundScore > hRoundScore) {
+      std::cout << "You lost this round." << std::endl << std::endl;
+   } else {
+      std::cout << "This round was a draw" << std::endl << std::endl;
+   }
+   hGameScore += hRoundScore;
+   cGameScore += cRoundScore;
 }
 
-void Round::leadVsChase(Card leadCard, Card chaseCard) {
+void Round::findWinnerAndGivePoints(Card leadCard, Card chaseCard) {
    //find out who wins
    if(leadCardWins(leadCard, chaseCard)) {
       //if it was the humans lead, then it would be the computer's turn during the playing of the chase card
@@ -130,6 +165,13 @@ void Round::leadVsChase(Card leadCard, Card chaseCard) {
          humansTurn = true;
       }
    }
+   //if the human player won
+   if(humansTurn) {
+      hRoundScore = hRoundScore + cardPoints(leadCard) + cardPoints(chaseCard);
+   } else {
+      cRoundScore = cRoundScore + cardPoints(leadCard) + cardPoints(chaseCard);
+   }
+
 }
 
 bool Round::leadCardWins(Card leadCard, Card chaseCard) {
@@ -220,7 +262,7 @@ bool coinToss() {
 int Round::promptUser() {
    int numOfOptions;
    if(humansTurn) {
-      std::cout << "It is your turn to play a card. What would you like to do?" << std::endl < std::endl;
+      std::cout << "It is your turn to play a card. What would you like to do?" << std::endl << std::endl;
       std::cout << "Pick an action:" << std::endl << std::endl;
       std::cout << "1.  Save the game" << std::endl;
       std::cout << "2.  Make a move" << std::endl;
@@ -237,7 +279,6 @@ int Round::promptUser() {
       std::cout << std::endl;
       numOfOptions = 3;
    }
-
 
    std::string userAction;
    int userActionInt;
@@ -267,7 +308,41 @@ int Round::promptUser() {
    }
    
    return userActionInt;
-   
+}
+
+int Round::prompUserForMeld(Player human) {
+   if(!human.isMeldPossible()) {
+      std::cout << "You won this turn, but you do not have any cards in your hand to create melds with." << std::endl << std::endl;
+      return;
+   }
+   std::cout << "You won this turn, so you can create a meld." << std::endl;
+   std::cout << "Pick an action: " << std::endl;
+   std::cout << "1.     Play a meld" << std::endl;
+   std::cout << "2.     Ask for help" << std::endl;
+
+   std::string userAction;
+   int userActionInt;
+   while(true) {
+      std::getline(std::cin, userAction);
+      userAction = removeWhiteSpace(userAction);
+      if(userAction.length() != 1) {
+         std::cout << "Invalid action. You must enter a number between 1 and 2. Please try again." << std::endl;
+      }
+
+      try {
+         userActionInt = std::stoi(userAction);
+      } catch(const std::invalid_argument &e) {
+         std::cout << "You must enter a valid number. Please try again." << std::endl;
+         continue;
+      }
+      
+      if (userActionInt < 1 || userActionInt > 2) {
+         std::cout << "You must enter a number between 1 and 2. Please try again." << std::endl; 
+      } else {
+         break;
+      }
+   }
+   return userActionInt;
 }
 
 // //  std::cout << "Pick an action:" << std::endl << std::endl;

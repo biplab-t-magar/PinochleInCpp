@@ -18,17 +18,19 @@ public:
    virtual Card playChaseCard(Card opponentCard);
    virtual MeldInstance playMeld();
    void addToCapturePile(Card card1, Card card2);
-   virtual std::string getHelpForLeadCard();
-   virtual std::string getHelpForChaseCard(Card opponentCard);
-   virtual std::string getHelpForMeld();
+   virtual void getHelpForLeadCard();
+   virtual void getHelpForChaseCard(Card opponentCard);
+   virtual void getHelpForMeld();
    int numCardsInHand();
    bool isMeldPossible();
 protected:
+   int getCardPositionInHand(Card card);
    Card suggestLeadCard(std::string &reasoning);
    Card suggestChaseCard(std::string &reasoning, Card opponentCard);
-   MeldInstance suggestNextMeld(std::string &reasoning);
+   MeldInstance suggestMeld(std::string &reasoning);
    Card playFromHand(int position);
    Card playFromHand(Card card);
+   
 
    //throw exception if not valid meld
    MeldInstance createMeld(std::vector<int> positions);

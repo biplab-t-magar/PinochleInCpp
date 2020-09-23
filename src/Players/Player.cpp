@@ -239,7 +239,7 @@ Card Player::suggestChaseCard(std::string &reasoning, Card opponentCard) {
    return cardToThrow;
 }
 
-MeldInstance Player::suggestNextMeld(std::string &reasoning) {
+MeldInstance Player::suggestMeld(std::string &reasoning) {
    //first, get all possible melds from the hand
    MeldsStorage allPossibleMelds = meldServices.getMeldsFromHand(hand);
 
@@ -310,14 +310,16 @@ int Player::numCardsInHand() {
 }
 
 bool Player::isMeldPossible() {
-   std::string reasoning;
-   MeldInstance meldToPlay = suggestNextMeld(reasoning);
-   if(meldToPlay.getNumOfCards() == 0) {
+   MeldsStorage allPossibleMelds = meldServices.getMeldsFromHand(hand);
+   if(allPossibleMelds.getNumOfMelds() == 0) {
       return false;
    } 
    return true;
 }
 
+int Player::getCardPositionInHand(Card card) {
+   return hand.getCardPosition(card);
+}
 
 
 
@@ -370,12 +372,12 @@ void Player::createMeld(MeldInstance meldInstance) {
    }
 }
 
-std::string Player::getHelpForLeadCard() {
-   throw PinochleException("Non-human players cannot ask help for moves.");
+void Player::getHelpForLeadCard() {
+   throw PinochleException("Non-human players cannot ask for help for moves.");
 }
-std::string Player::getHelpForChaseCard(Card opponentCard) {
-   throw PinochleException("Non-human players cannot ask help for moves.");
+void Player::getHelpForChaseCard(Card opponentCard) {
+   throw PinochleException("Non-human players cannot ask for help for moves.");
 }
-std::string Player::getHelpForMeld() {
-   throw PinochleException("Non-human players cannot ask help for moves.");
+void Player::getHelpForMeld() {
+   throw PinochleException("Non-human players cannot ask for help for moves.");
 }

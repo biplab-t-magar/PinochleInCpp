@@ -10,10 +10,10 @@ public:
    Human();
    Card playLeadCard();
    Card playChaseCard(Card opponentCard);
-   void playMeld();
-   std::string getHelpForLeadCard();
-   std::string getHelpForChaseCard(Card opponentCard);
-   std::string getHelpForMeld();
+   MeldInstance playMeld();
+   void getHelpForLeadCard();
+   void getHelpForChaseCard(Card opponentCard);
+   void getHelpForMeld();
 private:
    int promptUser();
    int promptCardThrow();

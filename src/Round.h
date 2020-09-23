@@ -12,16 +12,16 @@ public:
    void startNewRound(int roundNumber, int &hGameScore, int &cRoundScore);
    // void continueRound(Serialization )
 private:
-   Player human;
-   Player computer;
+   Player players[2];
    Deck stock;
    int hRoundScore;
-   int hRoundScore;
+   int cRoundScore;
    Card trumpCard;
    Suit trumpSuit;
    bool humansTurn;
    int promptUser();
-   void leadVsChase(Card leadCard, Card chaseCard);
+   int prompUserForMeld(Player human);
+   void findWinnerAndGivePoints(Card leadCard, Card chaseCard);
    bool leadCardWins(Card leadCard, Card chaseCard);
 };
 
