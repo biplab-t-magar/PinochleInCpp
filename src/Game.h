@@ -10,6 +10,7 @@ public:
    int newGameOrLoad();
    void startNewGame();
    void loadGame();
+   void Game::startAnotherRound();
 private:
    int humanScore;
    int computerScore;

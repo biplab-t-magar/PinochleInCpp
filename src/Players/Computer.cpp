@@ -24,7 +24,7 @@ Card Computer::playChaseCard(Card opponentCard) {
    return cardToPlay;
 }
 
-void Computer::playMeld() {
+MeldInstance Computer::playMeld() {
    std::string reasoning;
    MeldInstance meldToPlay = suggestNextMeld(reasoning);
    if(meldToPlay.getNumOfCards() == 0) {
@@ -38,4 +38,5 @@ void Computer::playMeld() {
    }
    std::cout << "The computer chose to play a " << meldToPlay.getMeldTypeString() << " for its meld" << 
                " because " << reasoning << "." << std::endl;
+   return meldToPlay;
 }

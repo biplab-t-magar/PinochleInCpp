@@ -10,7 +10,7 @@ MeldInstance::MeldInstance(std::vector<Card> cards, Suit trumpSuit) : GroupOfCar
    meldIsValid = checkMeldValidity();
 }
 
-bool MeldInstance::addCard(Card card) {
+bool MeldInstance::addCard(Card card, Suit trumpSuit) {
    cards.push_back(card);
    meldIsValid = checkMeldValidity();
    return true;
@@ -19,15 +19,19 @@ bool MeldInstance::removeCardById(int id) {
    for(int i = 0; i < cards.size(); i++) {
       if(cards[i].getId() == id) {
          cards.erase(cards.begin() + i);
+         meldIsValid = checkMeldValidity();
          return true;
       }
    }
-   meldIsValid = checkMeldValidity();
+   
    return false;
 }
 bool MeldInstance::removeCardByPosition(int position) {
    if(position >= cards.size() || position < 0) {
       throw PinochleException("Given position is out of bounds");
+   }
+   if(getNumOfCards()  < 1) {
+      return false;
    }
    cards.erase(cards.begin() + position);
    meldIsValid = checkMeldValidity();

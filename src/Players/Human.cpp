@@ -12,15 +12,14 @@ std::string Human::getHelpForLeadCard() {
    Card suggestedCard;
    std::string reasoning;
    suggestedCard = suggestLeadCard(reasoning);
-   //enter code for explanation
+   std::cout << "I recomment that you present " << suggestedCard.getCardString() << " as your lead card because " << reasoning << "." << std::endl << std::endl;
    return reasoning;
-   
 }
 std::string Human::getHelpForChaseCard(Card opponentCard) {
    Card suggestedCard;
    std::string reasoning;
    suggestedCard = suggestChaseCard(reasoning, opponentCard);
-   //enter code for explanation
+   std::cout << "I recomment that you present " << suggestedCard.getCardString() << " as your chase card because " << reasoning << "." << std::endl << std::endl;
    return reasoning;
 }
 std::string Human::getHelpForMeld() {
@@ -48,9 +47,10 @@ Card Human::playChaseCard(Card opponentCard) {
    return card;
 }
 
-void Human::playMeld() {
+MeldInstance Human::playMeld() {
    std::string meldString;
    std::vector<int> positions;
+   MeldInstance meldInstance;
    while(true) {
       std::getline(std::cin, meldString);
       std::cout << "List out the positions (separated by spaces) of all the cards you would like to play for your meld:" << std::endl << std::endl;
@@ -61,7 +61,7 @@ void Human::playMeld() {
          continue;
       }
       try {
-         MeldInstance meldInstance = createMeld(positions);
+          meldInstance = createMeld(positions);
          std::cout << "You played a " << meldInstance.getMeldTypeString() << " for your meld." << std::endl;
       } catch (PinochleException &e) {
          std::cout << e.what() << std::endl;
@@ -69,6 +69,7 @@ void Human::playMeld() {
       }
       break;
    }
+   return meldInstance;
 }
 
 

@@ -14,19 +14,25 @@ void Game::startNewGame() {
    currentRound = 1;
    humanScore = 0;
    computerScore = 0;
-   Round round;
+   
    while(true) {
-      //start new round
-      round = Round();
-      std::cout << "Starting round " << currentRound << "..." << std::endl << std::endl;
-      //passing arguments by reference
-      round.startRound(currentRound, humanScore, computerScore);
-      currentRound++;
+      startAnotherRound();
       if(playAnotherRound() == false) {
          break;
       }
    }
+
    std::cout << "Thank you for playing Pinochle!" << std::endl;
+}
+
+void Game::startAnotherRound() {
+   Round round;
+   
+   std::cout << "Starting round " << currentRound << "..." << std::endl << std::endl;
+   //start new round
+   //passing arguments by reference
+   round.startNewRound(currentRound, humanScore, computerScore);
+   currentRound++;
 }
 
 int Game::newGameOrLoad() {

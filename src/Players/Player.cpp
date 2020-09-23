@@ -9,9 +9,38 @@ void Player::takeOneCard(Card card) {
    hand.addCard(card);
 }
 
+// void Player::takeCards(std::vector<Card> cards) {
+//    for(int i = 0; i < cards.size(); i++) {
+//       hand.addCard(cards[i]);
+//    }
+// }
+
 bool Player::setTrumpSuit(Suit trumpSuit) {
    this->trumpSuit = trumpSuit;
    return true;
+}
+
+
+Card Player::playFromHand(int position) {
+   if(position >= numCardsInHand() || position < 0) {
+      throw PinochleException("Position is out of range.");
+   } 
+   Card card = hand.getCardByPosition(position);
+   hand.removeCardByPosition(position);
+   return card;
+}
+
+Card Player::playFromHand(Card card) {
+   if(hand.searchCardById(card.getId())) {
+      throw PinochleException("This card is not in the player's hand.");
+   } 
+   hand.removeCardById(card.getId());
+   return card;
+}
+
+void Player::addToCapturePile(Card card1, Card card2) {
+   capturePile.addCard(card1);
+   capturePile.addCard(card2);
 }
 
 std::vector<Card> Player::bestCardsForLeadThrow() {
@@ -251,7 +280,6 @@ MeldInstance Player::suggestNextMeld(std::string &reasoning) {
 
 }
 
-
 MeldInstance Player::findBestMeldToPlay(std::vector<MeldInstance> meldsToCompare) {
    MeldServices mockServices1 = meldServices;
    MeldServices mockServices2 = meldServices;
@@ -277,15 +305,6 @@ MeldInstance Player::findBestMeldToPlay(std::vector<MeldInstance> meldsToCompare
 }
 
 
-// Card Player::playCard(int position) {
-//    //adjusting the string representation of the hand and meld 
-   
-// }
-
-// void Player::playMeld(MeldInstance MeldInstance) {
-
-// }
-
 int Player::numCardsInHand() {
    return hand.getNumOfCards();
 }
@@ -298,6 +317,8 @@ bool Player::isMeldPossible() {
    } 
    return true;
 }
+
+
 
 
 MeldInstance Player::createMeld(std::vector<int> positions) {
@@ -315,7 +336,7 @@ MeldInstance Player::createMeld(std::vector<int> positions) {
    MeldInstance meldInstance;
    //next, combine all cards from each position to create a MeldInstance object
    for(int i = 0; i < positions.size(); i++) {
-      meldInstance.addCard(hand.getCardByPosition(positions[i]));
+      meldInstance.addCard(hand.getCardByPosition(positions[i]), trumpSuit);
    }
    try {
       createMeld(meldInstance);
@@ -340,8 +361,21 @@ void Player::createMeld(MeldInstance meldInstance) {
       throw PinochleException("This meld is not valid because at least one card in it has been used to create an instance of this same meld type before.");
    }
 
+   if(!meldServices.meldHasANewCard(meldInstance)) {
+      throw PinochleException("The meld must contain at least one new card from hand. Please try again.");
+   }
+
    if (meldServices.storeMeld(hand, meldInstance) == false) {
       throw PinochleException("Unable to store meld.");
    }
+}
 
+std::string Player::getHelpForLeadCard() {
+   throw PinochleException("Non-human players cannot ask help for moves.");
+}
+std::string Player::getHelpForChaseCard(Card opponentCard) {
+   throw PinochleException("Non-human players cannot ask help for moves.");
+}
+std::string Player::getHelpForMeld() {
+   throw PinochleException("Non-human players cannot ask help for moves.");
 }

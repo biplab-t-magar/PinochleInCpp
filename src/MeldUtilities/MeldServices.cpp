@@ -38,6 +38,10 @@ bool MeldServices::meldIsNotARepeat(MeldInstance meldInstance) {
    return true;
 }
 
+bool MeldServices::meldHasANewCard(MeldInstance meldInstance) {
+   return !meldsPlayed.cardsUsedForSameMeld(meldInstance, meldInstance.getMeldType());
+}
+
 bool MeldServices::storeMeld(GroupOfCards hand, MeldInstance meldInstance) {
    if(!meldInstance.isValidMeld() || !allCardsPresentInHand(hand, meldInstance) || !meldIsNotARepeat(meldInstance)) {
       return false;
@@ -526,6 +530,8 @@ std::vector<MeldInstance> MeldServices::getSameRankMelds(Meld meld, GroupOfCards
    
 }
 
+
+
 std::vector<MeldInstance> MeldServices::getSameSuitMelds(Meld meld, GroupOfCards hand, Suit suit, Rank startingRank, int howManyCards) {
    
    //if the number in howManyCards is more than the number of Ranks in the meld
@@ -572,6 +578,32 @@ std::vector<MeldInstance> MeldServices::getSameSuitMelds(Meld meld, GroupOfCards
       
    }
 
+   //since melds must contain at least one new card from hand and since 
+   //Royal Marriage is the only possible meld that could violate this rule
+   //we check that the any pair of King/Queen cards have not been used together to form a Flush
+   if(meld == Meld::RoyalMarriage) {
+      std::vector<Card> royalMarriagePair;
+      royalMarriagePair.push_back(cardsOfEachRank[0][0]);
+      royalMarriagePair.push_back(cardsOfEachRank[1][0]);
+
+      //if both cards have been used for same meld, switch the cards out if there are other equivalent cards available
+      if(meldsPlayed.cardsUsedForSameMeld(royalMarriagePair, meld)) {
+         if(cardsOfEachRank[0].size() > 1) {
+            Card temp = cardsOfEachRank[0][0];
+            cardsOfEachRank[0][0] = cardsOfEachRank[0][1];
+            cardsOfEachRank[0][1] = temp;
+         } else if(cardsOfEachRank[1].size() > 1) {
+            Card temp = cardsOfEachRank[1][0];
+            cardsOfEachRank[1][0] = cardsOfEachRank[1][1];
+            cardsOfEachRank[1][1] = temp;
+         } else {
+            cardsOfEachRank[0].pop_back();
+            cardsOfEachRank[1].pop_back();
+         }
+      }
+   }
+
+
    return createMeldsFromEligibleCards(cardsOfEachRank);
 
 }
@@ -606,7 +638,7 @@ std::vector<MeldInstance> MeldServices::createMeldsFromEligibleCards(std::vector
    for(int i = 0; i < min; i++) {
       //loop through each card type needed to create the meld
       for(int j = 0; j < cards.size(); j++) {
-         meldStore.addCard(cards[j][i]);
+         meldStore.addCard(cards[j][i], trumpSuit);
       }
    }
 

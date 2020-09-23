@@ -12,10 +12,15 @@ public:
    Player();
    // virtual void nextMove() = 0;
    void takeOneCard(Card card);
+   // void takeCards(std::vector<Card> cards);
    bool setTrumpSuit(Suit trumpSuit);
-   virtual Card playLeadCard() = 0;
-   virtual Card playChaseCard(Card opponentCard) = 0;
-   virtual void playMeld() = 0;
+   virtual Card playLeadCard();
+   virtual Card playChaseCard(Card opponentCard);
+   virtual MeldInstance playMeld();
+   void addToCapturePile(Card card1, Card card2);
+   virtual std::string getHelpForLeadCard();
+   virtual std::string getHelpForChaseCard(Card opponentCard);
+   virtual std::string getHelpForMeld();
    int numCardsInHand();
    bool isMeldPossible();
 protected:

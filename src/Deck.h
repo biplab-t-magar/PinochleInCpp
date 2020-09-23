@@ -7,14 +7,20 @@
 
 class Deck {
 public:
-    Deck(int numOfEachCard  = 2);
-    void shuffle();
-    Card takeOneFromTop();
-    size_t getNumRemaining();
+   Deck(int numOfEachCard  = 2);
+   void shuffle();
+   Card takeOneFromTop();
+
+
+   //function to be used during serialization
+   void removeCards(std::vector<Card> cards);
+
+   size_t getNumRemaining();
+
 private:
-    std::vector<Card> cards;
-    const int numOfEachCard;
-    void populate();
+   std::vector<Card> cards;
+   const int numOfEachCard;
+   void populate();
 };
 
 #endif

@@ -134,6 +134,38 @@ bool MeldsStorage::isCardUsedByMeld(Card card, Meld meldType) {
    return false;
 }
 
+bool MeldsStorage::cardsUsedForSameMeld(std::vector<Card> cards, Meld meldType) {
+   //get int representation of the given meld
+   int meldTypeInt = static_cast<int>(meldType);
+
+   //get the number of instances of that particular meld type
+   int numOfMeldsPlayed = storage[meldTypeInt].size();
+
+   bool cardsUsedBySameMeld = true;
+   for(int i = 0; i < numOfMeldsPlayed; i++) {
+      for(int j= 0; j < cards.size(); j++) {
+         //if one of the cards is not found in the meld instance currently being looped through
+         if(storage[meldTypeInt][i].searchCardById(cards[j].getId()) != true) {
+            cardsUsedBySameMeld =  false;
+            break;
+         }
+      }
+      //if there is a meld where all of the given cards are present
+      if(cardsUsedBySameMeld == true) {
+         return true;
+      }
+   }
+   return false;
+}
+
+bool MeldsStorage::cardsUsedForSameMeld(MeldInstance meldInstance, Meld meldType) {
+   std::vector<Card> cards;
+   for(int i = 0; i < meldInstance.getNumOfCards(); i++) {
+      cards.push_back(meldInstance.getCardByPosition(i));
+   }
+   return cardsUsedForSameMeld(cards, meldType);
+}
+
 bool MeldsStorage::isCardUsedByAnyMeld(Card card) {
    
    for(int meldType = 0; meldType < numOfMeldTypes; meldType++) {

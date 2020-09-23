@@ -9,7 +9,7 @@ public:
    Computer();
    Card playLeadCard();
    Card playChaseCard(Card opponentCard);
-   void playMeld();
+   MeldInstance playMeld();
 private:
 
 };

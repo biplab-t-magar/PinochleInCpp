@@ -12,7 +12,7 @@ class MeldInstance : public GroupOfCards {
 public:
    MeldInstance();
    MeldInstance(std::vector<Card> cards, Suit trumpSuit);
-   bool addCard(Card card);
+   bool MeldInstance::addCard(Card card, Suit trumpSuit);
    bool removeCardById(int id); 
    bool removeCardByPosition(int position);
    Meld getMeldType() const;
