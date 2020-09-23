@@ -8,7 +8,8 @@
 class Round {
 public:
    Round();
-   void startRound(int roundNumber, int hScore, int cScore);
+   void startRound(int &roundNumber, int &hScore, int &cScore);
+   // void continueRound(Serialization )
 private:
    Human human;
    Computer computer;

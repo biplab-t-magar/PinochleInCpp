@@ -7,7 +7,9 @@
 class Game {
 public:
    Game();
-   void startGame();
+   int newGameOrLoad();
+   void startNewGame();
+   void loadGame();
 private:
    int humanScore;
    int computerScore;
