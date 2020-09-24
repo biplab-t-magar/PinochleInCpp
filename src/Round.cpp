@@ -238,19 +238,19 @@ bool Round::coinToss() {
    if(toss == 1) {
       headsOrTails = "tails";
    }
-   std::cout << "Deciding who goes first based on a coin toss. Enter your prediction (heads/tails): " << std::endl;
+   std::cout << "Deciding who goes first based on a coin toss. Enter your prediction (heads/tails): ";
    std::string userResponse;
    while(true) {
       getline(std::cin, userResponse);
       userResponse = stripString(userResponse);
       if(userResponse != "heads" && userResponse != "tails" ) {
-         std::cout << "You must enter either 'heads' or 'tails' exactly. Please enter your guess again:" << std::endl;
+         std::cout << "You must enter either 'heads' or 'tails' exactly. Please enter your guess again:";
          continue;
       }
       break;
    }
 
-   std::cout << "The toss resulted in a " << headsOrTails << std::endl;
+   std::cout << "The toss resulted in a " << headsOrTails << "." <<std::endl;
    if(userResponse == headsOrTails) {
       std::cout << "Human wins the coin toss! It's your turn to go first." << std::endl;
       return true;
