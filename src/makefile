@@ -1,0 +1,1 @@
+pinochle: MeldInstance.o MeldServices.o MeldsStorage.o Computer.o Human.o Player.o Card.o Deck.o Game.o GroupOfCards.o Pinochle.o
