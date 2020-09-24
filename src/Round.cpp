@@ -30,7 +30,10 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
 
    trumpCard = stock.takeOneFromTop();
    trumpSuit = trumpCard.getSuit();
+   players[0].setTrumpSuit(trumpSuit);
+   players[1].setTrumpSuit(trumpSuit);
    std::cout << "The trump card for this round is " << trumpCard.getCardString() << std::endl << std::endl;
+   
    
    if(roundNumber == 1 || hGameScore == cGameScore) {
       //if humansTurnIsNext is set to true, the human player plays the next turn
@@ -51,6 +54,8 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
    int userAction;
    //loop for each turn
    while(players[1].numCardsInHand() != 0 || players[0].numCardsInHand() != 0) {
+      //display the game table
+      displayTable(roundNumber, hGameScore, cGameScore);
       //prompt user action
       switch (promptUser()) {
       case 1:
@@ -244,6 +249,8 @@ bool Round::coinToss() {
       }
       break;
    }
+
+   std::cout << "The toss resulted in a " << headsOrTails << std::endl;
    if(userResponse == headsOrTails) {
       std::cout << "Human wins the coin toss! It's your turn to go first." << std::endl;
       return true;
@@ -339,7 +346,8 @@ int Round::promptUserForMeld(Player human) {
    return userActionInt;
 }
 
-void Round::displayTable(int roundNumber, int cGameScore, int hGameScore) {
+void Round::displayTable(int roundNumber, int hGameScore, int cGameScore) {
+   std::cout << "\n\nCurrent Game Table: \n\n";
    //display each players info
    std::string player;
    for(int i = 0; i < 2; i++) {
@@ -370,25 +378,25 @@ void Round::displayTable(int roundNumber, int cGameScore, int hGameScore) {
 }
 
 std::string Round::getHandString(Player player) {   
-   std::string handString;
+   std::string handString ="";
    GroupOfCards hand = player.getHand();
    for(int i = 0; i < hand.getNumOfCards(); i++) {
-      handString = hand.getCardByPosition(i).getShortCardStr() + "(" + std::to_string(i) + ") ";
+      handString = handString + hand.getCardByPosition(i).getShortCardStr() + "(" + std::to_string(i) + ") ";
    }
    return handString;
 }
 
 std::string Round::getCaptureString(Player player) {   
-   std::string captureString;
+   std::string captureString ="";
    GroupOfCards capturePile = player.getCapturePile();
    for(int i = 0; i < capturePile.getNumOfCards(); i++) {
-      captureString = capturePile.getCardByPosition(i).getShortCardStr() + " ";
+      captureString = captureString + capturePile.getCardByPosition(i).getShortCardStr() + " ";
    }
    return captureString;
 }
 
 std::string Round::getMeldsString(Player player) {   
-   std::string meldsString;
+   std::string meldsString ="";
    // MeldsStorage meldsPlayed = player.getMeldsPlayed();
    std::vector<std::vector<MeldInstance>> melds = player.getMeldsPlayed().getAllMelds();
    GroupOfCards hand = player.getHand();
@@ -404,7 +412,7 @@ std::string Round::getMeldsString(Player player) {
             meldCard = melds[i][j].getCardByPosition(0);
             meldCardPos = hand.getCardPosition(meldCard);
             //get the string representation of the card, along with its position in hand
-            meldsString = meldCard.getShortCardStr() + "(" + (meldCardPos == -1 ? "" : std::to_string(meldCardPos)) + ") "; 
+            meldsString = meldsString +  meldCard.getShortCardStr() + "(" + (meldCardPos == -1 ? "" : std::to_string(meldCardPos)) + ") "; 
          }
          //once all the cards for the melds have been displayed, print name of meld type
          meldsString = meldsString + " -- " + melds[i][j].getMeldTypeString() + ",\n";

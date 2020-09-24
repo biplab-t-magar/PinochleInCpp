@@ -25,7 +25,7 @@ private:
    int cardPoints(Card card);
    void findWinnerAndGivePoints(Card leadCard, Card chaseCard);
    bool leadCardWins(Card leadCard, Card chaseCard);
-   void displayTable(int roundNumber, int cGameScore, int hGameScore);
+   void displayTable(int roundNumber, int hGameScore, int cGameScore);
    std::string getHandString(Player player);
    std::string getCaptureString(Player player);
    std::string getMeldsString(Player player);

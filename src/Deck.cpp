@@ -156,5 +156,6 @@ Card Deck::takeOneFromTop() {
 }
 
 std::vector<Card> Deck::getAllRemainingCards() {
+   
    return cards;
 }
