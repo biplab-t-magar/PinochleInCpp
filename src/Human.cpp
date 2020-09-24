@@ -13,19 +13,19 @@ void Human::getHelpForLeadCard() {
    Card suggestedCard;
    std::string reasoning;
    suggestedCard = suggestLeadCard(reasoning);
-   std::cout << "I recomment that you present " << suggestedCard.getCardString() << " as your lead card because " << reasoning << "." << std::endl << std::endl;
+   std::cout << "\nHint: I recomment that you present " << suggestedCard.getCardString() << " as your lead card because " << reasoning << "." << std::endl << std::endl;
 }
 void Human::getHelpForChaseCard(Card opponentCard) {
    Card suggestedCard;
    std::string reasoning;
    suggestedCard = suggestChaseCard(reasoning, opponentCard);
-   std::cout << "I recomment that you present " << suggestedCard.getCardString() << " as your chase card because " << reasoning << "." << std::endl << std::endl;
+   std::cout << "\nHint: I recomment that you present " << suggestedCard.getCardString() << " as your chase card because " << reasoning << "." << std::endl << std::endl;
 }
 void Human::getHelpForMeld() {
    std::string reasoning;
    MeldInstance meldToPlay = suggestMeld(reasoning);
 
-    std::string hint = "I recomment that you present "; 
+    std::string hint = "\nHint: I recomment that you present "; 
 
    //create reasoning string
    for(int i = 0; i < meldToPlay.getNumOfCards() - 1; i++) {

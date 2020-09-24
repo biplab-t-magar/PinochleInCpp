@@ -10,6 +10,9 @@ public:
    Card playLeadCard();
    Card playChaseCard(Card opponentCard);
    MeldInstance playMeld();
+   void getHelpForLeadCard();
+   void getHelpForChaseCard(Card opponentCard);
+   void getHelpForMeld();
 private:
 
 };

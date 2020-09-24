@@ -13,6 +13,7 @@ Assistance Received: None
 Card::Card() {
    rankInitialized = false;
    suitInitialized = false;
+   idInitialized = false;
 }
 
 /* *********************************************************************

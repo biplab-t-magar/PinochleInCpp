@@ -41,3 +41,13 @@ MeldInstance Computer::playMeld() {
                " because " << reasoning << "." << std::endl;
    return meldToPlay;
 }
+
+void Computer::getHelpForLeadCard() {
+   throw PinochleException("Non-human players cannot ask for help for moves.");
+}
+void Computer::getHelpForChaseCard(Card opponentCard) {
+   throw PinochleException("Non-human players cannot ask for help for moves.");
+}
+void Computer::getHelpForMeld() {
+   throw PinochleException("Non-human players cannot ask for help for moves.");
+}

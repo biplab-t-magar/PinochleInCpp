@@ -6,13 +6,16 @@
 #include "Computer.h"
 #include "Deck.h"
 
+#define numOfPlayers 2
+
 class Round {
 public:
    Round();
+   ~Round();
    void startNewRound(int roundNumber, int &hGameScore, int &cGameScore);
    // void continueRound(Serialization )
 private:
-   Player* players[2];
+   Player* players[numOfPlayers];
    Deck stock;
    int hRoundScore;
    int cRoundScore;

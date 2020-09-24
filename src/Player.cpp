@@ -35,6 +35,7 @@ GroupOfCards Player::getCapturePile() const {
 
 bool Player::setTrumpSuit(Suit trumpSuit) {
    this->trumpSuit = trumpSuit;
+   meldServices.setTrumpSuit(trumpSuit);
    return true;
 }
 
@@ -49,7 +50,7 @@ Card Player::playFromHand(int position) {
 }
 
 Card Player::playFromHand(Card card) {
-   if(hand.searchCardById(card.getId())) {
+   if(!hand.searchCardById(card.getId())) {
       throw PinochleException("This card is not in the player's hand.");
    } 
    hand.removeCardById(card.getId());
@@ -111,7 +112,7 @@ Card Player::suggestLeadCard(std::string &reasoning) {
    assert(bestCardsToThrow.size() >= 1);
 
    //give the reasoning for choosing this set of cards
-   reasoning = "throwing this card would result in the most favorable hand, which has the most high-value melds";
+   reasoning = "throwing this card would preserve the most favorable hand, which has the most high-value melds";
 
    //now, check the size of bestCardsToThrow. if it is more than one, then we need to further compare
    if(bestCardsToThrow.size() > 1) {
@@ -127,8 +128,6 @@ Card Player::suggestLeadCard(std::string &reasoning) {
       //if there is at least one trump card, then that card(s) is the new best card(s)
       if(trumpSuitCardsToThrow.size() != 0) {
          bestCardsToThrow = trumpSuitCardsToThrow;
-         //give the reasoning for choosing this set of cards
-         reasoning = "throwing this card would result in the most favorable hand (meld-wise) and it would increase the chance of winning because it is a trump card";
       }
       //if still there are more than one cards, get the card with the greater Rank
       //if even ranks are the same, it does not matter what card we throw
@@ -139,7 +138,12 @@ Card Player::suggestLeadCard(std::string &reasoning) {
                bestCardsToThrow[0] = bestCardsToThrow[i];
             }
          }
-         reasoning = "throwing this card would result in a good balance between a favorable hand (meld-wise) and the chance of winning the turn";
+         if(bestCardsToThrow[0].getSuit() == trumpSuit) {
+            reasoning = "throwing this card would preserve the most favorable hand (meld-wise) and it would increase the chance of winning because it is a trump card";
+         } else {
+            reasoning = "throwing this card would result in a good balance between a favorable hand (meld-wise) and the chance of winning the turn";
+         }
+         
       }
    } 
    return bestCardsToThrow[0];
@@ -166,6 +170,7 @@ Card Player::getLeastRankedCard() {
       for(index = 0; index < hand.getNumOfCards(); index++) {
          if(hand.getCardByPosition(index).getSuit() != trumpSuit) {
             leastRankedCard = hand.getCardByPosition(index);
+            break;
          }
       }
       //now find the least ranked card that's not of trump suit
@@ -238,7 +243,7 @@ Card Player::suggestChaseCard(std::string &reasoning, Card opponentCard) {
       //if same suit cards with ranks greater than that of opponent card were found, then return the card with the smallest rank among them
       if(sameSuitCards.size() > 0) {
          cardToThrow = getLeastRankedFrom(sameSuitCards);
-         reasoning = "throwing the card of the same suit as the opponent but with a greater rank is the least expensive winning move";
+         reasoning = "throwing the card of the same suit as the opponent but with a rank greater than but closest to that of the opponent's card is the least expensive winning move";
       } else {
          //if the there are no cards in hand having the same suit as that of the opponent card, and having a higher rank,
          //then check if there is a trump-suit card in hand
@@ -388,26 +393,26 @@ MeldInstance Player::createMeld(MeldInstance meldInstance) {
    return meldInstance;
 }
 
-void Player::getHelpForLeadCard() {
-   throw PinochleException("Non-human players cannot ask for help for moves.");
-}
-void Player::getHelpForChaseCard(Card opponentCard) {
-   throw PinochleException("Non-human players cannot ask for help for moves.");
-}
-void Player::getHelpForMeld() {
-   throw PinochleException("Non-human players cannot ask for help for moves.");
-}
+// void Player::getHelpForLeadCard() {
+//    throw PinochleException("Non-human players cannot ask for help for moves.");
+// }
+// void Player::getHelpForChaseCard(Card opponentCard) {
+//    throw PinochleException("Non-human players cannot ask for help for moves.");
+// }
+// void Player::getHelpForMeld() {
+//    throw PinochleException("Non-human players cannot ask for help for moves.");
+// }
 
-Card Player::playLeadCard(){
-   std::string reasoning;
-   return suggestLeadCard(reasoning);
-}
-Card Player::playChaseCard(Card opponentCard){
-   std::string reasoning;
-   return suggestChaseCard(reasoning, opponentCard);
-}
+// Card Player::playLeadCard(){
+//    std::string reasoning;
+//    return suggestLeadCard(reasoning);
+// }
+// Card Player::playChaseCard(Card opponentCard){
+//    std::string reasoning;
+//    return suggestChaseCard(reasoning, opponentCard);
+// }
 
-MeldInstance Player::playMeld() {
-   std::string reasoning;
-   return suggestMeld(reasoning);
-}
+// MeldInstance Player::playMeld() {
+//    std::string reasoning;
+//    return suggestMeld(reasoning);
+// }

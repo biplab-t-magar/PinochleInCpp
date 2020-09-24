@@ -2,8 +2,19 @@
 #include <iostream>
 #include "StringUtilities.h"
 
+#define numOfPlayers 2
+
 Round::Round() {
-   
+   for(int i = 0; i < numOfPlayers; i++) {
+      players[i] = NULL;
+   }
+}
+
+Round::~Round() {
+
+   for(int i = 0; i < numOfPlayers; i++) {
+      delete players[i];
+   }
 }
 
 void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
@@ -14,10 +25,8 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
    
    hRoundScore = 0;
    cRoundScore = 0;
-   Player computer = Computer();
-   Player human = Human();
-   players[0] = &computer;
-   players[1] = &human;
+   players[0] = new Computer();
+   players[1] = new Human();
    
 
    std::cout << "Distributing cards:" << std::endl;
@@ -65,7 +74,7 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
          //simply proceed beyond switch statement if user wants to make a move
          break;
       case 2:
-         players[1]->getHelpForChaseCard(leadCard);
+         players[1]->getHelpForLeadCard();
          break;
       case 3: 
          std::cout << "Thank you for playing Pinochle! Exiting game..." << std::endl;

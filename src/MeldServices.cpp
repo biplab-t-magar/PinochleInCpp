@@ -233,12 +233,15 @@ int MeldServices::compareHandsForMelds(GroupOfCards hand1, GroupOfCards hand2) {
    //if again the total possible points of each hand are the same, compare the 2nd highest, 3rd highest,...
    //and so on points of each meld until a winner is found
    int i = 0;
-   while(i < hand1Points.size()) {
+   //get the size of the smaller of the two vectors
+   int size = hand1Points.size() < hand2Points.size() ? hand1Points.size() : hand2Points.size();
+   while(i < size) {
       if (hand1Points[i] > hand2Points[i]) {
          return 1;
       } else if (hand1Points[i] < hand2Points[i]) {
          return 2;
-      } 
+      }
+      i++;
    }
 
    //if no difference between the possible points from each hand was found, return 0, standing for draw
@@ -255,6 +258,10 @@ std::vector<int> MeldServices::potentialPointsFromHand(GroupOfCards hand) {
       for(int j = 0; j < countsOfEachMeldType[i]; j++) {
          points.push_back(getMeldPoints(static_cast<Meld>(i)));
       }
+   }
+   
+   if(points.size() == 0) {
+      points.push_back(0);
    }
    //sort the vector
    std::sort(points.rbegin(), points.rend()); 
@@ -355,6 +362,10 @@ std::vector<MeldInstance> MeldServices::getPinochles(GroupOfCards hand) {
    }
    std::vector<std::vector<Card>> playableCards;
 
+   //0 index will store the vector of all JD's and 1 index will store the vector of all QS
+   playableCards.push_back(std::vector<Card>());
+   playableCards.push_back(std::vector<Card>());
+
    std::vector<Card> allJackOfDiamonds = hand.getCardsByRankAndSuit(Rank::Jack, Suit::Diamonds);
    std::vector<Card> allQueenOfSpades = hand.getCardsByRankAndSuit(Rank::Queen, Suit::Spades);
 
@@ -386,7 +397,7 @@ std::vector<MeldInstance> MeldServices::getMarriages(GroupOfCards hand) {
    //loop through each suit
    for(int suit = 0; suit < 4; suit++) {
       if(static_cast<Suit>(suit) != trumpSuit) {
-         marriageStore = getSameSuitMelds(Meld::RoyalMarriage, hand, static_cast<Suit>(suit), Rank::King, 2);
+         marriageStore = getSameSuitMelds(Meld::Marriage, hand, static_cast<Suit>(suit), Rank::King, 2);
          marriages.insert(marriages.begin(), marriageStore.begin(), marriageStore.end());
       }
    }
@@ -588,24 +599,27 @@ std::vector<MeldInstance> MeldServices::getSameSuitMelds(Meld meld, GroupOfCards
    //we check that the any pair of King/Queen cards have not been used together to form a Flush
    if(meld == Meld::RoyalMarriage) {
       std::vector<Card> royalMarriagePair;
-      royalMarriagePair.push_back(cardsOfEachRank[0][0]);
-      royalMarriagePair.push_back(cardsOfEachRank[1][0]);
+      if(cardsOfEachRank[0].size() > 0 && cardsOfEachRank[1].size() > 0) {
+         royalMarriagePair.push_back(cardsOfEachRank[0][0]);
+         royalMarriagePair.push_back(cardsOfEachRank[1][0]);
 
-      //if both cards have been used for same meld, switch the cards out if there are other equivalent cards available
-      if(meldsPlayed.cardsUsedForSameMeld(royalMarriagePair, meld)) {
-         if(cardsOfEachRank[0].size() > 1) {
-            Card temp = cardsOfEachRank[0][0];
-            cardsOfEachRank[0][0] = cardsOfEachRank[0][1];
-            cardsOfEachRank[0][1] = temp;
-         } else if(cardsOfEachRank[1].size() > 1) {
-            Card temp = cardsOfEachRank[1][0];
-            cardsOfEachRank[1][0] = cardsOfEachRank[1][1];
-            cardsOfEachRank[1][1] = temp;
-         } else {
-            cardsOfEachRank[0].pop_back();
-            cardsOfEachRank[1].pop_back();
+         //if both cards have been used for same meld, switch the cards out if there are other equivalent cards available
+         if(meldsPlayed.cardsUsedForSameMeld(royalMarriagePair, meld)) {
+            if(cardsOfEachRank[0].size() > 1) {
+               Card temp = cardsOfEachRank[0][0];
+               cardsOfEachRank[0][0] = cardsOfEachRank[0][1];
+               cardsOfEachRank[0][1] = temp;
+            } else if(cardsOfEachRank[1].size() > 1) {
+               Card temp = cardsOfEachRank[1][0];
+               cardsOfEachRank[1][0] = cardsOfEachRank[1][1];
+               cardsOfEachRank[1][1] = temp;
+            } else {
+               cardsOfEachRank[0].pop_back();
+               cardsOfEachRank[1].pop_back();
+            }
          }
       }
+      
    }
 
 
@@ -645,6 +659,7 @@ std::vector<MeldInstance> MeldServices::createMeldsFromEligibleCards(std::vector
       for(int j = 0; j < cards.size(); j++) {
          meldStore.addCard(cards[j][i], trumpSuit);
       }
+      allPossibleMelds.push_back(meldStore);
    }
 
    return allPossibleMelds;
