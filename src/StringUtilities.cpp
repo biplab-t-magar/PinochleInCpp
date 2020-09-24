@@ -1,3 +1,4 @@
+#include "StringUtilities.h"
 #include <string>
 
 std::string stripString(std::string str) {

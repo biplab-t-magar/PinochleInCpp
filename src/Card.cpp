@@ -51,6 +51,7 @@ int Card::getId() const {
 bool Card::setId(int id) {
    this->id = id;
    idInitialized = true;
+   return true;
 }
 
 

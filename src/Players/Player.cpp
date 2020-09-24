@@ -3,7 +3,13 @@
 
 #define numOfMeldTypes 9
 
-Player::Player() { }
+// Player::Player() { 
+
+// }
+
+// Player::~Player() {
+
+// }
 
 void Player::takeOneCard(Card card) {
    hand.addCard(card);
@@ -392,4 +398,18 @@ void Player::getHelpForChaseCard(Card opponentCard) {
 }
 void Player::getHelpForMeld() {
    throw PinochleException("Non-human players cannot ask for help for moves.");
+}
+
+Card Player::playLeadCard(){
+   std::string reasoning;
+   return suggestLeadCard(reasoning);
+}
+Card Player::playChaseCard(Card opponentCard){
+   std::string reasoning;
+   return suggestChaseCard(reasoning, opponentCard);
+}
+
+MeldInstance Player::playMeld() {
+   std::string reasoning;
+   return suggestMeld(reasoning);
 }

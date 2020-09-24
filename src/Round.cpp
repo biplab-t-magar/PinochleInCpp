@@ -1,16 +1,14 @@
 #include "Round.h"
 #include <iostream>
-#include "StringUtilities.cpp"
+#include "StringUtilities.h"
 
 Round::Round() {
-
+   
 }
 
 void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
    std::cout << "Welcome to Pinochle. Let's start the game." << std::endl << std::endl << std::endl;
    //storing players for the game:
-   players[0] = Computer();
-   players[1] = Human();
    //there is a reason for storing these players in this order
    //we can use the boolean variable humansTurn as the index for this array
    
@@ -246,7 +244,7 @@ bool Round::coinToss() {
       }
       break;
    }
-   if(userResponse == "heads") {
+   if(userResponse == headsOrTails) {
       std::cout << "Human wins the coin toss! It's your turn to go first." << std::endl;
       return true;
    } else {

@@ -1,6 +1,6 @@
 #include "Game.h"
 #include <iostream>
-#include "StringUtilities.cpp"
+#include "StringUtilities.h"
 
 Game::Game() {
    if(newGameOrLoad() == 1) {
@@ -36,7 +36,7 @@ void Game::startAnotherRound() {
 }
 
 int Game::newGameOrLoad() {
-   std::cout << "Would you like to (1)start a new game or (2)load a previous game? Enter 1 or 2: " << std::endl << std::endl;
+   std::cout << "Would you like to (1) start a new game or (2) load a previous game? Enter 1 or 2: " << std::endl << std::endl;
    std::string userResponse;
    while(true) {
       getline(std::cin, userResponse);
@@ -49,7 +49,7 @@ int Game::newGameOrLoad() {
    }
    if(userResponse == "1") {
       return 1;
-   } else if(userResponse == "2") {
+   } else {
       return 2;
    }
 }
@@ -69,11 +69,11 @@ bool Game::playAnotherRound(){
    }
    if(userResponse == "n") {
       return false;
-   } else if(userResponse == "y") {
+   } else {
       return true;
    }
 }
 
-void loadGame() {
-   
+void Game::loadGame() {
+
 }

@@ -9,7 +9,12 @@
 
 class Player {
 public:
-   Player();
+   Player() {
+
+   }
+   ~Player() {
+
+   }
    // virtual void nextMove() = 0;
    void takeOneCard(Card card);
    // void takeCards(std::vector<Card> cards);
