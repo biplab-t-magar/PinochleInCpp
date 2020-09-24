@@ -4,17 +4,31 @@
 
 #include <vector>
 #include "Card.h"
-#include "MeldInstance.h"
+#include "MeldsStorage.h"
 
 class Serialization {
 public:
    Serialization();
-   void cardPlayed();
-   void meldPlayed();
+   bool getPlayerCards(GroupOfCards hand, MeldsStorage meldsPlayed, GroupOfCards capturePile);
+   bool getPlayerData(std::string handSerialization, std::string meldSerialization, std::string captureSerialization);
+
+   std::string getHandSerialization();
+   std::string getCaptureSerialization();
+   std::string getMeldSerialization();
+
+   GroupOfCards getHand();
+   MeldsStorage getMeldsPlayed();
+   GroupOfCards getCapturePile();
 private:
-   std::vector<Card> handPile;
-   std::vector<Card> meldPile;
-   std::vector<Card> capturePile; 
+   bool playerCardsEntered;
+   bool playerDataEntered;
+   GroupOfCards hand;
+   MeldsStorage meldsPlayed;
+   GroupOfCards capturePile; 
+
+   std::string handSerialization;
+   std::string meldSerialization;
+   std::string captureSerialization;
 };
 
 #endif

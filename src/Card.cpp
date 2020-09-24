@@ -215,6 +215,37 @@ std::string Card::getCardString() const {
    }
 }
 
+std::string Card::getShortCardStr() const {
+   //check if both suit and rank have not been initialized 
+   if(!suitInitialized && !rankInitialized) {
+      throw PinochleException("Suit and rank for this card have not been specified");
+   } else {
+      //cardString holds the string to be returned
+
+      //here, both getRankString() and getSuitString() can return exceptions if either
+      //one has not been initialized. Catch exception and pass it up
+      std::string cardString;
+      try {
+         //getting string representation of rank and suit
+         std::string rankStr, suitStr;
+         //if Rank is not Ten or Nine, then rank is first string of getCardRank()
+         rankStr = getRankString()[0];
+         if(rank == Rank::Ten) {
+            rankStr = "X";
+         } else if(rank == Rank::Nine) {
+            rankStr = "9";
+         }
+
+         suitStr = getSuitString()[0];
+
+         cardString = rankStr + suitStr;
+      } catch (PinochleException &e) {
+         throw e;
+      }
+      return cardString;
+   }
+}
+
 /* *********************************************************************
 Function Name: setRank
 Purpose: a mutator function to that set the rank of the card

@@ -134,6 +134,21 @@ bool MeldsStorage::isCardUsedByMeld(Card card, Meld meldType) {
    return false;
 }
 
+std::vector<MeldInstance> MeldsStorage::getAllMeldsUsingCard(Card card) {
+   std::vector<MeldInstance> allMeldsUsingCard;
+   //loop through all meld types
+   for(int i = 0; i < storage.size(); i++) {
+      //loop through all instances of a meld type
+      for(int j = 0; j < storage[i].size(); j++) {
+         //if card is in the given meld instance, push it as one of the results
+         if(storage[i][j].searchCardById(card.getId()) == true) {
+            allMeldsUsingCard.push_back(storage[i][j]);
+         }
+      }
+   }
+   return allMeldsUsingCard;
+}
+
 bool MeldsStorage::cardsUsedForSameMeld(std::vector<Card> cards, Meld meldType) {
    //get int representation of the given meld
    int meldTypeInt = static_cast<int>(meldType);

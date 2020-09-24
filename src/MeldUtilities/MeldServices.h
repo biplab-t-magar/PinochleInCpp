@@ -12,6 +12,8 @@ class MeldServices {
 public:
    MeldServices();
    MeldServices(Suit trumpSuit);
+   MeldsStorage getMeldsPlayed() const;
+
    bool setTrumpSuit(Suit trumpSuit);
    // bool playMeld(std::vector<Card> meldToBePlayed, std::vector<Card>* handPile, std::vector<Card>* meldPile);
    

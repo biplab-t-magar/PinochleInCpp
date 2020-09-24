@@ -15,6 +15,18 @@ void Player::takeOneCard(Card card) {
 //    }
 // }
 
+GroupOfCards Player::getHand() const {
+   return hand;
+} 
+
+MeldsStorage Player::getMeldsPlayed() const {
+   return meldServices.getMeldsPlayed();
+}
+
+GroupOfCards Player::getCapturePile() const {
+   return capturePile;
+}
+
 bool Player::setTrumpSuit(Suit trumpSuit) {
    this->trumpSuit = trumpSuit;
    return true;
@@ -327,8 +339,7 @@ MeldInstance Player::createMeld(std::vector<int> positions) {
    // be sure   to check if all positions are valid
    for(int i = 0; i < positions.size(); i++) {
       if (positions[i] < 0 || positions[i] >= numCardsInHand()) {
-         std::string errorMessage = "All positions must be a valid position between 0 and " + (numCardsInHand() - 1);
-         errorMessage += ". Please try again.";
+         std::string errorMessage = "All positions must be a valid position between 0 and " + std::to_string(numCardsInHand() - 1) + ". Please try again.";
          throw PinochleException(errorMessage); 
       } else {
          break;
@@ -350,7 +361,7 @@ MeldInstance Player::createMeld(std::vector<int> positions) {
 }
 
 
-void Player::createMeld(MeldInstance meldInstance) {
+MeldInstance Player::createMeld(MeldInstance meldInstance) {
    if(meldInstance.isValidMeld() == false) {
       throw PinochleException("The cards you specified do not combine to make up a meld. Please try again.");
    }   
@@ -370,6 +381,7 @@ void Player::createMeld(MeldInstance meldInstance) {
    if (meldServices.storeMeld(hand, meldInstance) == false) {
       throw PinochleException("Unable to store meld.");
    }
+   return meldInstance;
 }
 
 void Player::getHelpForLeadCard() {

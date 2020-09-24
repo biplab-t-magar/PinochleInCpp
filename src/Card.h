@@ -32,6 +32,7 @@ public:
    std::string getRankString() const;
    std::string getSuitString() const;
    std::string getCardString() const;
+   std::string getShortCardStr() const;
    bool setRank(Rank rank);
    bool setSuit(Suit suit);
    bool hasGreaterRankThan(Card otherCard);

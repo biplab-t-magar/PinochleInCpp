@@ -9,7 +9,7 @@
 class Round {
 public:
    Round();
-   void startNewRound(int roundNumber, int &hGameScore, int &cRoundScore);
+   void startNewRound(int roundNumber, int &hGameScore, int &cGameScore);
    // void continueRound(Serialization )
 private:
    Player players[2];
@@ -23,6 +23,10 @@ private:
    int prompUserForMeld(Player human);
    void findWinnerAndGivePoints(Card leadCard, Card chaseCard);
    bool leadCardWins(Card leadCard, Card chaseCard);
+   void displayTable(int roundNumber, int cGameScore, int hGameScore);
+   std::string getHandString(Player player);
+   std::string getCaptureString(Player player);
+   std::string getMeldsString(Player player);
 };
 
 #endif

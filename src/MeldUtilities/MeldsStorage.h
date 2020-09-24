@@ -14,6 +14,7 @@ public:
    std::vector<std::vector<MeldInstance>> getAllMelds() const;
    std::vector<MeldInstance> getAllMeldsByType(Meld meldType) const;
    bool isCardUsedByMeld(Card card, Meld meldType);
+   std::vector<MeldInstance> getAllMeldsUsingCard(Card card);
    bool cardsUsedForSameMeld(std::vector<Card> cards, Meld meldType);
    bool cardsUsedForSameMeld(MeldInstance cards, Meld meldType);
    bool isCardUsedByAnyMeld(Card card);

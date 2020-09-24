@@ -81,17 +81,12 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
       promptUser();
       switch (promptUser()) {
       case 1:
-         // saveGame();
-         std::cout << "Game saved!" << std::endl;
-         continue;
-         break;
-      case 2:
          //simply proceed beyond switch statement if user wants to make a move
          break;
-      case 3:
+      case 2:
          players[1].getHelpForChaseCard(leadCard);
          break;
-      case 4: 
+      case 3: 
          std::cout << "Thank you for playing Pinochle! Exiting game..." << std::endl;
          exit(0);
          break;
@@ -264,20 +259,18 @@ int Round::promptUser() {
    if(humansTurn) {
       std::cout << "It is your turn to play a card. What would you like to do?" << std::endl << std::endl;
       std::cout << "Pick an action:" << std::endl << std::endl;
-      std::cout << "1.  Save the game" << std::endl;
-      std::cout << "2.  Make a move" << std::endl;
-      std::cout << "3.  Ask for help" << std::endl;
-      std::cout << "4.  Quit the game" << std::endl;
-      std::cout << std::endl;
-      numOfOptions = 4;
-   } else {
-      std::cout << "It is the computers turn to play a card. What would you like to do?"<< std::endl << std::endl;;
-      std::cout << "Pick an action:" << std::endl << std::endl;
-      std::cout << "1.  Save the game" << std::endl;
-      std::cout << "2.  Make a move" << std::endl;
+      std::cout << "1.  Make a move" << std::endl;
+      std::cout << "2.  Ask for help" << std::endl;
       std::cout << "3.  Quit the game" << std::endl;
       std::cout << std::endl;
       numOfOptions = 3;
+   } else {
+      std::cout << "It is the computers turn to play a card. What would you like to do?"<< std::endl << std::endl;;
+      std::cout << "Pick an action:" << std::endl << std::endl;
+      std::cout << "1.  Ask computer to make a move" << std::endl;
+      std::cout << "2.  Quit the game" << std::endl;
+      std::cout << std::endl;
+      numOfOptions = 2;
    }
 
    std::string userAction;
@@ -303,8 +296,8 @@ int Round::promptUser() {
       }
    }
    //adjust quit game option number
-   if(!humansTurn && userActionInt == 3) {
-      userActionInt = 4;
+   if(!humansTurn && userActionInt == 2) {
+      userActionInt = 3;
    }
    
    return userActionInt;
@@ -345,58 +338,75 @@ int Round::prompUserForMeld(Player human) {
    return userActionInt;
 }
 
-// //  std::cout << "Pick an action:" << std::endl << std::endl;
-// //    std::cout << "1.  Save the game" << std::endl;
-// //    std::cout << "2.  Make a move" << std::endl;
-// //    std::cout << "3.  Ask for help" << std::endl;
-// //    std::cout << "4.  Quit the game" << std::endl;
+void Round::displayTable(int roundNumber, int cGameScore, int hGameScore) {
+   //display each players info
+   std::string player;
+   for(int i = 0; i < 2; i++) {
+      std::cout << "Round: " << roundNumber << std::endl << std::endl;
+      std::cout << (i == 0 ? "Computer:" : "Human:")  << roundNumber << std::endl;
+      std::cout << "    Score: " <<  cGameScore << " / " << cRoundScore << std::endl;
+      std::cout << "    Hand: " << getHandString(players[i]) << std::endl;
+      std::cout << "    Capture Pile: " << getCaptureString(players[i]) << std::endl;
+      std::cout << "    Melds: " << getMeldsString(players[i]) << std::endl;
+      std::cout << std::endl;
+   }
 
+   if(stock.getNumRemaining() == 0) {
+      std::cout << "Trump Card: " << trumpCard.getSuitString()[0] << std::endl;
+   } else {
+      std::cout << "Trump Card: " << trumpCard.getShortCardStr()  << std::endl;
+   }
+   
 
-// std::cout << "Pick an action:" << std::endl << std::endl;
-//    std::cout << "1.  Save the game" << std::endl;
-//    std::cout << "2.  Make a move" << std::endl;
-//    std::cout << "3.  Ask for help" << std::endl;
-//    std::cout << "4.  Quit the game" << std::endl;
-//    std::cout << std::endl;
+   std::vector<Card> stockCards = stock.getAllRemainingCards();
+   std::cout << "Stock: ";
+   //the card at the top of the stock is the card at the end of the vector
+   for(int i = stockCards.size() - 1; i >= 0; i++) {
+      std::cout << stockCards[i].getShortCardStr() << " ";
+   }
+   std::cout << std::endl << std::endl;
+   std::cout << "Next Player: " << (humansTurn ? "Human" : "Computer") << std::endl << std::endl;
+}
 
-//    std::string userAction;
-//    int userActionInt;
-//    while(true) {
-//       std::getline(std::cin, userAction);
-//       userAction = removeWhiteSpace(userAction);
-//       if(userAction.length() != 1) {
-//          std::cout << "Invalid action. You must enter a number between 1 and 4. Please try again." << std::endl;
-//       }
+std::string Round::getHandString(Player player) {   
+   std::string handString;
+   GroupOfCards hand = player.getHand();
+   for(int i = 0; i < hand.getNumOfCards(); i++) {
+      handString = hand.getCardByPosition(i).getShortCardStr() + "(" + std::to_string(i) + ") ";
+   }
+}
 
-//       try {
-//          userActionInt = std::stoi(userAction);
-//       } catch(const std::invalid_argument &e) {
-//          std::cout << "You must enter a valid number. Please try again." << std::endl;
-//          continue;
-//       }
-      
-//       if (userActionInt < 1 || userActionInt > 4) {
-//          std::cout << "You must enter a number between 1 and 4. Please try again." << std::endl; 
-//       } else {
-//          break;
-//       }
-//    }
+std::string Round::getCaptureString(Player player) {   
+   std::string captureString;
+   GroupOfCards capturePile = player.getCapturePile();
+   for(int i = 0; i < capturePile.getNumOfCards(); i++) {
+      captureString = capturePile.getCardByPosition(i).getShortCardStr() + " ";
+   }
+}
 
-//    switch(userActionInt) {
-//       case 1:
-//          std::cout << "Saving game..." << std::endl;
-//          saveGameProgress();
-//          break;
-//       case 2:
-//          break;
-//       case 3:
-//          break;
-//       case 4:
-//          std::cout << "Thank you for playing Pinochle" << std::endl;
-//          exit(0);
-//          break;
-//       default:
-//          std::cout << "Error: invalid input from user" << std::endl;
-//          break;
-//    }
-//    return userActionInt;
+std::string Round::getMeldsString(Player player) {   
+   std::string meldsString;
+   // MeldsStorage meldsPlayed = player.getMeldsPlayed();
+   std::vector<std::vector<MeldInstance>> melds = player.getMeldsPlayed().getAllMelds();
+   GroupOfCards hand = player.getHand();
+   Card meldCard;
+   int meldCardPos;
+   std::cout << std::endl;
+   //for all meld types
+   for(int i = 0; i < melds.size(); i++) {
+      //for all instances of a meld type
+      for(int j = 0; j < melds[i].size(); j++) {
+         std::cout << "          ";
+         //for all cards in a meld instance
+         for(int k = 0; k < melds[i][j].getNumOfCards(); k++) {
+            meldCard = melds[i][j].getCardByPosition(0);
+            meldCardPos = hand.getCardPosition(meldCard);
+            //get the string representation of the card, along with its position in hand
+            meldsString = meldCard.getShortCardStr() + "(" + (meldCardPos == -1 ? "" : std::to_string(meldCardPos)) + ") "; 
+         }
+         //once all the cards for the melds have been displayed, print name of meld type
+         std::cout << " -- " << melds[i][j].getMeldTypeString() << "," << std::endl;
+         
+      }
+   }
+}

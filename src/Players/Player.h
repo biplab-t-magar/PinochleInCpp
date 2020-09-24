@@ -23,6 +23,10 @@ public:
    virtual void getHelpForMeld();
    int numCardsInHand();
    bool isMeldPossible();
+   GroupOfCards getHand() const;
+   MeldsStorage getMeldsPlayed() const;
+   GroupOfCards getCapturePile() const;
+
 protected:
    int getCardPositionInHand(Card card);
    Card suggestLeadCard(std::string &reasoning);
@@ -36,7 +40,7 @@ protected:
    MeldInstance createMeld(std::vector<int> positions);
 
    //throws exception if not valid meld
-   void createMeld(MeldInstance meldInstance);
+   MeldInstance createMeld(MeldInstance meldInstance);
 private:
    GroupOfCards hand;
    GroupOfCards capturePile;
@@ -46,9 +50,9 @@ private:
    Card getLeastRankedCard();
    Card getLeastRankedFrom(std::vector<Card> cards);
    MeldInstance findBestMeldToPlay(std::vector<MeldInstance> meldsToCompare);
-   // std::vector<std::string> handStrRep;
-   // std::vector<std::string> meldStrRep;
-   // std::vector<std::string> capturePileStrRep;
+   std::vector<std::string> handPile;
+   std::vector<std::string> meldStrRep;
+   std::vector<std::string> capturePileStrRep;
    
    // Card playCard(int position);
    // bool cardsArePresentInHand(std::vector<Card> cards);

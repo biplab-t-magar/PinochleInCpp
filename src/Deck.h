@@ -10,13 +10,11 @@ public:
    Deck(int numOfEachCard  = 2);
    void shuffle();
    Card takeOneFromTop();
-
-
    //function to be used during serialization
    void removeCards(std::vector<Card> cards);
 
    size_t getNumRemaining();
-
+   std::vector<Card> getAllRemainingCards();
 private:
    std::vector<Card> cards;
    const int numOfEachCard;

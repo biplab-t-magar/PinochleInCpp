@@ -13,6 +13,10 @@ MeldServices::MeldServices(Suit trumpSuit) {
    this->trumpSuitSpecified = true;
 }
 
+MeldsStorage MeldServices::getMeldsPlayed() const {
+   return meldsPlayed;
+}
+
 bool MeldServices::setTrumpSuit(Suit trumpSuit) {
    this->trumpSuit = trumpSuit;
    this->trumpSuitSpecified = true;
