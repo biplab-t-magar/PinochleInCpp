@@ -9,7 +9,7 @@ Card Computer::playLeadCard() {
    std::string reasoning;
    Card cardToPlay = suggestLeadCard(reasoning);
    playFromHand(cardToPlay);
-   std::cout << "The computer chose to play " << cardToPlay.getCardString() << " as its lead card" <<
+   std::cout << "The computer chose to play " << cardToPlay.getShortCardStr() << " as its lead card" <<
                " because " << reasoning << "." << std::endl;
    return cardToPlay;
 }
@@ -19,7 +19,7 @@ Card Computer::playChaseCard(Card opponentCard) {
    std::string reasoning;
    Card cardToPlay = suggestChaseCard(reasoning, opponentCard);
    playFromHand(cardToPlay);
-   std::cout << "The computer chose to play " << cardToPlay.getCardString() << " as its chase card" <<
+   std::cout << "The computer chose to play " << cardToPlay.getShortCardStr() << " as its chase card" <<
                " because " << reasoning << "." << std::endl;
    return cardToPlay;
 }

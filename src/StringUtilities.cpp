@@ -5,7 +5,7 @@ std::string stripString(std::string str) {
    std::string strippedString;
    //strip from front
    for(int i = 0; i < str.length(); i++) {
-      if(str[i] != ' ') {
+      if(str[i] != ' ' &&  str[i] != '\n') {
          strippedString = str.substr(i);
          break;
       }
@@ -13,7 +13,7 @@ std::string stripString(std::string str) {
    //strip from back
    str = strippedString;
    for(int i = str.length() - 1; i >= 0; i--) {
-      if(str[i] != ' ') {
+      if(str[i] != ' '  && str[i] != '\n') {
          strippedString = str.substr(0, i + 1);
          break;
       }
@@ -24,7 +24,7 @@ std::string stripString(std::string str) {
 std::string removeWhiteSpace(std::string str) {
    std::string cleanString = "";
    for(int i = 0; i < str.length(); i++) {
-      if(str[i] != ' ') {
+      if(str[i] != ' ' && str[i] != '\n') {
          cleanString += str[i];
       }
    }

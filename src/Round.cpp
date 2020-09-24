@@ -65,6 +65,7 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
    Card leadCard;
    Card chaseCard;
    MeldInstance meld;
+   int promptResponse;
    //loop for each turn
    while(players[1]->numCardsInHand() != 0 || players[0]->numCardsInHand() != 0) {
       //display the game table
@@ -109,21 +110,25 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
       //this function also updates the value of humansTurn to reflect who the winner of the turn is
       findWinnerAndGivePoints(leadCard, chaseCard);
 
-      std::cout << "The winner takes both cards for their capture pile." << std::endl;
-
       players[humansTurn]->addToCapturePile(leadCard, chaseCard);
 
-      //if the human won, ask if he wants help for meld or if he wants to play a meld
-      if(humansTurn) {
-         if(promptUserForMeld(players[1]) == 2) {
-            players[1]->getHelpForMeld();
+      if(!(players[humansTurn]->isMeldPossible())) {
+         std::cout << "The winner of this turn does not have any cards in hand to create melds with. Moving on to the next turn..." << std::endl << std::endl;
+      } else {
+         std::cout <<"Now, the winner creates a meld." << std::endl;
+         //if the human won, ask if he wants help for meld or if he wants to play a meld
+         if(humansTurn) {
+            if(promptUserForMeld(players[1]) == 2) {
+               players[1]->getHelpForMeld();
+            } 
          }
+         //now ask the player to play a meld
+         meld = players[humansTurn]->playMeld();
+         std::cout << (humansTurn ? "You" : "The computer") << " win " << meld.getMeldPoints() << " points for playing a " << meld.getMeldTypeString() << " meld.\n\n";
       }
-      
 
-      //now ask the player to play a meld
-      meld = players[humansTurn]->playMeld();
-      std::cout << (humansTurn ? "You" : "The computer") << " win " << meld.getMeldPoints() << " points for playing a " << meld.getMeldTypeString() << " meld.\n\n";
+      
+      
 
       //now each player takes one card from the stock
       if(stock.getNumRemaining() > 0) {
@@ -159,28 +164,30 @@ void Round::findWinnerAndGivePoints(Card leadCard, Card chaseCard) {
       //if it was the humans lead, then it would be the computer's turn during the playing of the chase card
       //that's why humansTurn == false if human played the lead card
       if(!humansTurn) {
-         std::cout << "Your lead card has beaten the computer's chase card. You win this turn!" << std::endl;
+         std::cout << "\nYour lead card has beaten the computer's chase card. You win this turn!" << std::endl;
          humansTurn = true;
       } else {
-         std::cout << "Your chase card was beaten by the computer's lead card. You lose this turn." << std::endl;
+         std::cout << "\nYour chase card was beaten by the computer's lead card. You lose this turn." << std::endl;
          humansTurn = false;
       }
    } else {
       if(!humansTurn) {
-         std::cout << "Your chase card was beaten by the computer's lead card. You lose this turn." << std::endl;
+         std::cout << "\nYour chase card was beaten by the computer's lead card. You lose this turn." << std::endl;
          humansTurn = false;
       } else {
-         std::cout << "Your chase card has beaten the computer's lead card. You win this turn!" << std::endl;
+         std::cout << "\nYour chase card has beaten the computer's lead card. You win this turn!" << std::endl;
          humansTurn = true;
       }
    }
    int pointsWon = cardPoints(leadCard) + cardPoints(chaseCard);
    //if the human player won
    if(humansTurn) {
-      std::cout << "You won " << pointsWon << " points using your card.\n";
+      std::cout << "You take both cards for your capture pile." << std::endl;
+      std::cout << "You won " << pointsWon << " points.\n\n";
       roundScores[1] = roundScores[1] + pointsWon;
    } else {
-      std::cout << "The computer won " << pointsWon << " points using its card.\n";
+      std::cout << "The computer takes both cards for their capture pile." << std::endl;
+      std::cout << "The computer won " << pointsWon << " points.\n\n";
       roundScores[0] = roundScores[0] + pointsWon;
    }
 
@@ -252,6 +259,7 @@ bool Round::coinToss() {
    std::cout << "Deciding who goes first based on a coin toss. Enter your prediction (heads/tails): ";
    std::string userResponse;
    while(true) {
+      std::cin.clear();
       getline(std::cin, userResponse);
       userResponse = stripString(userResponse);
       if(userResponse != "heads" && userResponse != "tails" ) {
@@ -295,10 +303,18 @@ int Round::promptUser() {
    std::string userAction;
    int userActionInt;
    while(true) {
+      std::cin.clear();
       std::getline(std::cin, userAction);
       userAction = removeWhiteSpace(userAction);
       if(userAction.length() != 1) {
          std::cout << "Invalid action. You must enter a number between 1 and " << numOfOptions << ". Please try again." << std::endl;
+         continue;
+      }
+
+      
+      if(userAction[0] < 48 || userAction[0] > 57) {
+         std::cout << "You must enter a valid number. Please try again." << std::endl;
+         continue;
       }
 
       try {
@@ -310,6 +326,7 @@ int Round::promptUser() {
       
       if (userActionInt < 1 || userActionInt > numOfOptions) {
          std::cout << "You must enter a number between 1 and " << numOfOptions << ". Please try again." << std::endl; 
+         continue;
       } else {
          break;
       }
@@ -323,10 +340,6 @@ int Round::promptUser() {
 }
 
 int Round::promptUserForMeld(Player *human) {
-   if(!(human->isMeldPossible())) {
-      std::cout << "You won this turn, but you do not have any cards in your hand to create melds with." << std::endl << std::endl;
-      return 0;
-   }
    std::cout << "You won this turn, so you can create a meld." << std::endl;
    std::cout << "Pick an action: " << std::endl;
    std::cout << "1.     Play a meld" << std::endl;
@@ -335,10 +348,12 @@ int Round::promptUserForMeld(Player *human) {
    std::string userAction;
    int userActionInt;
    while(true) {
+      std::cin.clear();
       std::getline(std::cin, userAction);
       userAction = removeWhiteSpace(userAction);
       if(userAction.length() != 1) {
          std::cout << "Invalid action. You must enter a number between 1 and 2. Please try again." << std::endl;
+         continue;
       }
 
       try {
@@ -350,6 +365,7 @@ int Round::promptUserForMeld(Player *human) {
       
       if (userActionInt < 1 || userActionInt > 2) {
          std::cout << "You must enter a number between 1 and 2. Please try again." << std::endl; 
+         continue;
       } else {
          break;
       }
@@ -358,7 +374,8 @@ int Round::promptUserForMeld(Player *human) {
 }
 
 void Round::displayTable(int roundNumber, int hGameScore, int cGameScore) {
-   std::cout << "\n\nCurrent Game Table: \n\n";
+   std::cout << "\n\n---------------------------------------------------------------------------------------\n";
+   std::cout << "Current Game Table: \n\n";
    //display each players info
    std::string player;
    for(int i = 0; i < 2; i++) {
@@ -385,7 +402,8 @@ void Round::displayTable(int roundNumber, int hGameScore, int cGameScore) {
       std::cout << stockCards[i].getShortCardStr() << " ";
    }
    std::cout << std::endl << std::endl;
-   std::cout << "Next Player: " << (humansTurn ? "Human" : "Computer") << std::endl << std::endl;
+   std::cout << "Next Player: " << (humansTurn ? "Human" : "Computer") << std::endl;
+   std::cout << "---------------------------------------------------------------------------------------\n\n";
 }
 
 std::string Round::getHandString(Player* player) {   

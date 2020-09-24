@@ -48,16 +48,16 @@ Card Human::playLeadCard() {
    // std::cout << "You are the lead player for this turn" << std::endl;
    int cardToPlay = promptCardThrow();
    Card card = playFromHand(cardToPlay);
-   std::cout << "You chose to play " << card.getCardString() << " as your lead card" << std::endl << std::endl;
+   std::cout << "You chose to play " << card.getShortCardStr() << " as your lead card." << std::endl << std::endl;
    return card;
 }
 
 Card Human::playChaseCard(Card opponentCard) {
    // std::cout << "You are the chase player for this turn" << std::endl;
-   std::cout << "Your opponent played " << opponentCard.getCardString() << " as the lead card." << std::endl;
+   std::cout << "Your opponent played " << opponentCard.getShortCardStr() << " as the lead card." << std::endl;
    int cardToPlay = promptCardThrow();
    Card card = playFromHand(cardToPlay);
-   std::cout << "You chose to play " << card.getCardString() << " as your chase card" << std::endl << std::endl;
+   std::cout << "You chose to play " << card.getShortCardStr() << " as your chase card" << std::endl;
    return card;
 }
 
@@ -66,16 +66,18 @@ MeldInstance Human::playMeld() {
    std::vector<int> positions;
    MeldInstance meldInstance;
    while(true) {
+      std::cin.clear();
       std::getline(std::cin, meldString);
-      std::cout << "List out the positions (separated by spaces) of all the cards you would like to play for your meld:" << std::endl << std::endl;
+      std::cout << "List out the positions (separated by spaces) of all the cards you would like to play for your meld: ";
       try {   
          positions = parseMeldPositions(meldString);
+         continue;
       } catch(PinochleException &e) {
          std::cout << e.what() << std::endl;
          continue;
       }
       try {
-          meldInstance = createMeld(positions);
+         meldInstance = createMeld(positions);
          std::cout << "You played a " << meldInstance.getMeldTypeString() << " for your meld." << std::endl;
       } catch (PinochleException &e) {
          std::cout << e.what() << std::endl;
@@ -142,27 +144,42 @@ MeldInstance Human::playMeld() {
 
 int Human::promptCardThrow() {
    std::cout << "What card do you want to throw?" << std::endl;
-   std::cout << "    Enter the card position (first card has position 0)" << std::endl;
+   std::cout << "    Enter the card position (first card has position 0): ";
 
    std::string cardToThrow;
    int cardToThrowInt;
 
    while(true) {
+      std::cin.clear();
       std::getline(std::cin, cardToThrow);
       cardToThrow = removeWhiteSpace(cardToThrow);
       if(cardToThrow.length() < 1 || cardToThrow.length() > 2) {
-         std::cout << "Invalid action. You must enter a valid card position. Please try again." << std::endl;
+         std::cout << "Invalid action. You must enter a valid card position. Please try again: ";
+         continue;
       }
 
+      
+      if(cardToThrow[0] < 48 || cardToThrow[0] > 57) {
+         std::cout << "You must enter a valid number. Please try again." << std::endl;
+         continue;
+      }
+      if (cardToThrow.size() > 1) {
+         if(cardToThrow[1] < 48 || cardToThrow[1] > 57) {
+            std::cout << "You must enter a valid number. Please try again." << std::endl;
+            continue;
+         }
+      }  
+      
       try {
          cardToThrowInt = std::stoi(cardToThrow);
       } catch(const std::invalid_argument &e) {
-         std::cout << "You must enter a valid position number for the card and not non-numeric characters. Please try again." << std::endl;
+         std::cout << "You must enter a valid position number for the card and not non-numeric characters. Please try again: ";
          continue;
       }
       
       if (cardToThrowInt < 0 || cardToThrowInt >= numCardsInHand()) {
-         std::cout << "You must enter a number between 0 and " << (numCardsInHand() - 1) << ". Please try again." << std::endl; 
+         std::cout << "You must enter a number between 0 and " << (numCardsInHand() - 1) << ". Please try again: "; 
+         continue;
       } else {
          break;
       }
