@@ -1,5 +1,5 @@
 #include "Human.h"
-#include "../StringUtilities.h"
+#include "StringUtilities.h"
 #include <exception>
 #include <iostream>
 #include <stdexcept>

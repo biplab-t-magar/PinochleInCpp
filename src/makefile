@@ -1,23 +1,23 @@
 pinochle: MeldInstance.o MeldServices.o MeldsStorage.o Computer.o Human.o Player.o Card.o Deck.o Game.o GroupOfCards.o Pinochle.o PinochleException.o Round.o StringUtilities.o
 	g++ -std=c++0x MeldInstance.o MeldServices.o MeldsStorage.o Computer.o Human.o Player.o Card.o Deck.o Game.o GroupOfCards.o Pinochle.o PinochleException.o Round.o StringUtilities.o -o pinochle
 
-MeldInstance.o: ./MeldUtilities/MeldInstance.cpp 
-	g++ -std=c++0x -c ./MeldUtilities/MeldInstance.cpp 
+MeldInstance.o: MeldInstance.cpp 
+	g++ -std=c++0x -c MeldInstance.cpp 
 
-MeldServices.o: ./MeldUtilities/MeldServices.cpp
-	g++ -std=c++0x -c ./MeldUtilities/MeldServices.cpp 
+MeldServices.o: MeldServices.cpp
+	g++ -std=c++0x -c MeldServices.cpp 
 
-MeldsStorage.o: ./MeldUtilities/MeldsStorage.cpp
-	g++ -std=c++0x -c ./MeldUtilities/MeldsStorage.cpp 
+MeldsStorage.o: MeldsStorage.cpp
+	g++ -std=c++0x -c MeldsStorage.cpp 
 
-Computer.o: ./Players/Computer.cpp
-	g++ -std=c++0x -c ./Players/Computer.cpp 
+Computer.o: Computer.cpp
+	g++ -std=c++0x -c Computer.cpp 
 
-Human.o: ./Players/Human.cpp
-	g++ -std=c++0x -c ./Players/Human.cpp  
+Human.o: Human.cpp
+	g++ -std=c++0x -c Human.cpp  
 
-Player.o: ./Players/Player.cpp
-	g++ -std=c++0x -c ./Players/Player.cpp  
+Player.o: Player.cpp
+	g++ -std=c++0x -c Player.cpp  
 
 Card.o: Card.cpp
 	g++ -std=c++0x -c Card.cpp 

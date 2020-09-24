@@ -2,7 +2,7 @@
 #ifndef MELD_SERVICES_H
 #define MELD_SERVICES_H
 
-#include "../Card.h"
+#include "Card.h"
 #include <vector>
 #include "MeldInstance.h"
 #include "MeldsStorage.h"

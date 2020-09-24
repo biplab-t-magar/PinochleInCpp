@@ -2,8 +2,8 @@
 #ifndef ROUND_H
 #define ROUND_H
 
-#include "./Players/Human.h"
-#include "./Players/Computer.h"
+#include "Human.h"
+#include "Computer.h"
 #include "Deck.h"
 
 class Round {

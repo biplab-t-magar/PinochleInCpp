@@ -2,7 +2,7 @@
 #ifndef MELD_INSTANCE_H
 #define MELD_INSTANCE_H
 
-#include "../GroupOfCards.h"
+#include "GroupOfCards.h"
 
 enum class Meld {
    Flush, RoyalMarriage, Marriage, Dix, FourAces, FourKings, FourQueens, FourJacks, Pinochle
