@@ -12,7 +12,7 @@ public:
    void startNewRound(int roundNumber, int &hGameScore, int &cGameScore);
    // void continueRound(Serialization )
 private:
-   Player players[2];
+   Player* players[2];
    Deck stock;
    int hRoundScore;
    int cRoundScore;

@@ -163,7 +163,7 @@ Card Player::getLeastRankedCard() {
       //if there are non-trump suit cards, find the least ranked among them   
       //first, get the first card in hand that's not a trump suit card
       int index;
-      for(int index = 0; index < hand.getNumOfCards(); index++) {
+      for(index = 0; index < hand.getNumOfCards(); index++) {
          if(hand.getCardByPosition(index).getSuit() != trumpSuit) {
             leastRankedCard = hand.getCardByPosition(index);
          }
@@ -347,8 +347,6 @@ MeldInstance Player::createMeld(std::vector<int> positions) {
       if (positions[i] < 0 || positions[i] >= numCardsInHand()) {
          std::string errorMessage = "All positions must be a valid position between 0 and " + std::to_string(numCardsInHand() - 1) + ". Please try again.";
          throw PinochleException(errorMessage); 
-      } else {
-         break;
       }
    }
 

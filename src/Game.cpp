@@ -36,13 +36,13 @@ void Game::startAnotherRound() {
 }
 
 int Game::newGameOrLoad() {
-   std::cout << "Would you like to (1) start a new game or (2) load a previous game? Enter 1 or 2: " << std::endl << std::endl;
+   std::cout << "Would you like to (1) start a new game or (2) load a previous game? Enter 1 or 2: ";
    std::string userResponse;
    while(true) {
       getline(std::cin, userResponse);
       userResponse = stripString(userResponse);
       if(userResponse != "1" && userResponse != "2" ) {
-         std::cout << "You must enter either 1 or 2" << std::endl;
+         std::cout << "You must enter either 1 or 2: ";
          continue;
       }
       break;

@@ -216,7 +216,8 @@ int MeldServices::compareHandsForMelds(GroupOfCards hand1, GroupOfCards hand2) {
       return 2;
    } 
    //if the highest points of each is the same, compare the total potential points produced by all the melds of each hand
-   int totalHand1Points, totalHand2Points = 0;
+   int totalHand1Points = 0;
+   int totalHand2Points = 0;
    for(int i = 0; i < hand1Points.size(); i++) {
       totalHand1Points+= hand1Points[i];
    }

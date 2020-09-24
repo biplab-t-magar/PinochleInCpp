@@ -199,9 +199,9 @@ Assistance Received: none
 ********************************************************************* */
 std::string Card::getCardString() const {
 
-   //check if both suit and rank have not been initialized 
-   if(!suitInitialized && !rankInitialized) {
-      throw PinochleException("Suit and rank for this card have not been specified");
+   //check if suit or rank have not been initialized 
+   if(!suitInitialized || !rankInitialized) {
+      throw PinochleException("Suit or rank for this card have not been specified");
    } else {
       //cardString holds the string to be returned
       std::string cardString;
@@ -217,9 +217,9 @@ std::string Card::getCardString() const {
 }
 
 std::string Card::getShortCardStr() const {
-   //check if both suit and rank have not been initialized 
-   if(!suitInitialized && !rankInitialized) {
-      throw PinochleException("Suit and rank for this card have not been specified");
+   //check if suit or rank has not been initialized 
+   if(!suitInitialized || !rankInitialized) {
+      throw PinochleException("Suit or rank for this card have not been specified");
    } else {
       //cardString holds the string to be returned
 

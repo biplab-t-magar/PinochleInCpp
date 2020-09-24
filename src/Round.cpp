@@ -14,24 +14,28 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
    
    hRoundScore = 0;
    cRoundScore = 0;
+   Player computer = Computer();
+   Player human = Human();
+   players[0] = &computer;
+   players[1] = &human;
    
 
    std::cout << "Distributing cards:" << std::endl;
    for(int i = 0; i < 3; i++) {
       std::cout << "Giving human four cards..." << std::endl;
       for(int i = 0; i < 4; i++) {
-         players[1].takeOneCard(stock.takeOneFromTop());
+         players[1]->takeOneCard(stock.takeOneFromTop());
       }
       std::cout << "Giving computer four cards..." << std::endl;
       for(int i = 0; i < 4; i++) {
-         players[0].takeOneCard(stock.takeOneFromTop());
+         players[0]->takeOneCard(stock.takeOneFromTop());
       }
    }
 
    trumpCard = stock.takeOneFromTop();
    trumpSuit = trumpCard.getSuit();
-   players[0].setTrumpSuit(trumpSuit);
-   players[1].setTrumpSuit(trumpSuit);
+   players[0]->setTrumpSuit(trumpSuit);
+   players[1]->setTrumpSuit(trumpSuit);
    std::cout << "The trump card for this round is " << trumpCard.getCardString() << std::endl << std::endl;
    
    
@@ -51,25 +55,20 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
 
    Card leadCard;
    Card chaseCard;
-   int userAction;
    //loop for each turn
-   while(players[1].numCardsInHand() != 0 || players[0].numCardsInHand() != 0) {
+   while(players[1]->numCardsInHand() != 0 || players[0]->numCardsInHand() != 0) {
       //display the game table
       displayTable(roundNumber, hGameScore, cGameScore);
       //prompt user action
+      promptUser();
       switch (promptUser()) {
       case 1:
-         // saveGame();
-         std::cout << "Game saved!" << std::endl;
-         continue;
-         break;
-      case 2:
          //simply proceed beyond switch statement if user wants to make a move
          break;
-      case 3:
-         players[1].getHelpForLeadCard();
+      case 2:
+         players[1]->getHelpForChaseCard(leadCard);
          break;
-      case 4: 
+      case 3: 
          std::cout << "Thank you for playing Pinochle! Exiting game..." << std::endl;
          exit(0);
          break;
@@ -77,17 +76,16 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
          break;
       }
       //the player whose turn it is plays the lead card
-      leadCard = players[humansTurn].playLeadCard();
+      leadCard = players[humansTurn]->playLeadCard();
       humansTurn = !humansTurn;
 
       //again, ask prompt user action
-      promptUser();
       switch (promptUser()) {
       case 1:
          //simply proceed beyond switch statement if user wants to make a move
          break;
       case 2:
-         players[1].getHelpForChaseCard(leadCard);
+         players[1]->getHelpForChaseCard(leadCard);
          break;
       case 3: 
          std::cout << "Thank you for playing Pinochle! Exiting game..." << std::endl;
@@ -97,37 +95,37 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
          break;
       }
 
-      chaseCard = players[humansTurn].playChaseCard(leadCard);
+      chaseCard = players[humansTurn]->playChaseCard(leadCard);
 
       //this function also updates the value of humansTurn to reflect who the winner of the turn is
       findWinnerAndGivePoints(leadCard, chaseCard);
 
       std::cout << "The winner takes both cards for their capture pile." << std::endl;
 
-      players[humansTurn].addToCapturePile(leadCard, chaseCard);
+      players[humansTurn]->addToCapturePile(leadCard, chaseCard);
 
       //if the human won, ask if he wants help for meld or if he wants to play a meld
       if(humansTurn) {
-         if(promptUserForMeld(players[1]) == 2) {
-            players[1].getHelpForMeld();
+         if(promptUserForMeld(*(players[1])) == 2) {
+            players[1]->getHelpForMeld();
          }
       }
       
 
       //now ask the player to play a meld
-      players[humansTurn].playMeld();
+      players[humansTurn]->playMeld();
 
       //now each player takes one card from the stock
       if(stock.getNumRemaining() > 0) {
          std::cout << "Winner of the round picks a card from the stock pile first." << std::endl;
-         players[humansTurn].takeOneCard(stock.takeOneFromTop());
+         players[humansTurn]->takeOneCard(stock.takeOneFromTop());
          
          //if the stock pile has been exhausted, take the last card from stock 
          if(stock.getNumRemaining() == 0) {
-            players[!humansTurn].takeOneCard(trumpCard);
+            players[!humansTurn]->takeOneCard(trumpCard);
          } else {
             std::cout << "The other players also picks a card from the stock pile." << std::endl;
-            players[!humansTurn].takeOneCard(stock.takeOneFromTop());
+            players[!humansTurn]->takeOneCard(stock.takeOneFromTop());
          }  
       } else {
          std::cout << "No more cards left in stock. Play until hand cards are exhausted." << std::endl;
@@ -354,9 +352,9 @@ void Round::displayTable(int roundNumber, int hGameScore, int cGameScore) {
       std::cout << "Round: " << roundNumber << std::endl << std::endl;
       std::cout << (i == 0 ? "Computer:" : "Human:")  << roundNumber << std::endl;
       std::cout << "    Score: " <<  cGameScore << " / " << cRoundScore << std::endl;
-      std::cout << "    Hand: " << getHandString(players[i]) << std::endl;
-      std::cout << "    Capture Pile: " << getCaptureString(players[i]) << std::endl;
-      std::cout << "    Melds: " << getMeldsString(players[i]) << std::endl;
+      std::cout << "    Hand: " << getHandString(*players[i]) << std::endl;
+      std::cout << "    Capture Pile: " << getCaptureString(*players[i]) << std::endl;
+      std::cout << "    Melds: " << getMeldsString(*players[i]) << std::endl;
       std::cout << std::endl;
    }
 
@@ -370,7 +368,7 @@ void Round::displayTable(int roundNumber, int hGameScore, int cGameScore) {
    std::vector<Card> stockCards = stock.getAllRemainingCards();
    std::cout << "Stock: ";
    //the card at the top of the stock is the card at the end of the vector
-   for(int i = stockCards.size() - 1; i >= 0; i++) {
+   for(int i = stockCards.size() - 1; i >= 0; i--) {
       std::cout << stockCards[i].getShortCardStr() << " ";
    }
    std::cout << std::endl << std::endl;
