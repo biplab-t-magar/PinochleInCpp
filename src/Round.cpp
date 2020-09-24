@@ -19,12 +19,12 @@ Round::~Round() {
 
 void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
    std::cout << "Welcome to Pinochle. Let's start the game." << std::endl << std::endl << std::endl;
-   //storing players for the game:
+   //storing players and scores for the round:
    //there is a reason for storing these players in this order
-   //we can use the boolean variable humansTurn as the index for this array
-   
-   hRoundScore = 0;
-   cRoundScore = 0;
+   //we can use the boolean variable humansTurn as the index for these array
+
+   roundScores[0] = 0;
+   roundScores[1] = 0;
    players[0] = new Computer();
    players[1] = new Human();
    
@@ -64,6 +64,7 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
 
    Card leadCard;
    Card chaseCard;
+   MeldInstance meld;
    //loop for each turn
    while(players[1]->numCardsInHand() != 0 || players[0]->numCardsInHand() != 0) {
       //display the game table
@@ -121,14 +122,15 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
       
 
       //now ask the player to play a meld
-      players[humansTurn]->playMeld();
+      meld = players[humansTurn]->playMeld();
+      std::cout << (humansTurn ? "You" : "The computer") << " win " << meld.getMeldPoints() << " points for playing a " << meld.getMeldTypeString() << " meld.\n\n";
 
       //now each player takes one card from the stock
       if(stock.getNumRemaining() > 0) {
          std::cout << "Winner of the round picks a card from the stock pile first." << std::endl;
          players[humansTurn]->takeOneCard(stock.takeOneFromTop());
          
-         //if the stock pile has been exhausted, take the last card from stock 
+         //if the stock pile has been exhausted, take the trump card
          if(stock.getNumRemaining() == 0) {
             players[!humansTurn]->takeOneCard(trumpCard);
          } else {
@@ -140,15 +142,15 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
       }
    }
    std::cout << "Round ended. " << std::endl;
-   if(hRoundScore > cRoundScore) {
+   if(roundScores[1] > roundScores[0]) {
       std::cout << "You won this round!" << std::endl << std::endl;
-   } else if(cRoundScore > hRoundScore) {
+   } else if(roundScores[0] > roundScores[1]) {
       std::cout << "You lost this round." << std::endl << std::endl;
    } else {
       std::cout << "This round was a draw" << std::endl << std::endl;
    }
-   hGameScore += hRoundScore;
-   cGameScore += cRoundScore;
+   hGameScore += roundScores[1];
+   cGameScore += roundScores[0];
 }
 
 void Round::findWinnerAndGivePoints(Card leadCard, Card chaseCard) {
@@ -172,11 +174,14 @@ void Round::findWinnerAndGivePoints(Card leadCard, Card chaseCard) {
          humansTurn = true;
       }
    }
+   int pointsWon = cardPoints(leadCard) + cardPoints(chaseCard);
    //if the human player won
    if(humansTurn) {
-      hRoundScore = hRoundScore + cardPoints(leadCard) + cardPoints(chaseCard);
+      std::cout << "You won " << pointsWon << " points using your card.\n";
+      roundScores[1] = roundScores[1] + pointsWon;
    } else {
-      cRoundScore = cRoundScore + cardPoints(leadCard) + cardPoints(chaseCard);
+      std::cout << "The computer won " << pointsWon << " points using its card.\n";
+      roundScores[0] = roundScores[0] + pointsWon;
    }
 
 }
@@ -359,7 +364,7 @@ void Round::displayTable(int roundNumber, int hGameScore, int cGameScore) {
    for(int i = 0; i < 2; i++) {
       std::cout << "Round: " << roundNumber << std::endl << std::endl;
       std::cout << (i == 0 ? "Computer:" : "Human:")  << roundNumber << std::endl;
-      std::cout << "    Score: " <<  cGameScore << " / " << cRoundScore << std::endl;
+      std::cout << "    Score: " <<  (i == 0 ? cGameScore : hGameScore) << " / " << roundScores[i] << std::endl;
       std::cout << "    Hand: " << getHandString(players[i]) << std::endl;
       std::cout << "    Capture Pile: " << getCaptureString(players[i]) << std::endl;
       std::cout << "    Melds: " << getMeldsString(players[i]) << std::endl;

@@ -85,6 +85,44 @@ std::string MeldInstance::getMeldTypeString() const {
    }
 }
 
+int MeldInstance::getMeldPoints() const {
+   if(!meldIsValid) {
+      throw PinochleException("This is not a valid meld");
+   }
+   switch(meldType) {
+      case Meld::Flush:
+         return 150;
+         break;
+      case Meld::RoyalMarriage:
+         return 40;
+         break;
+      case Meld::Marriage:
+         return 20;
+         break;
+      case Meld::Dix:
+         return 10;
+         break;
+      case Meld::FourAces:
+         return 100;
+         break;
+      case Meld::FourKings:
+         return 80;
+         break;
+      case Meld::FourQueens:
+         return 60;
+         break;
+      case Meld::FourJacks:
+         return 40;
+         break;
+      case Meld::Pinochle:
+         return 40;
+         break;
+      default:
+         return 0;
+         break;
+   }
+}
+
 bool MeldInstance::isValidMeld() const {
    return meldIsValid;
 }

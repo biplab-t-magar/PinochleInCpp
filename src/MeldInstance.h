@@ -18,6 +18,7 @@ public:
    Meld getMeldType() const;
    std::string getMeldTypeString() const;
    bool isValidMeld() const;
+   int getMeldPoints() const;
 private:
    Meld meldType;
    bool meldIsValid;

@@ -16,9 +16,8 @@ public:
    // void continueRound(Serialization )
 private:
    Player* players[numOfPlayers];
+   int roundScores[numOfPlayers];
    Deck stock;
-   int hRoundScore;
-   int cRoundScore;
    Card trumpCard;
    Suit trumpSuit;
    bool humansTurn;
