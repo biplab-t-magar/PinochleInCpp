@@ -3,8 +3,8 @@
 #define PLAYER_H
 
 #include <vector>
-#include "Card.h"
-#include "MeldServices.h"
+#include "../Card.h"
+#include "../MeldUtilities/MeldServices.h"
 #include <string>
 
 class Player {
