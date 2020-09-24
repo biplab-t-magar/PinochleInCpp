@@ -20,15 +20,15 @@ private:
    Suit trumpSuit;
    bool humansTurn;
    int promptUser();
-   int promptUserForMeld(Player human);
+   int promptUserForMeld(Player* human);
    bool coinToss();
    int cardPoints(Card card);
    void findWinnerAndGivePoints(Card leadCard, Card chaseCard);
    bool leadCardWins(Card leadCard, Card chaseCard);
    void displayTable(int roundNumber, int hGameScore, int cGameScore);
-   std::string getHandString(Player player);
-   std::string getCaptureString(Player player);
-   std::string getMeldsString(Player player);
+   std::string getHandString(Player* player);
+   std::string getCaptureString(Player* player);
+   std::string getMeldsString(Player* player);
 };
 
 #endif

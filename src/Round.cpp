@@ -60,7 +60,6 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
       //display the game table
       displayTable(roundNumber, hGameScore, cGameScore);
       //prompt user action
-      promptUser();
       switch (promptUser()) {
       case 1:
          //simply proceed beyond switch statement if user wants to make a move
@@ -106,7 +105,7 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
 
       //if the human won, ask if he wants help for meld or if he wants to play a meld
       if(humansTurn) {
-         if(promptUserForMeld(*(players[1])) == 2) {
+         if(promptUserForMeld(players[1]) == 2) {
             players[1]->getHelpForMeld();
          }
       }
@@ -271,7 +270,7 @@ int Round::promptUser() {
       std::cout << std::endl;
       numOfOptions = 3;
    } else {
-      std::cout << "It is the computers turn to play a card. What would you like to do?"<< std::endl << std::endl;;
+      std::cout << "It is the computer's turn to play a card. What would you like to do?"<< std::endl << std::endl;;
       std::cout << "Pick an action:" << std::endl << std::endl;
       std::cout << "1.  Ask computer to make a move" << std::endl;
       std::cout << "2.  Quit the game" << std::endl;
@@ -309,8 +308,8 @@ int Round::promptUser() {
    return userActionInt;
 }
 
-int Round::promptUserForMeld(Player human) {
-   if(!human.isMeldPossible()) {
+int Round::promptUserForMeld(Player *human) {
+   if(!(human->isMeldPossible())) {
       std::cout << "You won this turn, but you do not have any cards in your hand to create melds with." << std::endl << std::endl;
       return 0;
    }
@@ -352,9 +351,9 @@ void Round::displayTable(int roundNumber, int hGameScore, int cGameScore) {
       std::cout << "Round: " << roundNumber << std::endl << std::endl;
       std::cout << (i == 0 ? "Computer:" : "Human:")  << roundNumber << std::endl;
       std::cout << "    Score: " <<  cGameScore << " / " << cRoundScore << std::endl;
-      std::cout << "    Hand: " << getHandString(*players[i]) << std::endl;
-      std::cout << "    Capture Pile: " << getCaptureString(*players[i]) << std::endl;
-      std::cout << "    Melds: " << getMeldsString(*players[i]) << std::endl;
+      std::cout << "    Hand: " << getHandString(players[i]) << std::endl;
+      std::cout << "    Capture Pile: " << getCaptureString(players[i]) << std::endl;
+      std::cout << "    Melds: " << getMeldsString(players[i]) << std::endl;
       std::cout << std::endl;
    }
 
@@ -375,29 +374,29 @@ void Round::displayTable(int roundNumber, int hGameScore, int cGameScore) {
    std::cout << "Next Player: " << (humansTurn ? "Human" : "Computer") << std::endl << std::endl;
 }
 
-std::string Round::getHandString(Player player) {   
+std::string Round::getHandString(Player* player) {   
    std::string handString ="";
-   GroupOfCards hand = player.getHand();
+   GroupOfCards hand = player->getHand();
    for(int i = 0; i < hand.getNumOfCards(); i++) {
       handString = handString + hand.getCardByPosition(i).getShortCardStr() + "(" + std::to_string(i) + ") ";
    }
    return handString;
 }
 
-std::string Round::getCaptureString(Player player) {   
+std::string Round::getCaptureString(Player* player) {   
    std::string captureString ="";
-   GroupOfCards capturePile = player.getCapturePile();
+   GroupOfCards capturePile = player->getCapturePile();
    for(int i = 0; i < capturePile.getNumOfCards(); i++) {
       captureString = captureString + capturePile.getCardByPosition(i).getShortCardStr() + " ";
    }
    return captureString;
 }
 
-std::string Round::getMeldsString(Player player) {   
+std::string Round::getMeldsString(Player* player) {   
    std::string meldsString ="";
    // MeldsStorage meldsPlayed = player.getMeldsPlayed();
-   std::vector<std::vector<MeldInstance>> melds = player.getMeldsPlayed().getAllMelds();
-   GroupOfCards hand = player.getHand();
+   std::vector<std::vector<MeldInstance>> melds = player->getMeldsPlayed().getAllMelds();
+   GroupOfCards hand = player->getHand();
    Card meldCard;
    int meldCardPos;
    //for all meld types
