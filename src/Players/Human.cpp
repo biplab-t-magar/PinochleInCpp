@@ -1,4 +1,5 @@
 #include "Human.h"
+#include "StringUtilities.cpp"
 #include <exception>
 #include <iostream>
 #include <stdexcept>

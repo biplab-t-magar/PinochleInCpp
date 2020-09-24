@@ -3,7 +3,7 @@
 #define MELD_STORAGE_H
 
 //Stores:    Flush, RoyalMarriage, Marriage, Dix, FourAces, FourKings, FourQueens, FourJacks, Pinochle
-#include <MeldInstance.h>
+#include "MeldInstance.h"
 
 class MeldsStorage {
 public:

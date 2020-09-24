@@ -104,9 +104,12 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
       players[humansTurn].addToCapturePile(leadCard, chaseCard);
 
       //if the human won, ask if he wants help for meld or if he wants to play a meld
-      if(promptUser () == 2) {
-         players[1].getHelpForMeld();
+      if(humansTurn) {
+         if(promptUserForMeld(players[1]) == 2) {
+            players[1].getHelpForMeld();
+         }
       }
+      
 
       //now ask the player to play a meld
       players[humansTurn].playMeld();
@@ -196,7 +199,7 @@ bool Round::leadCardWins(Card leadCard, Card chaseCard) {
    }
 }
 
-int cardPoints(Card card){
+int Round::cardPoints(Card card){
    switch (card.getRank()) {
    case Rank::Ace:
       return 11;
@@ -222,7 +225,7 @@ int cardPoints(Card card){
    }
 }
 
-bool coinToss() {
+bool Round::coinToss() {
    srand(time(NULL));
    int toss = rand() % 2;
    std::string headsOrTails;
@@ -246,7 +249,7 @@ bool coinToss() {
    if(userResponse == "heads") {
       std::cout << "Human wins the coin toss! It's your turn to go first." << std::endl;
       return true;
-   } else if(userResponse == "tails") {
+   } else {
       std::cout << "Computer wins. The computer goes first." << std::endl;
       return false;
    }
@@ -303,10 +306,10 @@ int Round::promptUser() {
    return userActionInt;
 }
 
-int Round::prompUserForMeld(Player human) {
+int Round::promptUserForMeld(Player human) {
    if(!human.isMeldPossible()) {
       std::cout << "You won this turn, but you do not have any cards in your hand to create melds with." << std::endl << std::endl;
-      return;
+      return 0;
    }
    std::cout << "You won this turn, so you can create a meld." << std::endl;
    std::cout << "Pick an action: " << std::endl;
@@ -374,6 +377,7 @@ std::string Round::getHandString(Player player) {
    for(int i = 0; i < hand.getNumOfCards(); i++) {
       handString = hand.getCardByPosition(i).getShortCardStr() + "(" + std::to_string(i) + ") ";
    }
+   return handString;
 }
 
 std::string Round::getCaptureString(Player player) {   
@@ -382,6 +386,7 @@ std::string Round::getCaptureString(Player player) {
    for(int i = 0; i < capturePile.getNumOfCards(); i++) {
       captureString = capturePile.getCardByPosition(i).getShortCardStr() + " ";
    }
+   return captureString;
 }
 
 std::string Round::getMeldsString(Player player) {   
@@ -391,7 +396,6 @@ std::string Round::getMeldsString(Player player) {
    GroupOfCards hand = player.getHand();
    Card meldCard;
    int meldCardPos;
-   std::cout << std::endl;
    //for all meld types
    for(int i = 0; i < melds.size(); i++) {
       //for all instances of a meld type
@@ -405,8 +409,9 @@ std::string Round::getMeldsString(Player player) {
             meldsString = meldCard.getShortCardStr() + "(" + (meldCardPos == -1 ? "" : std::to_string(meldCardPos)) + ") "; 
          }
          //once all the cards for the melds have been displayed, print name of meld type
-         std::cout << " -- " << melds[i][j].getMeldTypeString() << "," << std::endl;
+         meldsString = meldsString + " -- " + melds[i][j].getMeldTypeString() + ",\n";
          
       }
    }
+   return meldsString;
 }

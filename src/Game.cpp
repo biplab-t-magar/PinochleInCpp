@@ -53,8 +53,8 @@ int Game::newGameOrLoad() {
       return 2;
    }
 }
-
-bool playAnotherRound() {
+ 
+bool Game::playAnotherRound(){
    std::string userResponse;
    while(true) {
       std::cout << "Would you like to play another round? (y/n)" << std::endl;
@@ -74,3 +74,6 @@ bool playAnotherRound() {
    }
 }
 
+void loadGame() {
+   
+}

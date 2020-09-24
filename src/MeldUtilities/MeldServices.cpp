@@ -256,7 +256,7 @@ std::vector<int> MeldServices::potentialPointsFromHand(GroupOfCards hand) {
       }
    }
    //sort the vector
-   std::sort(points.begin(), points.end(), std::greater<>()); 
+   std::sort(points.rbegin(), points.rend()); 
    return points;
 }
 

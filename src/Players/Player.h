@@ -3,8 +3,8 @@
 #define PLAYER_H
 
 #include <vector>
-#include <Card.h>
-#include <MeldServices.h>
+#include "Card.h"
+#include "MeldServices.h"
 #include <string>
 
 class Player {
@@ -46,7 +46,7 @@ private:
    GroupOfCards capturePile;
    Suit trumpSuit; 
    MeldServices meldServices;
-   std::vector<Card> Player::bestCardsForLeadThrow();
+   std::vector<Card> bestCardsForLeadThrow();
    Card getLeastRankedCard();
    Card getLeastRankedFrom(std::vector<Card> cards);
    MeldInstance findBestMeldToPlay(std::vector<MeldInstance> meldsToCompare);

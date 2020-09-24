@@ -28,7 +28,8 @@ MeldInstance Computer::playMeld() {
    std::string reasoning;
    MeldInstance meldToPlay = suggestMeld(reasoning);
    if(meldToPlay.getNumOfCards() == 0) {
-      return;
+      std::cout << "The computer has no meld to play." << std::endl;
+      return meldToPlay;
    }
    try {
       createMeld(meldToPlay);

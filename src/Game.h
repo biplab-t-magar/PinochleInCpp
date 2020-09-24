@@ -7,14 +7,15 @@
 class Game {
 public:
    Game();
-   int newGameOrLoad();
-   void startNewGame();
-   void loadGame();
-   void Game::startAnotherRound();
 private:
    int humanScore;
    int computerScore;
    int currentRound;
+   int newGameOrLoad();
+   void startNewGame();
+   void loadGame();
+   void startAnotherRound();
+   bool playAnotherRound();
 };
 
 #endif

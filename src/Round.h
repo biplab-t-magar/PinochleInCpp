@@ -20,7 +20,9 @@ private:
    Suit trumpSuit;
    bool humansTurn;
    int promptUser();
-   int prompUserForMeld(Player human);
+   int promptUserForMeld(Player human);
+   bool coinToss();
+   int cardPoints(Card card);
    void findWinnerAndGivePoints(Card leadCard, Card chaseCard);
    bool leadCardWins(Card leadCard, Card chaseCard);
    void displayTable(int roundNumber, int cGameScore, int hGameScore);

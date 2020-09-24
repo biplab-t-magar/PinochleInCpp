@@ -22,7 +22,7 @@ public:
    // bool meldTypePlayedFirstTime(Meld meld);
    // bool meldCanNeglectMeldPile(std::vector<Card> handPile, std::vector<Card> meld);
    // bool meldHasCardFromHandPile(std::vector<Card> handPile, std::vector<Card> meld);
-   bool MeldServices::storeMeld(GroupOfCards hand, MeldInstance meldInstance);
+   bool storeMeld(GroupOfCards hand, MeldInstance meldInstance);
    // bool isLegalMeld(GroupOfCards hand, MeldInstance meldInstance);
    bool allCardsPresentInHand(GroupOfCards hand, MeldInstance meldInstance);
    bool meldIsNotARepeat(MeldInstance meldInstance);

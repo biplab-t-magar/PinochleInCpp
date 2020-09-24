@@ -2,7 +2,7 @@
 
 
 MeldInstance::MeldInstance() {
-   meldIsValid == false;
+   meldIsValid = false;
 }
 
 MeldInstance::MeldInstance(std::vector<Card> cards, Suit trumpSuit) : GroupOfCards(cards) {
@@ -284,7 +284,7 @@ bool MeldInstance::isFours() {
       } 
 
       //switch flag
-      flags[static_cast<int>(cards[i].getSuit())] == !flags[static_cast<int>(cards[i].getSuit())];
+      flags[static_cast<int>(cards[i].getSuit())] = !flags[static_cast<int>(cards[i].getSuit())];
    }
    //if all the cards are of the same rank and all their suits are unique, it is a Fours meld
    return true;

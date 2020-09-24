@@ -16,3 +16,7 @@ bool PinochleException::setMessage(std::string message) {
 std::string PinochleException::what() {
    return message;
 }
+
+// PinochleException::~PinochleException() {
+   
+// }
