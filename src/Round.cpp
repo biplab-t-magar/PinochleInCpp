@@ -18,7 +18,7 @@ Round::~Round() {
 }
 
 void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
-   std::cout << "Welcome to Pinochle. Let's start the game." << std::endl << std::endl << std::endl;
+   std::cout << "Let's begin the round." << std::endl << std::endl << std::endl;
    //storing players and scores for the round:
    //there is a reason for storing these players in this order
    //we can use the boolean variable humansTurn as the index for these array
@@ -148,11 +148,11 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
    }
    std::cout << "Round ended. " << std::endl;
    if(roundScores[1] > roundScores[0]) {
-      std::cout << "You won this round!" << std::endl << std::endl;
+      std::cout << "You won this round!\n\n" << std::endl << std::endl;
    } else if(roundScores[0] > roundScores[1]) {
-      std::cout << "You lost this round." << std::endl << std::endl;
+      std::cout << "You lost this round.\n\n" << std::endl << std::endl;
    } else {
-      std::cout << "This round was a draw" << std::endl << std::endl;
+      std::cout << "This round was a draw\n\n" << std::endl << std::endl;
    }
    hGameScore += roundScores[1];
    cGameScore += roundScores[0];

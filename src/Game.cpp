@@ -59,7 +59,6 @@ bool Game::playAnotherRound(){
    std::string userResponse;
    while(true) {
       std::cout << "Would you like to play another round? (y/n)" << std::endl;
-      std::string userResponse;
       getline(std::cin, userResponse);
       userResponse = stripString(userResponse);
       if(userResponse != "y" && userResponse != "n" ) {
