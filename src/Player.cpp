@@ -281,19 +281,24 @@ MeldInstance Player::suggestMeld(std::string &reasoning) {
    for(int i = 0; i < numOfMeldTypes; i++) {
       //if a particular meld yields the highest points so far, keep track of it
       allMeldsOfGivenType = allPossibleMelds.getAllMeldsByType(static_cast<Meld>(i));
-      meldPoints = meldServices.getMeldPoints(static_cast<Meld>(i));
+      if(allMeldsOfGivenType.size() == 0) {
+         meldPoints = 0;
+      } else {
+         meldPoints = meldServices.getMeldPoints(static_cast<Meld>(i));
+      }
+      
       if(meldPoints > highestPointsPossible) {
          highestPointsPossible = meldPoints;
          highScoringMelds.clear();
-         //add all the instances of this meld type to highScoringMelds
+         //append all the instances of this meld type to highScoringMelds
          highScoringMelds.insert(highScoringMelds.end(), allMeldsOfGivenType.begin(), allMeldsOfGivenType.end());
       } else if (meldPoints == highestPointsPossible) {
-         //add all the instances of this meld type to highScoringMelds
+         //append all the instances of this meld type to highScoringMelds
          highScoringMelds.insert(highScoringMelds.end(), allMeldsOfGivenType.begin(), allMeldsOfGivenType.end());
       }
    }
 
-   if(highScoringMelds.size() > 1) {
+   if(highScoringMelds.size() == 1) {
       reasoning = "playing this meld will yield the highest possible points";
       return highScoringMelds[0];
    } else {

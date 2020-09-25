@@ -29,13 +29,13 @@ void Human::getHelpForMeld() {
 
    //create reasoning string
    for(int i = 0; i < meldToPlay.getNumOfCards() - 1; i++) {
-      hint += meldToPlay.getCardByPosition(i).getCardString();
+      hint += meldToPlay.getCardByPosition(i).getShortCardStr();
       hint += "(";
       hint += getCardPositionInHand(meldToPlay.getCardByPosition(i));
       hint += "), ";
    }
    hint += "and ";
-   hint += meldToPlay.getCardByPosition(meldToPlay.getNumOfCards() - 1).getCardString();
+   hint += meldToPlay.getCardByPosition(meldToPlay.getNumOfCards() - 1).getShortCardStr();
    hint += "(";
    hint += getCardPositionInHand(meldToPlay.getCardByPosition(meldToPlay.getNumOfCards() - 1));
    hint = hint + ") because " + reasoning + ".";
