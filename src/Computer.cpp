@@ -37,8 +37,20 @@ MeldInstance Computer::playMeld() {
       std::cout << e.what() << std::endl;
       exit(1);
    }
-   std::cout << "The computer chose to play a " << meldToPlay.getMeldTypeString() << " for its meld" << 
-               " because " << reasoning << "." << std::endl;
+   std::string reason = "The computer chose to play ";
+
+   for(int i = 0; i < meldToPlay.getNumOfCards() - 1; i++) {
+         reason += meldToPlay.getCardByPosition(i).getShortCardStr();
+         reason += "(";
+         reason += getCardPositionInHand(meldToPlay.getCardByPosition(i));
+         reason += "), ";
+      }
+   reason += "and ";
+   reason += meldToPlay.getCardByPosition(meldToPlay.getNumOfCards() - 1).getShortCardStr();
+   reason += "(";
+   reason += getCardPositionInHand(meldToPlay.getCardByPosition(meldToPlay.getNumOfCards() - 1));
+   reason = reason + ") to create a " + meldToPlay.getMeldTypeString() + " meld because " + reasoning + ".";
+
    return meldToPlay;
 }
 

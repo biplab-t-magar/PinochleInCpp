@@ -439,7 +439,7 @@ std::string Round::getMeldsString(Player* player) {
    for(int i = 0; i < melds.size(); i++) {
       //for all instances of a meld type
       for(int j = 0; j < melds[i].size(); j++) {
-         std::cout << "          ";
+         std::cout << " ";
          //for all cards in a meld instance
          for(int k = 0; k < melds[i][j].getNumOfCards(); k++) {
             meldCard = melds[i][j].getCardByPosition(k);

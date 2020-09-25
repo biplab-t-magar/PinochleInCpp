@@ -13,13 +13,15 @@ void Human::getHelpForLeadCard() {
    Card suggestedCard;
    std::string reasoning;
    suggestedCard = suggestLeadCard(reasoning);
-   std::cout << "\nHint: I recomment that you present " << suggestedCard.getCardString() << " as your lead card because " << reasoning << "." << std::endl << std::endl;
+   std::cout << "\nHint: I recomment that you present " << suggestedCard.getShortCardStr() 
+         << "(" << getCardPositionInHand(suggestedCard) << ") as your lead card because " << reasoning << "." << std::endl << std::endl;
 }
 void Human::getHelpForChaseCard(Card opponentCard) {
    Card suggestedCard;
    std::string reasoning;
    suggestedCard = suggestChaseCard(reasoning, opponentCard);
-   std::cout << "\nHint: I recomment that you present " << suggestedCard.getCardString() << " as your chase card because " << reasoning << "." << std::endl << std::endl;
+   std::cout << "\nHint: I recomment that you present " << suggestedCard.getShortCardStr() 
+   << "(" << getCardPositionInHand(suggestedCard) << ") as your chase card because " << reasoning << "." << std::endl << std::endl;
 }
 void Human::getHelpForMeld() {
    std::string reasoning;
@@ -38,7 +40,7 @@ void Human::getHelpForMeld() {
    hint += meldToPlay.getCardByPosition(meldToPlay.getNumOfCards() - 1).getShortCardStr();
    hint += "(";
    hint += getCardPositionInHand(meldToPlay.getCardByPosition(meldToPlay.getNumOfCards() - 1));
-   hint = hint + ") because " + reasoning + ".";
+   hint = hint + ") to create a " + meldToPlay.getMeldTypeString() + " meld because " + reasoning + ".";
    std::cout << hint << std::endl << std::endl;
 }
 
