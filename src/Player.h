@@ -12,7 +12,7 @@ public:
    Player() {
 
    }
-   ~Player() {
+   virtual ~Player()  {
 
    }
    // virtual void nextMove() = 0;

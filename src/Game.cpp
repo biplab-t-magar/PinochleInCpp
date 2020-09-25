@@ -36,6 +36,7 @@ void Game::startAnotherRound() {
 }
 
 int Game::newGameOrLoad() {
+   std::cout << "Welcome to Pinochle!" << std::endl;
    std::cout << "Would you like to (1) start a new game or (2) load a previous game? Enter 1 or 2: ";
    std::string userResponse;
    while(true) {
