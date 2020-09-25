@@ -17,8 +17,8 @@ private:
    int promptUser();
    int promptCardThrow();
    // void saveGameProgress();
-   std::string stripString(std::string str);
    std::vector<int> parseMeldPositions(std::string str);
+   int parsePosition(std::string str);
 };
 
 

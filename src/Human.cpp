@@ -67,11 +67,10 @@ MeldInstance Human::playMeld() {
    MeldInstance meldInstance;
    while(true) {
       std::cin.clear();
-      std::getline(std::cin, meldString);
       std::cout << "List out the positions (separated by spaces) of all the cards you would like to play for your meld: ";
+      std::getline(std::cin, meldString);
       try {   
          positions = parseMeldPositions(meldString);
-         continue;
       } catch(PinochleException &e) {
          std::cout << e.what() << std::endl;
          continue;
@@ -153,44 +152,50 @@ int Human::promptCardThrow() {
       std::cin.clear();
       std::getline(std::cin, cardToThrow);
       cardToThrow = removeWhiteSpace(cardToThrow);
-      if(cardToThrow.length() < 1 || cardToThrow.length() > 2) {
-         std::cout << "Invalid action. You must enter a valid card position. Please try again: ";
-         continue;
-      }
-
-      
-      if(cardToThrow[0] < 48 || cardToThrow[0] > 57) {
-         std::cout << "You must enter a valid number. Please try again." << std::endl;
-         continue;
-      }
-      if (cardToThrow.size() > 1) {
-         if(cardToThrow[1] < 48 || cardToThrow[1] > 57) {
-            std::cout << "You must enter a valid number. Please try again." << std::endl;
-            continue;
-         }
-      }  
-      
       try {
-         cardToThrowInt = std::stoi(cardToThrow);
-      } catch(const std::invalid_argument &e) {
-         std::cout << "You must enter a valid position number for the card and not non-numeric characters. Please try again: ";
-         continue;
-      }
-      
-      if (cardToThrowInt < 0 || cardToThrowInt >= numCardsInHand()) {
-         std::cout << "You must enter a number between 0 and " << (numCardsInHand() - 1) << ". Please try again: "; 
-         continue;
-      } else {
+         cardToThrowInt = parsePosition(cardToThrow);
          break;
+      } catch(PinochleException &e) {
+         std::cout << e.what();
       }
    }
    return cardToThrowInt;
 
 }
 
+int Human::parsePosition(std::string str) {
+   int num;
+   if(str.length() < 1 || str.length() > 2) {
+         throw PinochleException("Invalid action. You must enter a valid card position. Please try again: ");
+      }
+      
+   if(str[0] < 48 || str[0] > 57) {
+      throw PinochleException("You must enter a valid number. Please try again: ");
+   }
+   if (str.size() > 1) {
+      if(str[1] < 48 || str[1] > 57) {
+         throw PinochleException("You must enter a valid number. Please try again: ");
+      }
+   }  
+   
+   try {
+      num = std::stoi(str);
+   } catch(const std::invalid_argument &e) {
+      throw PinochleException("You must enter a valid position number for the card and not non-numeric characters. Please try again: ");
+   }
+   
+   if (num < 0 || num >= numCardsInHand()) {
+      throw PinochleException("You must enter a number between 0 and " + std::to_string((numCardsInHand() - 1)) + ". Please try again: "); 
+   } else {
+      return num;
+   }
+}
+
 std::vector<int> Human::parseMeldPositions(std::string str) {
    std::vector<int> positions;
    std::string numInString = "";
+   str = stripString(str);
+   int num;
    for(int i = 0; i < str.length(); i++) {
       //if the character is a number
       if(str[i] >= 48 && str[i] <= 57) {
@@ -199,21 +204,26 @@ std::vector<int> Human::parseMeldPositions(std::string str) {
       //if the character is a space
       else if(str[i] == ' '){
          try {
-            positions.push_back(stoi(numInString));
-            numInString = "";
-         } catch(std::invalid_argument &e) {
-            throw PinochleException("You must specify the position of the cards in the meld. Do not enter characters other than numbers and spaces.");
+            if(numInString != "") {
+               num = parsePosition(numInString);
+               positions.push_back(num);
+               numInString = "";
+            }
+         } catch(PinochleException &e) {
+            throw e;
          }
       } else {
-         throw PinochleException("You must specify the position of the cards in the meld. Do not enter characters other than numbers and spaces.");
+         throw PinochleException("You must specify the position of the cards in the meld. Do not enter characters other than numbers and spaces. Try again: ");
       }
    }
    //if there are still characters left to be converted
    if(numInString != "") {
       try {
-            positions.push_back(stoi(numInString));
-         } catch(std::invalid_argument &e) {
-            throw PinochleException("You must specify the position of the cards in the meld. Do not enter characters other than numbers and spaces.");
+         num = parsePosition(numInString);
+         positions.push_back(num);
+         numInString = "";
+      } catch(PinochleException &e) {
+         throw e;
       }
    }
    return positions;

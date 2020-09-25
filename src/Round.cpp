@@ -125,9 +125,8 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
          //now ask the player to play a meld
          meld = players[humansTurn]->playMeld();
          std::cout << (humansTurn ? "You" : "The computer") << " win " << meld.getMeldPoints() << " points for playing a " << meld.getMeldTypeString() << " meld.\n\n";
+         roundScores[humansTurn] += meld.getMeldPoints();
       }
-
-      
       
 
       //now each player takes one card from the stock
@@ -172,7 +171,7 @@ void Round::findWinnerAndGivePoints(Card leadCard, Card chaseCard) {
       }
    } else {
       if(!humansTurn) {
-         std::cout << "\nYour chase card was beaten by the computer's lead card. You lose this turn." << std::endl;
+         std::cout << "\nYour lead card was beaten by the computer's chase card. You lose this turn." << std::endl;
          humansTurn = false;
       } else {
          std::cout << "\nYour chase card has beaten the computer's lead card. You win this turn!" << std::endl;
@@ -341,6 +340,12 @@ int Round::promptUser() {
 
 int Round::promptUserForMeld(Player *human) {
    std::cout << "You won this turn, so you can create a meld." << std::endl;
+   std::cout << "Pick cards from your hand to create a meld: " << std::endl;
+   std::cout << "-------------------------------------------------" << std::endl;
+   std::cout << "Hand: " << getHandString(human) <<std::endl;
+   std::cout << "Trump Suit: " << trumpCard.getSuitString() << std::endl;
+   std::cout << "Melds Played: " << getMeldsString(human) << std::endl;
+   std::cout << "-------------------------------------------------" << std::endl  << std::endl;
    std::cout << "Pick an action: " << std::endl;
    std::cout << "1.     Play a meld" << std::endl;
    std::cout << "2.     Ask for help" << std::endl;
@@ -377,10 +382,9 @@ void Round::displayTable(int roundNumber, int hGameScore, int cGameScore) {
    std::cout << "\n\n---------------------------------------------------------------------------------------\n";
    std::cout << "Current Game Table: \n\n";
    //display each players info
-   std::string player;
+   std::cout << "Round: " << roundNumber << std::endl << std::endl;
    for(int i = 0; i < 2; i++) {
-      std::cout << "Round: " << roundNumber << std::endl << std::endl;
-      std::cout << (i == 0 ? "Computer:" : "Human:")  << roundNumber << std::endl;
+      std::cout << (i == 0 ? "Computer:" : "Human:") << std::endl;
       std::cout << "    Score: " <<  (i == 0 ? cGameScore : hGameScore) << " / " << roundScores[i] << std::endl;
       std::cout << "    Hand: " << getHandString(players[i]) << std::endl;
       std::cout << "    Capture Pile: " << getCaptureString(players[i]) << std::endl;
@@ -438,14 +442,13 @@ std::string Round::getMeldsString(Player* player) {
          std::cout << "          ";
          //for all cards in a meld instance
          for(int k = 0; k < melds[i][j].getNumOfCards(); k++) {
-            meldCard = melds[i][j].getCardByPosition(0);
+            meldCard = melds[i][j].getCardByPosition(k);
             meldCardPos = hand.getCardPosition(meldCard);
             //get the string representation of the card, along with its position in hand
             meldsString = meldsString +  meldCard.getShortCardStr() + "(" + (meldCardPos == -1 ? "" : std::to_string(meldCardPos)) + ") "; 
          }
          //once all the cards for the melds have been displayed, print name of meld type
-         meldsString = meldsString + " -- " + melds[i][j].getMeldTypeString() + ",\n";
-         
+         meldsString = meldsString + "[" + melds[i][j].getMeldTypeString() + "],";
       }
    }
    return meldsString;

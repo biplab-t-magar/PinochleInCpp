@@ -12,6 +12,7 @@ MeldInstance::MeldInstance(std::vector<Card> cards, Suit trumpSuit) : GroupOfCar
 
 bool MeldInstance::addCard(Card card, Suit trumpSuit) {
    cards.push_back(card);
+   this->trumpSuit = trumpSuit;
    meldIsValid = checkMeldValidity();
    return true;
 }
