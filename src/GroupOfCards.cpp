@@ -41,6 +41,15 @@ bool GroupOfCards::searchCardById(int id) const{
    return false;
 }
 
+// bool GroupOfCards::searchCard(Card card) {
+//    for(int i = 0; i < cards.size(); i++) {
+//       if(cards[i] == card) {
+//          return true;
+//       }
+//    }
+//    return false;
+// }
+
 Card GroupOfCards::getCardById(int id) const {
    if(searchCardById(id) == false) {
       throw PinochleException("Card with given id is not in this group of cards. Make sure the card is in this group by calling searchCardById()");
