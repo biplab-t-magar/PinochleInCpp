@@ -124,7 +124,7 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
          }
          //now ask the player to play a meld
          meld = players[humansTurn]->playMeld();
-         std::cout << (humansTurn ? "You" : "The computer") << " win " << meld.getMeldPoints() << " points for playing a " << meld.getMeldTypeString() << " meld.\n\n";
+         std::cout << (humansTurn ? "You" : "The computer") << " won " << meld.getMeldPoints() << " points for playing a " << meld.getMeldTypeString() << " meld.\n\n";
          roundScores[humansTurn] += meld.getMeldPoints();
       }
       
@@ -137,6 +137,7 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
          //if the stock pile has been exhausted, take the trump card
          if(stock.getNumRemaining() == 0) {
             players[!humansTurn]->takeOneCard(trumpCard);
+            std::cout << "Loser of this round picks up the trump card." << std::endl;
          } else {
             std::cout << "The other players also picks a card from the stock pile." << std::endl;
             players[!humansTurn]->takeOneCard(stock.takeOneFromTop());
@@ -448,7 +449,7 @@ std::string Round::getMeldsString(Player* player) {
             meldsString = meldsString +  meldCard.getShortCardStr() + "(" + (meldCardPos == -1 ? "" : std::to_string(meldCardPos)) + ") "; 
          }
          //once all the cards for the melds have been displayed, print name of meld type
-         meldsString = meldsString + "[" + melds[i][j].getMeldTypeString() + "],";
+         meldsString = meldsString + "[" + melds[i][j].getMeldTypeString() + "], ";
       }
    }
    return meldsString;

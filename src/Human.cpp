@@ -33,13 +33,13 @@ void Human::getHelpForMeld() {
    for(int i = 0; i < meldToPlay.getNumOfCards() - 1; i++) {
       hint += meldToPlay.getCardByPosition(i).getShortCardStr();
       hint += "(";
-      hint += getCardPositionInHand(meldToPlay.getCardByPosition(i));
+      hint += std::to_string(getCardPositionInHand(meldToPlay.getCardByPosition(i)));
       hint += "), ";
    }
    hint += "and ";
    hint += meldToPlay.getCardByPosition(meldToPlay.getNumOfCards() - 1).getShortCardStr();
    hint += "(";
-   hint += getCardPositionInHand(meldToPlay.getCardByPosition(meldToPlay.getNumOfCards() - 1));
+   hint += std::to_string(getCardPositionInHand(meldToPlay.getCardByPosition(meldToPlay.getNumOfCards() - 1)));
    hint = hint + ") to create a " + meldToPlay.getMeldTypeString() + " meld because " + reasoning + ".";
    std::cout << hint << std::endl << std::endl;
 }

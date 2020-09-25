@@ -42,13 +42,13 @@ MeldInstance Computer::playMeld() {
    for(int i = 0; i < meldToPlay.getNumOfCards() - 1; i++) {
          reason += meldToPlay.getCardByPosition(i).getShortCardStr();
          reason += "(";
-         reason += getCardPositionInHand(meldToPlay.getCardByPosition(i));
+         reason += std::to_string(getCardPositionInHand(meldToPlay.getCardByPosition(i)));
          reason += "), ";
       }
    reason += "and ";
    reason += meldToPlay.getCardByPosition(meldToPlay.getNumOfCards() - 1).getShortCardStr();
    reason += "(";
-   reason += getCardPositionInHand(meldToPlay.getCardByPosition(meldToPlay.getNumOfCards() - 1));
+   reason += std::to_string(getCardPositionInHand(meldToPlay.getCardByPosition(meldToPlay.getNumOfCards() - 1)));
    reason = reason + ") to create a " + meldToPlay.getMeldTypeString() + " meld because " + reasoning + ".";
 
    return meldToPlay;
