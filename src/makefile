@@ -1,5 +1,5 @@
-pinochle: MeldInstance.o MeldServices.o MeldsStorage.o Computer.o Human.o Player.o Card.o Deck.o Game.o GroupOfCards.o Pinochle.o PinochleException.o Round.o StringUtilities.o
-	g++ -std=c++0x MeldInstance.o MeldServices.o MeldsStorage.o Computer.o Human.o Player.o Card.o Deck.o Game.o GroupOfCards.o Pinochle.o PinochleException.o Round.o StringUtilities.o -o pinochle
+pinochle: MeldInstance.o MeldServices.o MeldsStorage.o Computer.o Human.o Player.o Card.o Deck.o Game.o GroupOfCards.o Pinochle.o PinochleException.o Round.o Serialization.o StringUtilities.o 
+	g++ -std=c++0x MeldInstance.o MeldServices.o MeldsStorage.o Computer.o Human.o Player.o Card.o Deck.o Game.o GroupOfCards.o Pinochle.o PinochleException.o Round.o Serialization.o StringUtilities.o -o pinochle
 
 MeldInstance.o: MeldInstance.cpp 
 	g++ -std=c++0x -c MeldInstance.cpp 
@@ -39,6 +39,9 @@ PinochleException.o: PinochleException.cpp
 
 Round.o: Round.cpp
 	g++ -std=c++0x -c Round.cpp 
+
+Serialization.o: Serialization.cpp
+	g++ -std=c++0x -c Serialization.cpp
 
 StringUtilities.o: StringUtilities.cpp
 	g++ -std=c++0x -c StringUtilities.cpp 

@@ -190,3 +190,28 @@ bool MeldsStorage::isCardUsedByAnyMeld(Card card) {
    }
    return false;
 }
+
+
+// bool MeldsStorage::isCardTypeUsedByAnyMeld(Rank rank, Suit suit) {
+//    for(int meldType = 0; meldType < numOfMeldTypes; meldType++) {
+//       if(isCardTypeUsedByMeld(rank, suit, static_cast<Meld>(meldType))) {
+//          return true;
+//       }
+//    }
+//    return false;
+// }
+// bool MeldsStorage::isCardTypeUsedByMeld(Rank rank, Suit suit, Meld meldType) {
+//    //get int representation of the given meld
+//    int meldTypeInt = static_cast<int>(meldType);
+//    //get the number of instances of that particular meld type
+//    int numOfMeldsPlayed = storage[meldTypeInt].size();
+
+//    for(int i = 0; i < numOfMeldsPlayed; i++) {
+//       //if that card is found in a meld instance, return true
+//       if(storage[meldTypeInt][i].searchCardByRankAndSuit(rank, suit) == true) {
+//          return true;
+//       }
+//    }
+//    //return false;
+//    return false;
+// }

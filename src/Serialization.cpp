@@ -13,38 +13,46 @@ void Serialization::setPlayerObjects(GroupOfCards hand, MeldsStorage meldsPlayed
    this->capturePile = capturePile;
    playerObjectsEntered = true;
    try {
-      convertObjectsToString();
+      convertObjectsToStrings();
    } catch (PinochleException &e) {
       throw e;
    }
 }
 
-void Serialization::setPlayerStrings(std::string handString, std::string meldString, std::string captureString) {
+GroupOfCards Serialization::setPlayerStrings(std::string handString, std::string meldString, std::string captureString, GroupOfCards allRemCards, Suit trumpSuit) {
    //first, store all the strings
    this->handString = handString;
    this->meldString = meldString;
    this->captureString = captureString;
    playerStringsEntered = true;
+   
    try {
-      void handStringToObjects();
-   } catch(PinochleException &e) {
+       //calculate hand
+      allRemCards = handStrToObject(allRemCards);
+   } catch (PinochleException &e){
       throw e;
    }
 
    try {
-      void meldStringToObjects();
-   } catch(PinochleException &e) {
+      //get capturePile
+      allRemCards = captureStrToObject(allRemCards);
+      //getMeldPile
+   } catch (PinochleException &e){
       throw e;
    }
 
    try {
-      void captureStringToObjects();
-   } catch(PinochleException &e) {
+      //get capturePile
+      allRemCards = meldStrToObject(allRemCards, trumpSuit);
+      //getMeldPile
+   } catch (PinochleException &e){
       throw e;
    }
+
+   return allRemCards;
 }
 
-void Serialization::convertObjectsToString() {
+void Serialization::convertObjectsToStrings() {
    if(!playerObjectsEntered) {
       throw PinochleException("Player Objects has not been specifiec, and so cannot be serialized.");
    }
@@ -119,16 +127,270 @@ void Serialization::convertObjectsToString() {
             meldString = meldString + " ";
          }
       }
-      if(i < completeMelds.size() - 1; i++) {
+      if(i < completeMelds.size() - 1) {
          meldString = meldString + ", ";
       }
    }
 
 }
 
-void Serialization::convertStringToObjects() {
+GroupOfCards Serialization::handStrToObject(GroupOfCards allRemCards) {
+   //first, get the invidual cards from the hand string and add them to hand
+   //none of the cards in the hand string are assumed to be a part of the meld
+
+   //getting individual card strings from hand string
+   Card handCard;
+   std::vector<std::string> handCardStrs;
+   try {
+      handCardStrs = splitCardsInString(handString);
+   } catch(PinochleException &e) {
+      throw e;
+   }
    
+   //check if all card strings are of correct length (i.e. check if any card contains asterisk )
+   for(int i = 0; i < handCardStrs.size(); i++) {
+      if(handCardStrs[i].size() > 2) {
+         throw PinochleException(handCardStrs[i] + " is an invalid card to put in the hand serialization");
+      }
+      try {
+         handCard = strToCard(handCardStrs[i]);
+         //find first instance of the card in allRemCards 
+         if(allRemCards.getCardsByRankAndSuit(handCard.getRank(), handCard.getSuit()).size() == 0) {
+            throw PinochleException("This card cannot be present in the because it has already been used somewhere else");
+         }
+         handCard = allRemCards.getCardsByRankAndSuit(handCard.getRank(), handCard.getSuit())[0];
+         //remove the instance from allRemCards
+         allRemCards.removeCardById(handCard.getId());
+         //add hand card to hand
+         hand.addCard(handCard);
+      } catch (PinochleException &e) {
+         throw e;
+      }
+   }
+   return allRemCards;
 }
+
+GroupOfCards Serialization::captureStrToObject(GroupOfCards allRemCards) {
+   //first, get the invidual cards from the capture string and add them to capturePile
+   //none of the cards in the capture string are assumed to be a part of the meld
+
+   //getting individual card strings from capture string
+   Card captureCard;
+   std::vector<std::string> captureCardStrs;
+   try {
+      captureCardStrs = splitCardsInString(captureString);
+   } catch(PinochleException &e) {
+      throw e;
+   }
+   
+   //check if all card strings are of correct length (i.e. check if any card contains asterisk )
+   for(int i = 0; i < captureCardStrs.size(); i++) {
+      if(captureCardStrs[i].size() > 2) {
+         throw PinochleException(captureCardStrs[i] + " is an invalid card to put in the hand serialization");
+      }
+      try {
+         captureCard = strToCard(captureCardStrs[i]);
+         //find first instance of the card in allRemCards 
+         if(allRemCards.getCardsByRankAndSuit(captureCard.getRank(), captureCard.getSuit()).size() == 0) {
+            throw PinochleException("This card cannot be present in the because it has already been used somewhere else");
+         }
+         captureCard = allRemCards.getCardsByRankAndSuit(captureCard.getRank(), captureCard.getSuit())[0];
+         //remove the instance from allRemCards
+         allRemCards.removeCardById(captureCard.getId());
+         //add capture card to capturePile
+         capturePile.addCard(captureCard);
+      } catch (PinochleException &e) {
+         throw e;
+      }
+   }
+   return allRemCards;
+}
+
+GroupOfCards Serialization::meldStrToObject(GroupOfCards allRemCards, Suit trumpSuit) {
+   //first split the string into component melds
+   std::vector<std::vector<std::string>> meldVector;
+   try {
+      meldVector = splitMeldsInString(meldString);
+   } catch(PinochleException &e) {
+      throw e;
+   }
+   
+
+   //for handling repetition of cards in mmeld
+   bool cardHasAsterisk;
+   Card card;
+   MeldInstance meldInstance;
+   std::vector<Card> cardsWithAstrk;
+   std::vector<Card> cardsWithoutAstrk;
+   std::vector<Card> cardsExtracted;
+   // std::vector<MeldInstance> meldsToBeStored;
+   bool cardWasExtracted;
+   //loop through each meld instance
+   for(int i = 0; i < meldVector.size(); i++) {
+      cardsWithAstrk.clear();
+      cardsWithoutAstrk.clear();
+      meldInstance.removeAllCards();
+      //loop through all the cards in a meld instance
+      for(int j = 0; j < meldVector[i].size(); j++) {
+         cardHasAsterisk = false;
+         //check if card string is valid
+         if(meldVector[i][j].size() == 3) {
+            if(meldVector[i][j][2] == '*') {
+               cardHasAsterisk = true;
+            } else {
+               throw PinochleException("Invalid card in meld string");
+            }
+         } 
+         //if the card is valid
+         if(meldVector[i][j].size() == 2 || meldVector[i][j].size() == 3) {
+            card = strToCard(meldVector[i][j]);
+            if(cardHasAsterisk) {
+               cardsWithAstrk.push_back(card);
+            } else {
+               cardsWithoutAstrk.push_back(card);
+            }
+         } else {
+            throw PinochleException("Invalid card in meld string");
+         }
+      }
+      
+      //checking if all the cards with asterisks have already been extracted from allRemCards or not
+      for(int n = 0; n < cardsWithAstrk.size(); n++) {
+         //go through cardsExracted to search
+         cardWasExtracted = false;
+         for(int m = 0; m < cardsExtracted.size(); m++) {
+            //if the card was previously extracted
+            if(cardsExtracted[m].compareRankAndSuit(cardsWithAstrk[n]) == true) {
+               cardWasExtracted = true;
+               cardsWithAstrk[n] = cardsExtracted[m];
+               break;
+            } 
+         }
+         //if the card was not previously extracted, extract it from allRemCards
+         if(cardWasExtracted == false) {
+            cardsWithAstrk[n] = allRemCards.getCardsByRankAndSuit(cardsWithAstrk[n].getRank(), cardsWithAstrk[n].getSuit())[0];
+            allRemCards.removeCardById(cardsWithAstrk[n].getId());
+            cardsExtracted.push_back(cardsWithAstrk[n]);
+         }
+         //add the card to the meld instance object
+         meldInstance.addCard(cardsWithAstrk[n], trumpSuit);
+      }
+      //now, extracting all non-asterisk cards from allRemCards
+      for(int n = 0; n < cardsWithoutAstrk.size(); n++) {
+         cardsWithoutAstrk[n] = allRemCards.getCardsByRankAndSuit(cardsWithoutAstrk[n].getRank(), cardsWithoutAstrk[n].getSuit())[0];
+         allRemCards.removeCardById(cardsWithoutAstrk[n].getId());
+         cardsExtracted.push_back(cardsWithAstrk[n]);
+         meldInstance.addCard(cardsWithoutAstrk[n], trumpSuit);
+      }
+      //check if valid meld instance has been created
+      if(meldInstance.isValidMeld() == false) {
+         throw PinochleException("Error in serialization. Invalid meld is listed.");
+      }
+
+      meldsPlayed.addMeld(meldInstance);
+      // //get all the meld instances from meldsPlayed that have previously used any of the asterisked cards 
+      // for(int n = 0; n < cardsWithAstrk.size(); n++) {
+
+      // }
+   }
+   return allRemCards;
+}
+
+// GroupOfCards Serialization::meldStrToObject(GroupOfCards allRemCards, Suit trumpSuit) {
+//    //first split the string into component melds
+//    std::vector<std::vector<std::string>> meldVector;
+//    try {
+//       meldVector = splitMeldsInString(meldString);
+//    } catch(PinochleException &e) {
+//       throw e;
+//    }
+   
+
+//    //for handling repetition of cards in mmeld
+//    bool cardHasAsterisk;
+//    Card card;
+//    MeldInstance meldInstance;
+//    std::vector<Card> cardsWithAstrk;
+//    std::vector<Card> cardsWithoutAstrk;
+//    std::vector<Card> cardsExtracted;
+//    std::vector<MeldInstance> meldsToBeStored;
+//    bool cardWasExtracted;
+//    //loop through each meld instance
+//    for(int i = 0; i < meldVector.size(); i++) {
+//       cardsWithAstrk.clear();
+//       cardsWithoutAstrk.clear();
+//       meldInstance.removeAllCards();
+//       //loop through all the cards in a meld instance
+//       for(int j = 0; j < meldVector[i].size(); j++) {
+//          cardHasAsterisk = false;
+//          //check if card string is valid
+//          if(meldVector[i][j].size() == 3) {
+//             if(meldVector[i][j][2] == '*') {
+//                cardHasAsterisk = true;
+//             } else {
+//                throw PinochleException("Invalid card in meld string");
+//             }
+//          } 
+//          //if the card is valid
+//          if(meldVector[i][j].size() == 2 || meldVector[i][j].size() == 3) {
+//             card = strToCard(meldVector[i][j]);
+//             if(cardHasAsterisk) {
+//                cardsWithAstrk.push_back(card);
+//             } else {
+//                cardsWithoutAstrk.push_back(card);
+//             }
+//          } else {
+//             throw PinochleException("Invalid card in meld string");
+//          }
+//       }
+      
+//       //checking if all the cards with asterisks have already been extracted from allRemCards or not
+//       for(int n = 0; n < cardsWithAstrk.size(); n++) {
+//          //go through cardsExracted to search
+//          cardWasExtracted = false;
+//          for(int m = 0; m < cardsExtracted.size(); m++) {
+//             //if the card was previously extracted
+//             if(cardsExtracted[m].compareRankAndSuit(cardsWithAstrk[n]) == true) {
+//                cardWasExtracted = true;
+//                cardsWithAstrk[n] = cardsExtracted[m];
+//                break;
+//             } 
+//          }
+//          //if the card was not previously extracted, extract it from allRemCards
+//          if(cardWasExtracted == false) {
+//             cardsWithAstrk[n] = allRemCards.getCardsByRankAndSuit(cardsWithAstrk[n].getRank(), cardsWithAstrk[n].getSuit())[0];
+//             allRemCards.removeCardById(cardsWithAstrk[n].getId());
+//             cardsExtracted.push_back(cardsWithAstrk[n]);
+//          }
+//          //add the card to the meld instance object
+//          meldInstance.addCard(cardsWithAstrk[n], trumpSuit);
+//       }
+//       //now, extracting all non-asterisk cards from allRemCards
+//       for(int n = 0; n < cardsWithoutAstrk.size(); n++) {
+//          cardsWithoutAstrk[n] = allRemCards.getCardsByRankAndSuit(cardsWithoutAstrk[n].getRank(), cardsWithoutAstrk[n].getSuit())[0];
+//          allRemCards.removeCardById(cardsWithoutAstrk[n].getId());
+//          cardsExtracted.push_back(cardsWithAstrk[n]);
+//          meldInstance.addCard(cardsWithoutAstrk[n]);
+//       }
+//       //check if valid meld instance has been created
+//       if(meldInstance.isValidMeld() == false) {
+//          throw PinochleException("Error in serialization. Invalid meld is listed.");
+//       }
+//       //check if a meld type has already been declared before in which this card has been declared
+      
+//    }
+// }
+
+//every time asterisk is encountered, check if a meld with that card has already been declared
+//if it has not been declared, then it is a new card, 
+//if it has been declared, it is a repeat of an already played card
+//if four asterick count is reached (this can only happen in the case of Queen of Spades), then a state of ambiguity arises.
+//These four asterisks could represent a single Queen of Spades or two Queen of Spades
+
+
+
+//if a card is missing, one card of one meld must probably be repeated. 
+
 
 
 
@@ -166,4 +428,3 @@ MeldsStorage getMeldsPlayed();
 GroupOfCards getCapturePile();
 
 
-void Serialization 

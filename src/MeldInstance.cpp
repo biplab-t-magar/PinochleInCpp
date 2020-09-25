@@ -39,6 +39,11 @@ bool MeldInstance::removeCardByPosition(int position) {
    return true;
 }
 
+bool MeldInstance::removeAllCards() {
+   meldIsValid = false;
+   cards.clear();
+}
+
 Meld MeldInstance::getMeldType() const {
    if(meldIsValid == false) {
       throw PinochleException("This is not a valid meld");

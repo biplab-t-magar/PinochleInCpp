@@ -14,6 +14,7 @@ public:
    bool removeCardById(int id); 
    bool removeCardByPosition(int position);
    bool searchCardById(int id) const;
+   bool searchCardByRankAndSuit(Rank rank, Suit suit);
    // bool searchCard(Card card);
    Card getCardById(int id) const;
    std::vector<Card> getCardsByRank(Rank rank) const;

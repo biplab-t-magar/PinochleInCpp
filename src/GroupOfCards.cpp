@@ -41,6 +41,16 @@ bool GroupOfCards::searchCardById(int id) const{
    return false;
 }
 
+// bool GroupOfCards::searchCardByRankAndSuit(Rank rank, Suit suit) {
+//     for(int i = 0; i < cards.size(); i++) {
+//       if(cards[i].getRank() == rank && cards[i].getSuit() == suit) {
+//          return true;
+//       }
+//    }
+//    return false;
+// }
+
+
 // bool GroupOfCards::searchCard(Card card) {
 //    for(int i = 0; i < cards.size(); i++) {
 //       if(cards[i] == card) {

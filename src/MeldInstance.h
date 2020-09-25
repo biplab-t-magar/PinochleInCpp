@@ -15,6 +15,7 @@ public:
    bool addCard(Card card, Suit trumpSuit);
    bool removeCardById(int id); 
    bool removeCardByPosition(int position);
+   bool removeAllCards();
    Meld getMeldType() const;
    std::string getMeldTypeString() const;
    bool isValidMeld() const;

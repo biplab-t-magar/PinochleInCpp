@@ -10,7 +10,7 @@ class Serialization {
 public:
    Serialization();
    void setPlayerObjects(GroupOfCards hand, MeldsStorage meldsPlayed, GroupOfCards capturePile);
-   void setPlayerStrings(std::string handSerialization, std::string meldSerialization, std::string captureSerialization);
+   GroupOfCards setPlayerStrings(std::string handSerialization, std::string meldSerialization, std::string captureSerialization, GroupOfCards allRemCards, Suit trumpSuit);
 
    std::string getHandString();
    std::string getCaptureString();
@@ -30,16 +30,16 @@ private:
    std::string meldString;
    std::string captureString;
 
-   void handObjectsToString();
-   void meldObjectsToString();
-   void captureObjectsToString();
+   // void handObjectsToString();
+   // void meldObjectsToString();
+   // void captureObjectsToString();
 
-   void handStringToObjects();
-   void meldStringToObjects();
-   void captureStringToObjects();
+   GroupOfCards convertStringsToObjects(GroupOfCards allCards);
+   GroupOfCards handStrToObject(GroupOfCards allCards);
+   GroupOfCards meldStrToObject(GroupOfCards allCards, Suit trumpSuit);
+   GroupOfCards captureStrToObject(GroupOfCards allCards);
 
-   void convertObjectsToString();
-   void convertStringToObjects();
+   void convertObjectsToStrings();
    bool isACompleteMeldInstance(MeldInstance meldInstance);
 
 };

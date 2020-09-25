@@ -25,8 +25,11 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
 
    roundScores[0] = 0;
    roundScores[1] = 0;
+   gameScores[1] = hGameScore;
+   gameScores[0] = cGameScore;
    players[0] = new Computer();
    players[1] = new Human();
+   this->roundNumber = roundNumber;
    
 
    std::cout << "Distributing cards:" << std::endl;
@@ -69,7 +72,7 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
    //loop for each turn
    while(players[1]->numCardsInHand() != 0 || players[0]->numCardsInHand() != 0) {
       //display the game table
-      displayTable(roundNumber, hGameScore, cGameScore);
+      displayTable();
       //prompt user action
       switch (promptUser()) {
       case 1:
@@ -145,6 +148,8 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
       } else {
          std::cout << "No more cards left in stock. Play until hand cards are exhausted." << std::endl;
       }
+      promptSaveGame();
+
    }
    std::cout << "Round ended. " << std::endl;
    if(roundScores[1] > roundScores[0]) {
@@ -379,14 +384,14 @@ int Round::promptUserForMeld(Player *human) {
    return userActionInt;
 }
 
-void Round::displayTable(int roundNumber, int hGameScore, int cGameScore) {
+void Round::displayTable() {
    std::cout << "\n\n---------------------------------------------------------------------------------------\n";
    std::cout << "Current Game Table: \n\n";
    //display each players info
    std::cout << "Round: " << roundNumber << std::endl << std::endl;
-   for(int i = 0; i < 2; i++) {
+   for(int i = 0; i < numOfPlayers; i++) {
       std::cout << (i == 0 ? "Computer:" : "Human:") << std::endl;
-      std::cout << "    Score: " <<  (i == 0 ? cGameScore : hGameScore) << " / " << roundScores[i] << std::endl;
+      std::cout << "    Score: " <<  gameScores[i] << " / " << roundScores[i] << std::endl;
       std::cout << "    Hand: " << getHandString(players[i]) << std::endl;
       std::cout << "    Capture Pile: " << getCaptureString(players[i]) << std::endl;
       std::cout << "    Melds: " << getMeldsString(players[i]) << std::endl;
@@ -453,4 +458,60 @@ std::string Round::getMeldsString(Player* player) {
       }
    }
    return meldsString;
+}
+
+void Round::promptSaveGame() {
+   std::cout << "Would you like to save your progress so far? (y/n): ";
+   std::string userResponse;
+   while(true) {
+      getline(std::cin, userResponse);
+      userResponse = stripString(userResponse);
+      if(userResponse != "y" && userResponse != "n" ) {
+         std::cout << "You must enter either y or n: ";
+         continue;
+      }
+      break;
+   }
+   if(userResponse == "n") {
+      return;
+   } else {
+      saveGame();
+   }
+}
+
+void Round::saveGame() {
+   //prepare data to save to file
+   std::string saveData = "";
+
+   serializations[0].setPlayerObjects(players[0]->getHand(), players[0]->getMeldsPlayed(), players[0]->getCapturePile());
+   serializations[1].setPlayerObjects(players[1]->getHand(), players[1]->getMeldsPlayed(), players[1]->getCapturePile());
+
+   //round number
+   saveData = saveData + "Round: " + std::to_string(roundNumber) + "\n\n";
+   //player data
+   for(int i = 0; i < numOfPlayers; i++) {
+      saveData = saveData + (i == 0 ? "Computer:" : "Human:") + "\n";
+      saveData = saveData + "   Score: " + std::to_string(gameScores[i]) + " / " + std::to_string(roundScores[i]) + "\n";
+      saveData = saveData + "   Hand: " + serializations[i].getHandString() + "\n";
+      saveData = saveData + "   Capture Pile: " + serializations[i].getCaptureString() + "\n";
+      saveData = saveData + "   Melds: " + serializations[i].getMeldString() + "\n\n";
+   }
+
+   if(stock.getNumRemaining() == 0) {
+      saveData = saveData + "Trump Card: " + trumpCard.getSuitString()[0] + "\n";
+   } else {
+      saveData = saveData + "Trump Card: " + trumpCard.getShortCardStr() + "\n";
+   }
+   
+   std::vector<Card> stockCards = stock.getAllRemainingCards();
+   saveData = saveData + "Stock: ";
+   //the card at the top of the stock is the card at the end of the vector
+   for(int i = stockCards.size() - 1; i >= 0; i--) {
+      saveData = saveData + stockCards[i].getShortCardStr() + " ";
+   }
+   saveData = saveData + "\n\n";
+   saveData = saveData + "Next Player: " + (humansTurn ? "Human" : "Computer");
+
+   std::cout << saveData;
+
 }
