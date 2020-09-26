@@ -550,7 +550,7 @@ void Round::continueRound(int &roundNumber, int &hGameScore, int &cGameScore) {
    Deck deck;
    //empty out the deck into a GroupOfCards object
    GroupOfCards allCards;
-   for(int i = 0; i < deck.getNumRemaining(); i++) {
+   while(deck.getNumRemaining() > 0) {
       allCards.addCard(deck.takeOneFromTop());
    }
    //now, get a vector of all the stock pile cards from the string
