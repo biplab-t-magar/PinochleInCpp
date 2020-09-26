@@ -78,6 +78,13 @@ void Round::startNewRound(int &roundNumber, int &hGameScore, int &cGameScore) {
    }
    hGameScore += roundScores[1];
    cGameScore += roundScores[0];
+
+   std::cout << "Your score this round: " << roundScores[1];
+   std::cout << "\nComputer's score this round: " << roundScores[0];
+   std::cout << "\n\nYour total score so far: " << hGameScore;
+   std::cout << "\nComputer's total score so far: " << cGameScore;
+   std::cout << "\n\n";
+   
    roundNumber++;
 }
 
@@ -611,11 +618,12 @@ void Round::continueRound(int &roundNumber, int &hGameScore, int &cGameScore) {
    
    std::cout << "Game successfully loaded!\n";
 
-   std::cout << "Loading round " << roundNumber << " from the load file.\n\n";
+   std::cout << "Loading round " << roundNumber << " from the load file...\n\n";
 
    beginRoundLoop();
    
    std::cout << "Round ended. " << std::endl;
+   
    if(roundScores[1] > roundScores[0]) {
       std::cout << "You won this round!\n\n" << std::endl << std::endl;
    } else if(roundScores[0] > roundScores[1]) {
@@ -623,8 +631,16 @@ void Round::continueRound(int &roundNumber, int &hGameScore, int &cGameScore) {
    } else {
       std::cout << "This round was a draw\n\n" << std::endl << std::endl;
    }
+
    hGameScore += roundScores[1];
    cGameScore += roundScores[0];
+
+   std::cout << "Your score this round: " << roundScores[1];
+   std::cout << "\nComputer's score this round: " << roundScores[0];
+   std::cout << "\n\nYour total score so far: " << hGameScore;
+   std::cout << "\nComputer's total score so far: " << cGameScore;
+   std::cout << "\n\n";
+
    roundNumber++;
 
 }
