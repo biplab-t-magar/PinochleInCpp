@@ -23,15 +23,15 @@ std::string stripString(std::string str) {
    return strippedString;
 }
 
-std::string removeWhiteSpace(std::string str) {
-   std::string cleanString = "";
-   for(int i = 0; i < str.length(); i++) {
-      if(str[i] != ' ' && str[i] != '\n' && str[i] != '\t') {
-         cleanString += str[i];
-      }
-   }
-   return cleanString;
-}
+// std::string removeWhiteSpace(std::string str) {
+//    std::string cleanString = "";
+//    for(int i = 0; i < str.length(); i++) {
+//       if(str[i] != ' ' && str[i] != '\n' && str[i] != '\t') {
+//          cleanString += str[i];
+//       }
+//    }
+//    return cleanString;
+// }
 
 bool isAValidCardStr(std::string str) {
    //all cards are represented by two characters

@@ -41,7 +41,7 @@ private:
 
    void convertObjectsToStrings();
    bool isACompleteMeldInstance(MeldInstance meldInstance);
-
+   
 };
 
 #endif

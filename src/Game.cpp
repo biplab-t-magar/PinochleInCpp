@@ -91,20 +91,7 @@ void Game::loadGame() {
       return;
    }
 
-   std::cout << "current round" << currentRound;
-   std::cout << "\nh g score" << gameScores[1];
-   std::cout << "\nc g score" << gameScores[0];
-   std::cout << "\nh r score" << loadedRoundScores[1];
-   std::cout << "\nc r score" << loadedRoundScores[0];
-   std::cout << "\nh hand" << loadedHandStrs[1];
-   std::cout << "\nc hand" << loadedHandStrs[0];
-   std::cout << "\nh capture" << loadedCaptureStrs[1];
-   std::cout << "\nc capture" << loadedCaptureStrs[0];
-   std::cout << "\nc Meld" << loadedMeldStrs[0];
-   std::cout << "\nh Meld" << loadedMeldStrs[0];
-   std::cout << "\nstock: " << loadedStockStr;
-   std::cout << "\ntrump: " << loadedTrumpCard.getSuitString();
-   std::cout << "\nnext player: " << loadedNextPlayerStr;
+   
    
 }
 
@@ -127,11 +114,15 @@ void Game::loadGameData() {
       throw PinochleException("This is not a valid save file. The round number is not readable.");
    }
 
+   //next line
+   lineNumber++;
+
    //lines 1 to 10 (1- 5 in first iteration, 2-6 in second iteration)
-   for(int i = 0; i < 2; i++) {
+   //one iteration for each player
+   for(int i = 0; i < numOfPlayers; i++) {
       //skip the "Computer:" / "Human:" lines
       if(lineNumber == 1 || lineNumber == (1 + 5)) {
-         if(stripString(lines[lineNumber]) != "Computer:" || stripString(lines[lineNumber]) != "Human:") {
+         if(stripString(lines[lineNumber]) != "Computer:" && stripString(lines[lineNumber]) != "Human:") {
             throw("This is not a valid save file. Player's label (computer/human) is missing from save file");
          }
          
@@ -148,7 +139,7 @@ void Game::loadGameData() {
       data = lines[lineNumber].substr(0, index);
       //game score
       try {
-         gameScores[lineNumber] = std::stoi(data);
+         gameScores[i] = std::stoi(data);
       } catch (std::invalid_argument &e) {
          throw PinochleException("This is not a valid save file. Game score is invalid");
       }
@@ -156,7 +147,7 @@ void Game::loadGameData() {
       lines[lineNumber] = stripString(lines[lineNumber]); 
       //round score
       try {
-         loadedRoundScores[lineNumber] = std::stoi(lines[lineNumber]);
+         loadedRoundScores[i] = std::stoi(lines[lineNumber]);
       } catch (std::invalid_argument &e) {
          throw PinochleException("This is not a valid save file. Round score is invalid");
       }
@@ -169,7 +160,7 @@ void Game::loadGameData() {
       }
       lines[lineNumber] = lines[lineNumber].substr(5);
       lines[lineNumber] = stripString(lines[lineNumber]);
-      loadedHandStrs[lineNumber] = lines[lineNumber];
+      loadedHandStrs[i] = lines[lineNumber];
 
 
       //next line
@@ -180,7 +171,7 @@ void Game::loadGameData() {
       }
       lines[lineNumber] = lines[lineNumber].substr(13);
       lines[lineNumber] = stripString(lines[lineNumber]);
-      loadedCaptureStrs[lineNumber] = lines[lineNumber];
+      loadedCaptureStrs[i] = lines[lineNumber];
       
       //next line
       lineNumber++;
@@ -190,7 +181,7 @@ void Game::loadGameData() {
       }
       lines[lineNumber] = lines[lineNumber].substr(6);
       lines[lineNumber] = stripString(lines[lineNumber]);
-      loadedMeldStrs[lineNumber] = lines[lineNumber];
+      loadedMeldStrs[i] = lines[lineNumber];
       //next line
       lineNumber++;
    }
@@ -210,8 +201,8 @@ void Game::loadGameData() {
       if(!isAValidCardStr(lines[lineNumber])) {
          throw PinochleException("This is not a valid save file. The trump card specified is invalid."); 
       }
-      loadedTrumpCard.setRank(strToRank(data[0]));
-      loadedTrumpCard.setSuit(strToSuit(data[1]));
+      loadedTrumpCard.setRank(strToRank(lines[lineNumber][0]));
+      loadedTrumpCard.setSuit(strToSuit(lines[lineNumber][1]));
    } else {
       throw PinochleException("This is not a valid save file. The Trump card specified is invalid."); 
    }
@@ -236,7 +227,7 @@ void Game::loadGameData() {
    }
    lines[lineNumber] = lines[lineNumber].substr(12);
    lines[lineNumber] = stripString(lines[lineNumber]);
-   if(lines[lineNumber] != "Human" || lines[lineNumber] != "Computer") {
+   if(lines[lineNumber] != "Human" && lines[lineNumber] != "Computer") {
       throw PinochleException("This is not a valid save file. 'Next Player' must be either 'Human' or 'Computer'");
    }
    loadedNextPlayerStr = lines[lineNumber];
