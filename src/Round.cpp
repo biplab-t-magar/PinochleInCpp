@@ -562,7 +562,7 @@ void Round::continueRound(int &roundNumber, int &hGameScore, int &cGameScore) {
    //create the final stock pile by transferring over matching cards from allCards
    //it is very important here to add the cards in reverse order from how they were listed (so we need to go from right to left)
    //this is beause stock::putCardAtTop() adds the card to the "top" of the pile each time
-   for(int i = stockCards.size() - 1; i >= 0; i++) {
+   for(int i = stockCards.size() - 1; i >= 0; i--) {
       //take the first instance of a matching card returned from allCards
       stockCards[i] = allCards.getCardsByRankAndSuit(stockCards[i].getRank(), stockCards[i].getSuit())[0];
       //remove the card from allCards
