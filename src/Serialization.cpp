@@ -230,7 +230,10 @@ GroupOfCards Serialization::meldStrToObject(GroupOfCards allRemCards, Suit trump
 
    //for handling repetition of cards in mmeld
    bool cardHasAsterisk;
-   Card card;
+   //to hold a card temporarily
+   Card cardHolder;
+   //to hold cards temporarily
+   std::vector<Card> cardsHolder;
    MeldInstance meldInstance;
    std::vector<Card> cardsWithAstrk;
    std::vector<Card> cardsWithoutAstrk;
@@ -256,11 +259,11 @@ GroupOfCards Serialization::meldStrToObject(GroupOfCards allRemCards, Suit trump
          //if the card is valid
          if(meldVector[i][j].size() == 2 || meldVector[i][j].size() == 3) {
             if(cardHasAsterisk) {
-               card = strToCard(meldVector[i][j].substr(0, 2));
-               cardsWithAstrk.push_back(card);
+               cardHolder = strToCard(meldVector[i][j].substr(0, 2));
+               cardsWithAstrk.push_back(cardHolder);
             } else {
-               card = strToCard(meldVector[i][j]);
-               cardsWithoutAstrk.push_back(card);
+               cardHolder = strToCard(meldVector[i][j]);
+               cardsWithoutAstrk.push_back(cardHolder);
             }
          } else {
             throw PinochleException("Invalid card in meld string");
@@ -281,12 +284,12 @@ GroupOfCards Serialization::meldStrToObject(GroupOfCards allRemCards, Suit trump
          }
          //if the card was not previously extracted, extract it from allRemCards
          if(cardWasExtracted == false) {
-            try {
-               cardsWithAstrk[n] = allRemCards.getCardsByRankAndSuit(cardsWithAstrk[n].getRank(), cardsWithAstrk[n].getSuit())[0];
-            } catch (PinochleException& e) {
-               throw PinochleException(e.what() + "The card " + cardsWithoutAstrk[n].getShortCardStr() + " could not be extracted. There may one or more "
-                     + "extra instances of this card in the serialization file. Make sure there are only two instances of this card.\n\n");
+            cardsHolder = allRemCards.getCardsByRankAndSuit(cardsWithAstrk[n].getRank(), cardsWithAstrk[n].getSuit());
+            if(cardsHolder.size() == 0) {
+               throw PinochleException("The card " + cardsWithoutAstrk[n].getShortCardStr() + " could not be extracted. There may one or more "
+                  + "extra instances of this card in the serialization file. Make sure there are only two instances of this card.\n\n");
             }
+            cardsWithAstrk[n] = cardsHolder[0];
 
             allRemCards.removeCardById(cardsWithAstrk[n].getId());
             cardsExtracted.push_back(cardsWithAstrk[n]);
@@ -298,12 +301,13 @@ GroupOfCards Serialization::meldStrToObject(GroupOfCards allRemCards, Suit trump
       }
       //now, extracting all non-asterisk cards from allRemCards
       for(int n = 0; n < cardsWithoutAstrk.size(); n++) {
-         try {
-            cardsWithoutAstrk[n] = allRemCards.getCardsByRankAndSuit(cardsWithoutAstrk[n].getRank(), cardsWithoutAstrk[n].getSuit())[0];
-         } catch (PinochleException& e) {
-            throw PinochleException(e.what() + "The card " + cardsWithoutAstrk[n].getShortCardStr() + " could not be extracted. There may one or more "
-                  + "extra instances of this card in the serialization file. Make sure there are only two instances of this card.\n\n");
+         cardsHolder = allRemCards.getCardsByRankAndSuit(cardsWithoutAstrk[n].getRank(), cardsWithoutAstrk[n].getSuit());
+         if(cardsHolder.size() == 0) { 
+            throw PinochleException("The card " + cardsWithoutAstrk[n].getShortCardStr() + " could not be extracted. There may one or more "
+               + "extra instances of this card in the serialization file. Make sure there are only two instances of this card.\n\n");
          }
+         cardsWithoutAstrk[n] = allRemCards.getCardsByRankAndSuit(cardsWithoutAstrk[n].getRank(), cardsWithoutAstrk[n].getSuit())[0];
+         
          allRemCards.removeCardById(cardsWithoutAstrk[n].getId());
          cardsExtracted.push_back(cardsWithoutAstrk[n]);
          meldInstance.addCard(cardsWithoutAstrk[n], trumpSuit);

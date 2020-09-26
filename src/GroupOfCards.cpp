@@ -101,9 +101,6 @@ std::vector<Card> GroupOfCards::getCardsByRankAndSuit(Rank rank, Suit suit) cons
          foundCards.push_back(cards[i]);
       }
    }
-   if(foundCards.size() == 0) {
-      throw PinochleException("Card not found.");
-   }
    return foundCards;
 }
 

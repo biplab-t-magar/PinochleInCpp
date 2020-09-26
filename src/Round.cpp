@@ -554,6 +554,8 @@ void Round::continueRound(int &roundNumber, int &hGameScore, int &cGameScore) {
    Deck deck;
    //empty out the deck into a GroupOfCards object
    GroupOfCards allCards;
+   //to hold cards temporarily
+   std::vector<Card> cardsHolder;
    while(deck.getNumRemaining() > 0) {
       allCards.addCard(deck.takeOneFromTop());
    }
@@ -568,15 +570,13 @@ void Round::continueRound(int &roundNumber, int &hGameScore, int &cGameScore) {
    //this is beause stock::putCardAtTop() adds the card to the "top" of the pile each time
    for(int i = stockCards.size() - 1; i >= 0; i--) {
       //take the first instance of a matching card returned from allCards
-      try {
-         stockCards[i] = allCards.getCardsByRankAndSuit(stockCards[i].getRank(), stockCards[i].getSuit())[0];
-      } catch (PinochleException &e) {
-         std::cout << e.what();
+      cardsHolder = allCards.getCardsByRankAndSuit(stockCards[i].getRank(), stockCards[i].getSuit());
+      if(cardsHolder.size() == 0) {
          std::cout << "The card " << stockCards[i].getShortCardStr() << " could not be extracted. There may one or more "
-                     << "extra instances of this card in the serialization file. Make sure there are only two instances of this card.\n\n";
+            << "extra instances of this card in the serialization file. Make sure there are only two instances of this card.\n\n";
          exit(1);
       }
-      
+      stockCards[i] = cardsHolder[0];
       //remove the card from allCards
       allCards.removeCardById(stockCards[i].getId());
       stock.putCardAtTop(stockCards[i]);
