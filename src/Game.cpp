@@ -39,11 +39,11 @@ void Game::loadGame() {
 
    //continue with the rest of the rounds
    while(true) {
-      startAnotherRound();
       if(playAnotherRound() == false) {
          std::cout << "Thank you for playing Pinochle!" << std::endl;
          exit(0);
       }
+      startAnotherRound();
    }
 }
 
