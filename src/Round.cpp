@@ -543,6 +543,10 @@ void Round::continueRound(int &roundNumber, int &hGameScore, int &cGameScore) {
       std::cout << e.what() << std::endl;
       return;
    }
+   roundNumber = this->roundNumber;
+   hGameScore = this->gameScores[1];
+   cGameScore = this->gameScores[0];
+
 
    //once game data has been loaded, we can start forming objects from our serializations
 
@@ -596,7 +600,9 @@ void Round::continueRound(int &roundNumber, int &hGameScore, int &cGameScore) {
       std::cout << e.what() << std::endl;
    }
    
-   std::cout << "Game successfully loaded!\n\n";
+   std::cout << "Game successfully loaded!\n";
+
+   std::cout << "Loading round " << roundNumber << " from the load file.\n\n";
 
    beginRoundLoop();
    
@@ -716,6 +722,7 @@ void Round::loadGameData() {
       if(!isAValidSuitStr(lines[lineNumber][0])) {
          throw PinochleException("This is not a valid save file. The trump suit specified is not valid."); 
       }
+      trumpCard.setSuit(strToSuit(lines[lineNumber][0]));
       trumpSuit = strToSuit(lines[lineNumber][0]);
    } else if(lines[lineNumber].size() == 2) {
       if(!isAValidCardStr(lines[lineNumber])) {
