@@ -37,6 +37,14 @@ void Game::loadGame() {
    Round round;
    round.continueRound(currentRound, gameScores[1], gameScores[0]);
 
+   //continue with the rest of the rounds
+   while(true) {
+      startAnotherRound();
+      if(playAnotherRound() == false) {
+         std::cout << "Thank you for playing Pinochle!" << std::endl;
+         exit(0);
+      }
+   }
 }
 
 void Game::startAnotherRound() {
