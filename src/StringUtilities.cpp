@@ -139,6 +139,7 @@ std::vector<std::vector<std::string>> splitMeldsInString(std::string str) {
          allMelds.push_back(std::vector<std::string>());
          try {
             allMelds[meldIndex] = splitCardsInString(meldStr);
+            meldStr = "";
             meldIndex++;
          } catch(PinochleException &e) {
             throw e;

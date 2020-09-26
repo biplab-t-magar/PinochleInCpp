@@ -255,10 +255,11 @@ GroupOfCards Serialization::meldStrToObject(GroupOfCards allRemCards, Suit trump
          } 
          //if the card is valid
          if(meldVector[i][j].size() == 2 || meldVector[i][j].size() == 3) {
-            card = strToCard(meldVector[i][j]);
             if(cardHasAsterisk) {
+               card = strToCard(meldVector[i][j].substr(0, 2));
                cardsWithAstrk.push_back(card);
             } else {
+               card = strToCard(meldVector[i][j]);
                cardsWithoutAstrk.push_back(card);
             }
          } else {
