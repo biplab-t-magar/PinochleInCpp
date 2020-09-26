@@ -35,7 +35,7 @@ private:
    std::string getHandString(Player* player);
    std::string getCaptureString(Player* player);
    std::string getMeldsString(Player* player);
-   void saveGame();
+   std::string saveGame();
    void promptSaveGame();
 };
 

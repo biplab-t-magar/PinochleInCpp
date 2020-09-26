@@ -7,7 +7,7 @@ std::string stripString(std::string str) {
    std::string strippedString;
    //strip from front
    for(int i = 0; i < str.length(); i++) {
-      if(str[i] != ' ' &&  str[i] != '\n' && str[i] != '\t') {
+      if(str[i] != ' ' && str[i] != '\t') {
          strippedString = str.substr(i);
          break;
       }
@@ -15,7 +15,7 @@ std::string stripString(std::string str) {
    //strip from back
    str = strippedString;
    for(int i = str.length() - 1; i >= 0; i--) {
-      if(str[i] != ' '  && str[i] != '\n' && str[i] != '\t') {
+      if(str[i] != ' ' && str[i] != '\t') {
          strippedString = str.substr(0, i + 1);
          break;
       }
@@ -32,6 +32,7 @@ std::string removeWhiteSpace(std::string str) {
    }
    return cleanString;
 }
+
 bool isAValidCardStr(std::string str) {
    //all cards are represented by two characters
    if(str.size() != 2) {
@@ -48,7 +49,21 @@ bool isAValidCardStr(std::string str) {
    return true;
 }
 
-bool checkStrValidity(std::string str) {
+bool isAValidRankStr(char rank) {
+   if(rank != 'A' && rank != 'X' && rank != 'K' && rank != 'Q' && rank != 'J' && rank != '9') {
+      return false;
+   }
+   return true;
+}
+
+bool isAValidSuitStr(char suit) {
+   if(suit != 'C' && suit != 'D' && suit != 'H' && suit != 'S') {
+      return false;
+   }
+   return true;
+}
+
+bool checkCardStrValidity(std::string str) {
    //check if character has asterisk
    if(str.size() == 3 && str[2] != '*') {
       return false;
@@ -76,7 +91,7 @@ std::vector<std::string> splitCardsInString(std::string str) {
       if(str[i] != ' ') {
          cardStr = cardStr + str[i];
       } else {
-         if(checkStrValidity(cardStr) == false) {
+         if(checkCardStrValidity(cardStr) == false) {
             throw PinochleException("Invalid serialization." + cardStr + " is not a proper card.");
          }
          //if the string is valid, add it the result
@@ -87,7 +102,7 @@ std::vector<std::string> splitCardsInString(std::string str) {
    }
    //store last card string
    if(cardStr != "") {
-      if(checkStrValidity(cardStr) == false) {
+      if(checkCardStrValidity(cardStr) == false) {
          throw PinochleException("Invalid serialization." + cardStr + " is not a proper card.");
       }
       //if the string is valid, add it the result
@@ -140,46 +155,58 @@ Card strToCard(std::string str) {
    Card card;
    Rank rank;
    Suit suit;
-   switch (str[0]) {
-      case 'A':
-         rank = Rank::Ace;
-         break;
-      case 'X':
-         rank = Rank::Ten;
-         break;
-      case 'K':
-         rank = Rank::King;
-         break;
-      case 'Q':
-         rank = Rank::Queen;
-         break;
-      case 'J':
-         rank = Rank::Jack;
-         break;
-      case '9':
-         rank = Rank::Nine;
-         break;
-      default:
-         break;
-   }
-   switch (str[1]) {
-      case 'C':
-         suit = Suit::Clubs;
-         break;
-      case 'S':
-         suit = Suit::Spades;
-         break;
-      case 'H':
-         suit = Suit::Hearts;
-         break;
-      case 'D':
-         suit = Suit::Diamonds;
-         break;
-      default:
-         break;
-   }
+   rank = strToRank(str[0]);
+   suit = strToSuit(str[1]);
+   
    card.setRank(rank);
    card.setSuit(suit);
 
    return card;
 }
+
+Rank strToRank(char rank) {
+   switch (rank) {
+      case 'A':
+         return Rank::Ace;
+         break;
+      case 'X':
+         return Rank::Ten;
+         break;
+      case 'K':
+         return Rank::King;
+         break;
+      case 'Q':
+         return Rank::Queen;
+         break;
+      case 'J':
+         return Rank::Jack;
+         break;
+      case '9':
+         return Rank::Nine;
+         break;
+      default:
+         throw PinochleException("Invalid rank");
+         break;
+   }
+}
+
+Suit strToSuit(char suit) {
+   switch (suit) {
+      case 'C':
+         return Suit::Clubs;
+         break;
+      case 'S':
+         return Suit::Spades;
+         break;
+      case 'H':
+         return Suit::Hearts;
+         break;
+      case 'D':
+         return Suit::Diamonds;
+         break;
+      default:
+         throw PinochleException("Invalid suit");
+         break;
+   }
+}
+

@@ -1,6 +1,7 @@
 #include "Round.h"
 #include <iostream>
 #include "StringUtilities.h"
+#include <fstream>
 
 #define numOfPlayers 2
 
@@ -310,7 +311,7 @@ int Round::promptUser() {
    while(true) {
       std::cin.clear();
       std::getline(std::cin, userAction);
-      userAction = removeWhiteSpace(userAction);
+      userAction = stripString(userAction);
       if(userAction.length() != 1) {
          std::cout << "Invalid action. You must enter a number between 1 and " << numOfOptions << ". Please try again." << std::endl;
          continue;
@@ -361,7 +362,7 @@ int Round::promptUserForMeld(Player *human) {
    while(true) {
       std::cin.clear();
       std::getline(std::cin, userAction);
-      userAction = removeWhiteSpace(userAction);
+      userAction = stripString(userAction);
       if(userAction.length() != 1) {
          std::cout << "Invalid action. You must enter a number between 1 and 2. Please try again." << std::endl;
          continue;
@@ -472,14 +473,22 @@ void Round::promptSaveGame() {
       }
       break;
    }
+   std::string saveData;
    if(userResponse == "n") {
       return;
    } else {
-      saveGame();
+      saveData = saveGame();
    }
+   
+   std::cout << "Name your save file: ";
+   getline(std::cin, userResponse);
+   std::ofstream saveFile(userResponse.c_str());
+   saveFile << saveData;
+   saveFile.close();
+
 }
 
-void Round::saveGame() {
+std::string Round::saveGame() {
    //prepare data to save to file
    std::string saveData = "";
 
@@ -512,6 +521,6 @@ void Round::saveGame() {
    saveData = saveData + "\n\n";
    saveData = saveData + "Next Player: " + (humansTurn ? "Human" : "Computer");
 
-   std::cout << saveData;
+   return saveData;
 
 }

@@ -153,7 +153,7 @@ int Human::promptCardThrow() {
    while(true) {
       std::cin.clear();
       std::getline(std::cin, cardToThrow);
-      cardToThrow = removeWhiteSpace(cardToThrow);
+      cardToThrow = stripString(cardToThrow);
       try {
          cardToThrowInt = parsePosition(cardToThrow);
          break;

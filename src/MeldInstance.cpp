@@ -42,6 +42,7 @@ bool MeldInstance::removeCardByPosition(int position) {
 bool MeldInstance::removeAllCards() {
    meldIsValid = false;
    cards.clear();
+   return true;
 }
 
 Meld MeldInstance::getMeldType() const {

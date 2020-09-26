@@ -76,6 +76,7 @@ void Serialization::convertObjectsToStrings() {
    //vector of every single "complete" meld instance
    std::vector<MeldInstance> completeMelds;
    //looping through all cards in hand
+   bool meldEncounteredBefore;
    for(int i = 0; i < hand.getNumOfCards(); i++) {
       //get all the meld instances that the card is part of
       allMeldsUsingCard = meldsPlayed.getAllMeldsUsingCard(hand.getCardByPosition(i));
@@ -85,8 +86,19 @@ void Serialization::convertObjectsToStrings() {
       
       //loop through each meld instance that a card is part of
       for(int j = 0; j < allMeldsUsingCard.size(); j++) {
+         meldEncounteredBefore = false;
          if(isACompleteMeldInstance(allMeldsUsingCard[j])) {
-            completeMelds.push_back(allMeldsUsingCard[j]);
+            //check if the meld instance has already been encountered (through another card that is part of the meld)
+            for(int k = 0; k < completeMelds.size(); k++) {
+               if(completeMelds[k] == allMeldsUsingCard[j]) {
+                  meldEncounteredBefore = true;
+                  break;
+               }
+            }
+            //only push the meld if it was not encountered before
+            if(!meldEncounteredBefore) {
+               completeMelds.push_back(allMeldsUsingCard[j]);
+            }
             meldInstanceCount[i]++;
          }
       }
