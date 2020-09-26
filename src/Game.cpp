@@ -25,6 +25,15 @@ void Game::startNewGame() {
    while(true) {
       startAnotherRound();
       if(playAnotherRound() == false) {
+         std::cout << "Your total score this game was: " << gameScores[1];
+         std::cout << "\nThe computer's total score this game was: " << gameScores[0];
+         if(gameScores[1] > gameScores[0]) {
+            std::cout << "\n\nYou won the game!\n\n";
+         } else if(gameScores[1] < gameScores [0]) {
+            std::cout << "\n\nThe computer won this game.\n\n";
+         } else {
+            std::cout << "\n\nThe game ended in a draw...\n\n";
+         }
          std::cout << "Thank you for playing Pinochle!" << std::endl;
          exit(0);
       }
@@ -40,6 +49,15 @@ void Game::loadGame() {
    //continue with the rest of the rounds
    while(true) {
       if(playAnotherRound() == false) {
+         std::cout << "Your total score this game was: " << gameScores[1];
+         std::cout << "\nThe computer's total score this game was: " << gameScores[0];
+         if(gameScores[1] > gameScores[0]) {
+            std::cout << "\n\nYou won the game!\n\n";
+         } else if(gameScores[1] < gameScores [0]) {
+            std::cout << "\n\nThe computer won this game.\n\n";
+         } else {
+            std::cout << "\n\nThe game ended in a draw...\n\n";
+         }
          std::cout << "Thank you for playing Pinochle!" << std::endl;
          exit(0);
       }

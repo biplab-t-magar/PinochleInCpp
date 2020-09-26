@@ -498,7 +498,9 @@ void Round::promptSaveGame() {
    std::ofstream saveFile(userResponse.c_str());
    saveFile << saveData;
    saveFile.close();
-
+   std::cout << "\nGame successfully save.";
+   std::cout << "\n\nThank you for playing Pinochle!\n\n";
+   exit(0);
 }
 
 std::string Round::saveGame() {
