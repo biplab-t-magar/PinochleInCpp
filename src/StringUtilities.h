@@ -16,6 +16,6 @@ std::vector<std::vector<std::string>> splitMeldsInString(std::string str);
 Card strToCard(std::string str);
 Rank strToRank(char rank);
 Suit strToSuit(char suit);
-
+std::vector<Card> strToVectorOfCards(std::string str);
 
 #endif

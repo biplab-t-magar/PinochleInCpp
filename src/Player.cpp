@@ -11,6 +11,13 @@
 
 // }
 
+Player::Player(GroupOfCards hand, GroupOfCards capturePile, MeldsStorage meldsPlayed, Suit trumpSuit) {
+   this->hand = hand;
+   this->capturePile = capturePile;
+   this->trumpSuit = trumpSuit;
+   this->meldServices = MeldServices(meldsPlayed, trumpSuit);
+}
+
 void Player::takeOneCard(Card card) {
    hand.addCard(card);
 }

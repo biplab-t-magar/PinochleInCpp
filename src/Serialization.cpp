@@ -435,8 +435,14 @@ std::string Serialization::getMeldString() {
    return meldString;
 }
 
-GroupOfCards getHand();
-MeldsStorage getMeldsPlayed();
-GroupOfCards getCapturePile();
+GroupOfCards Serialization::getHand() {
+   return hand;
+}
+MeldsStorage Serialization::getMeldsPlayed() {
+   return meldsPlayed;
+}
+GroupOfCards Serialization::getCapturePile() {
+   return capturePile;
+}
 
 

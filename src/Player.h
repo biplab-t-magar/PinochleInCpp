@@ -9,12 +9,9 @@
 
 class Player {
 public:
-   Player() {
-
-   }
-   virtual ~Player()  {
-
-   }
+   Player() {}
+   Player(GroupOfCards hand, GroupOfCards capturePile, MeldsStorage meldsPlayed, Suit trumpSuit);
+   virtual ~Player()  {}
    // virtual void nextMove() = 0;
    void takeOneCard(Card card);
    // void takeCards(std::vector<Card> cards);

@@ -156,6 +156,14 @@ Card Deck::takeOneFromTop() {
 }
 
 std::vector<Card> Deck::getAllRemainingCards() {
-   
    return cards;
+}
+
+
+void Deck::putCardAtTop(Card card) {
+   cards.push_back(card);
+}
+
+void Deck::clear() {
+   cards.clear();
 }

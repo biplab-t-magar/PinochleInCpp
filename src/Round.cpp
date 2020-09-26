@@ -18,7 +18,7 @@ Round::~Round() {
    }
 }
 
-void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
+void Round::startNewRound(int &roundNumber, int &hGameScore, int &cGameScore) {
    std::cout << "Let's begin the round." << std::endl << std::endl << std::endl;
    //storing players and scores for the round:
    //there is a reason for storing these players in this order
@@ -66,6 +66,22 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
       }
    }
 
+   beginRoundLoop();
+   
+   std::cout << "Round ended. " << std::endl;
+   if(roundScores[1] > roundScores[0]) {
+      std::cout << "You won this round!\n\n" << std::endl << std::endl;
+   } else if(roundScores[0] > roundScores[1]) {
+      std::cout << "You lost this round.\n\n" << std::endl << std::endl;
+   } else {
+      std::cout << "This round was a draw\n\n" << std::endl << std::endl;
+   }
+   hGameScore += roundScores[1];
+   cGameScore += roundScores[0];
+   roundNumber++;
+}
+
+void Round::beginRoundLoop() {
    Card leadCard;
    Card chaseCard;
    MeldInstance meld;
@@ -152,16 +168,6 @@ void Round::startNewRound(int roundNumber, int &hGameScore, int &cGameScore) {
       promptSaveGame();
 
    }
-   std::cout << "Round ended. " << std::endl;
-   if(roundScores[1] > roundScores[0]) {
-      std::cout << "You won this round!\n\n" << std::endl << std::endl;
-   } else if(roundScores[0] > roundScores[1]) {
-      std::cout << "You lost this round.\n\n" << std::endl << std::endl;
-   } else {
-      std::cout << "This round was a draw\n\n" << std::endl << std::endl;
-   }
-   hGameScore += roundScores[1];
-   cGameScore += roundScores[0];
 }
 
 void Round::findWinnerAndGivePoints(Card leadCard, Card chaseCard) {
@@ -492,8 +498,10 @@ std::string Round::saveGame() {
    //prepare data to save to file
    std::string saveData = "";
 
-   serializations[0].setPlayerObjects(players[0]->getHand(), players[0]->getMeldsPlayed(), players[0]->getCapturePile());
-   serializations[1].setPlayerObjects(players[1]->getHand(), players[1]->getMeldsPlayed(), players[1]->getCapturePile());
+   Serialization serializations[numOfPlayers];
+   for(int i = 0; i < numOfPlayers; i++) {
+      serializations[i].setPlayerObjects(players[i]->getHand(), players[i]->getMeldsPlayed(), players[i]->getCapturePile());
+   }
 
    //round number
    saveData = saveData + "Round: " + std::to_string(roundNumber) + "\n\n";
@@ -524,3 +532,258 @@ std::string Round::saveGame() {
    return saveData;
 
 }
+
+void Round::continueRound(int &roundNumber, int &hGameScore, int &cGameScore) {
+   try {
+      loadGameData();
+   } catch(PinochleException &e) {
+      std::cout << e.what() << std::endl;
+      return;
+   } catch(std::exception &e) {
+      std::cout << e.what() << std::endl;
+      return;
+   }
+
+   //once game data has been loaded, we can start forming objects from our serializations
+
+   //first, create all the cards in the game by creating a dummy deck, which automatically generates all cards
+   Deck deck;
+   //empty out the deck into a GroupOfCards object
+   GroupOfCards allCards;
+   for(int i = 0; i < deck.getNumRemaining(); i++) {
+      allCards.addCard(deck.takeOneFromTop());
+   }
+   //now, get a vector of all the stock pile cards from the string
+   //this only creates "ghost" cards, with no ids, only rank and suit defined
+   std::vector<Card> stockCards = strToVectorOfCards(loadedStockStr);
+
+   stock.clear();
+
+   //create the final stock pile by transferring over matching cards from allCards
+   //it is very important here to add the cards in reverse order from how they were listed (so we need to go from right to left)
+   //this is beause stock::putCardAtTop() adds the card to the "top" of the pile each time
+   for(int i = stockCards.size() - 1; i >= 0; i++) {
+      //take the first instance of a matching card returned from allCards
+      stockCards[i] = allCards.getCardsByRankAndSuit(stockCards[i].getRank(), stockCards[i].getSuit())[0];
+      //remove the card from allCards
+      allCards.removeCardById(stockCards[i].getId());
+      stock.putCardAtTop(stockCards[i]);
+   }
+
+   //now, we must create the player objects
+   //first, deserialize the strings
+   //important to receive the version of allCards returned by the Serialization::setPlayerStrings in order to reflect true stock pile
+   Serialization szs[numOfPlayers];
+   for(int i = 0; i < numOfPlayers; i++) {
+      allCards = szs[i].setPlayerStrings(loadedHandStrs[i], loadedMeldStrs[i], loadedCaptureStrs[i], allCards, trumpSuit);
+   }
+
+   //now create the player objects
+   try {
+      players[0] = new Computer(szs[0].getHand(), szs[0].getCapturePile(), szs[0].getMeldsPlayed(), trumpSuit);
+   } catch(PinochleException &e) {
+      std::cout << e.what() << std::endl;
+   }
+
+   try {
+      players[1] = new Human(szs[1].getHand(), szs[1].getCapturePile(), szs[1].getMeldsPlayed(), trumpSuit);
+   } catch(PinochleException &e) {
+      std::cout << e.what() << std::endl;
+   }
+   
+   std::cout << "Game successfully loaded!\n\n";
+
+   beginRoundLoop();
+   
+   std::cout << "Round ended. " << std::endl;
+   if(roundScores[1] > roundScores[0]) {
+      std::cout << "You won this round!\n\n" << std::endl << std::endl;
+   } else if(roundScores[0] > roundScores[1]) {
+      std::cout << "You lost this round.\n\n" << std::endl << std::endl;
+   } else {
+      std::cout << "This round was a draw\n\n" << std::endl << std::endl;
+   }
+   hGameScore += roundScores[1];
+   cGameScore += roundScores[0];
+   roundNumber++;
+
+}
+
+
+void Round::loadGameData() {
+   std::vector<std::string> lines = getSaveFileContent();
+   std::string data;
+   int index;
+   int lineNumber = 0;
+   //first get round number
+   
+   if(lines[lineNumber].substr(0, 6) != "Round:") {
+      throw PinochleException("This is not a valid save file. 'Round' label is missing.");
+   }
+   //get round number
+   lines[lineNumber] = lines[lineNumber].substr(6);
+   lines[lineNumber] = stripString(lines[lineNumber]);
+   try {
+      roundNumber = std::stoi(lines[lineNumber]);
+   } catch (std::invalid_argument &e) {
+      throw PinochleException("This is not a valid save file. The round number is not readable.");
+   }
+
+   //next line
+   lineNumber++;
+
+   //lines 1 to 10 (1- 5 in first iteration, 2-6 in second iteration)
+   //one iteration for each player
+   for(int i = 0; i < numOfPlayers; i++) {
+      //skip the "Computer:" / "Human:" lines
+      if(lineNumber == 1 || lineNumber == (1 + 5)) {
+         if(stripString(lines[lineNumber]) != "Computer:" && stripString(lines[lineNumber]) != "Human:") {
+            throw("This is not a valid save file. Player's label (computer/human) is missing from save file");
+         }
+         
+      }
+      //next line
+      lineNumber++;
+      //get scores
+      if(lines[lineNumber].substr(0, 6) != "Score:") {
+         throw PinochleException("This is not a valid save file. 'Score:' label is missing.");
+      }
+      lines[lineNumber] = lines[lineNumber].substr(6);
+      lines[lineNumber] = stripString(lines[lineNumber]);
+      index = lines[lineNumber].find("/");
+      data = lines[lineNumber].substr(0, index);
+      //game score
+      try {
+         gameScores[i] = std::stoi(data);
+      } catch (std::invalid_argument &e) {
+         throw PinochleException("This is not a valid save file. Game score is invalid");
+      }
+      lines[lineNumber] = lines[lineNumber].substr(index + 1);
+      lines[lineNumber] = stripString(lines[lineNumber]); 
+      //round score
+      try {
+         roundScores[i] = std::stoi(lines[lineNumber]);
+      } catch (std::invalid_argument &e) {
+         throw PinochleException("This is not a valid save file. Round score is invalid");
+      }
+
+      //next line
+      lineNumber++;
+      //get Hand 
+      if(lines[lineNumber].substr(0, 5) != "Hand:") {
+         throw PinochleException("This is not a valid save file. 'Hand' label is missing");
+      }
+      lines[lineNumber] = lines[lineNumber].substr(5);
+      lines[lineNumber] = stripString(lines[lineNumber]);
+      loadedHandStrs[i] = lines[lineNumber];
+
+
+      //next line
+      lineNumber++;
+      //get Capture Pile
+      if(lines[lineNumber].substr(0, 13) != "Capture Pile:") {
+         throw PinochleException("This is not a valid save file. 'Capture' label is missing");
+      }
+      lines[lineNumber] = lines[lineNumber].substr(13);
+      lines[lineNumber] = stripString(lines[lineNumber]);
+      loadedCaptureStrs[i] = lines[lineNumber];
+      
+      //next line
+      lineNumber++;
+      //get Melds
+      if(lines[lineNumber].substr(0, 6) != "Melds:") {
+         throw PinochleException("This is not a valid save file. 'Melds' label is missing");
+      }
+      lines[lineNumber] = lines[lineNumber].substr(6);
+      lines[lineNumber] = stripString(lines[lineNumber]);
+      loadedMeldStrs[i] = lines[lineNumber];
+      //next line
+      lineNumber++;
+   }
+
+   //trump card
+   if(lines[lineNumber].substr(0, 11) != "Trump Card:") {
+      throw PinochleException("This is not a valid save file. 'Trump Card: label is missing" );
+   }
+   lines[lineNumber] = lines[lineNumber].substr(11);
+   lines[lineNumber] = stripString(lines[lineNumber]);
+   if(lines[lineNumber].size() == 1) {
+      if(!isAValidSuitStr(lines[lineNumber][0])) {
+         throw PinochleException("This is not a valid save file. The trump suit specified is not valid."); 
+      }
+      trumpSuit = strToSuit(lines[lineNumber][0]);
+   } else if(lines[lineNumber].size() == 2) {
+      if(!isAValidCardStr(lines[lineNumber])) {
+         throw PinochleException("This is not a valid save file. The trump card specified is invalid."); 
+      }
+      trumpCard.setRank(strToRank(lines[lineNumber][0]));
+      trumpCard.setSuit(strToSuit(lines[lineNumber][1]));
+      trumpSuit = strToSuit(lines[lineNumber][1]);
+   } else {
+      throw PinochleException("This is not a valid save file. The Trump card specified is invalid."); 
+   }
+
+   //next line
+   lineNumber++;
+
+   //stock
+   if(lines[lineNumber].substr(0, 6) != "Stock:") {
+      throw PinochleException("This is not a valid save file. 'Stock' label is missing.");
+   }
+   lines[lineNumber] = lines[lineNumber].substr(6);
+   lines[lineNumber] = stripString(lines[lineNumber]);
+   loadedStockStr = lines[lineNumber];
+
+   //next line
+   lineNumber++;
+
+   //next player
+   if(lines[lineNumber].substr(0, 12) != "Next Player:") {
+      throw PinochleException("This is not a valid save file. 'Next Player' label is missing.");
+   }
+   lines[lineNumber] = lines[lineNumber].substr(12);
+   lines[lineNumber] = stripString(lines[lineNumber]);
+   if(lines[lineNumber] != "Human" && lines[lineNumber] != "Computer") {
+      throw PinochleException("This is not a valid save file. 'Next Player' must be either 'Human' or 'Computer'");
+   }
+   humansTurn = (lines[lineNumber] == "Human" ? true : false);
+
+}
+
+std::vector<std::string> Round::getSaveFileContent() {
+   std::string userResponse;
+   std::ifstream saveFile;
+   while(true) {
+      std::cout << "Enter save file name: ";
+      getline(std::cin, userResponse);
+      // userResponse = stripString(userResponse);
+      try {
+         saveFile.open(userResponse.c_str());
+         if(!saveFile.is_open()) {
+            std::cout << "Error: could not load save file." << std::endl;
+            continue;
+         }
+         break;
+      } catch(std::exception &e) {
+         std::cerr << e.what() << std::endl;
+      }
+   }
+   //first, remove all blank lines
+   std::vector<std::string> fileLines;
+   std::string nextLine;
+   //read game data
+   while(getline(saveFile, nextLine)) {
+      nextLine = stripString(nextLine);
+
+      //ignore empty line
+      if(nextLine.length() == 0) {
+         continue;
+      }
+      fileLines.push_back(nextLine);
+   }
+   
+   //now, parsing interpreting game data using Serialization object
+   saveFile.close();
+   return fileLines;
+}
+

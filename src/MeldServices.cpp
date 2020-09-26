@@ -8,9 +8,10 @@ MeldServices::MeldServices() {
    this->trumpSuitSpecified = false;
 }
 
-MeldServices::MeldServices(Suit trumpSuit) {
+MeldServices::MeldServices(MeldsStorage meldsPlayed, Suit trumpSuit) {
    this->trumpSuit = trumpSuit;
    this->trumpSuitSpecified = true;
+   this->meldsPlayed = meldsPlayed;
 }
 
 MeldsStorage MeldServices::getMeldsPlayed() const {

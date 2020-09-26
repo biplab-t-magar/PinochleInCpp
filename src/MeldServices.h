@@ -11,7 +11,7 @@
 class MeldServices {
 public:
    MeldServices();
-   MeldServices(Suit trumpSuit);
+   MeldServices(MeldsStorage meldsPlayed, Suit trumpSuit);
    MeldsStorage getMeldsPlayed() const;
 
    bool setTrumpSuit(Suit trumpSuit);

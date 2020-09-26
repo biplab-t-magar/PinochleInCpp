@@ -113,6 +113,15 @@ std::vector<std::string> splitCardsInString(std::string str) {
 
 }
 
+std::vector<Card> strToVectorOfCards(std::string str) {
+   std::vector<Card> cards;
+   std::vector<std::string> cardStrs = splitCardsInString(str);
+   for(int i = 0; i < cardStrs.size(); i++) {
+      cards.push_back(strToCard(cardStrs[i]));
+   }
+   return cards;
+}
+
 std::vector<std::vector<std::string>> splitMeldsInString(std::string str) {
    //extract all individual cards of all individual melds
    //throw exception if not a valid meld string

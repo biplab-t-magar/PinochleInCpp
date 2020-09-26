@@ -15,6 +15,8 @@ public:
 
    size_t getNumRemaining();
    std::vector<Card> getAllRemainingCards();
+   void putCardAtTop(Card card);
+   void clear();
 private:
    std::vector<Card> cards;
    const int numOfEachCard;
