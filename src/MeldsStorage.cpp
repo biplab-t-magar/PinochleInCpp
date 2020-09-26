@@ -149,36 +149,41 @@ std::vector<MeldInstance> MeldsStorage::getAllMeldsUsingCard(Card card) {
    return allMeldsUsingCard;
 }
 
-bool MeldsStorage::cardsUsedForSameMeld(std::vector<Card> cards, Meld meldType) {
+bool MeldsStorage::cardsUsedForSameMeld(std::vector<Card> cards) {
    //get int representation of the given meld
-   int meldTypeInt = static_cast<int>(meldType);
 
    //get the number of instances of that particular meld type
-   int numOfMeldsPlayed = storage[meldTypeInt].size();
+   int numOfMeldsPlayed;
 
-   bool cardsUsedBySameMeld = true;
-   for(int i = 0; i < numOfMeldsPlayed; i++) {
-      for(int j= 0; j < cards.size(); j++) {
-         //if one of the cards is not found in the meld instance currently being looped through
-         if(storage[meldTypeInt][i].searchCardById(cards[j].getId()) != true) {
-            cardsUsedBySameMeld =  false;
-            break;
+   //loop through every meld type
+   for(int meldTypeInt = 0; meldTypeInt < numOfMeldTypes; meldTypeInt++) {
+      numOfMeldsPlayed = storage[meldTypeInt].size();
+      //loop through each instance of a meld type
+      for(int i = 0; i < numOfMeldsPlayed; i++) {
+         bool cardsUsedBySameMeld = true;
+         //chech if all cards are present in the meld instance
+         for(int j= 0; j < cards.size(); j++) {
+            //if one of the cards is not found in the meld instance currently being looped through
+            if(storage[meldTypeInt][i].searchCardById(cards[j].getId()) != true) {
+               cardsUsedBySameMeld =  false;
+               break;
+            }
          }
-      }
-      //if there is a meld where all of the given cards are present
-      if(cardsUsedBySameMeld == true) {
-         return true;
+         //if a meld instance with all the cards in it has been found, return true;
+         if(cardsUsedBySameMeld == true) {
+            return true;
+         }
       }
    }
    return false;
 }
 
-bool MeldsStorage::cardsUsedForSameMeld(MeldInstance meldInstance, Meld meldType) {
+bool MeldsStorage::cardsUsedForSameMeld(MeldInstance meldInstance) {
    std::vector<Card> cards;
    for(int i = 0; i < meldInstance.getNumOfCards(); i++) {
       cards.push_back(meldInstance.getCardByPosition(i));
    }
-   return cardsUsedForSameMeld(cards, meldType);
+   return cardsUsedForSameMeld(cards);
 }
 
 bool MeldsStorage::isCardUsedByAnyMeld(Card card) {

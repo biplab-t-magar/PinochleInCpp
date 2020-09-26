@@ -568,7 +568,15 @@ void Round::continueRound(int &roundNumber, int &hGameScore, int &cGameScore) {
    //this is beause stock::putCardAtTop() adds the card to the "top" of the pile each time
    for(int i = stockCards.size() - 1; i >= 0; i--) {
       //take the first instance of a matching card returned from allCards
-      stockCards[i] = allCards.getCardsByRankAndSuit(stockCards[i].getRank(), stockCards[i].getSuit())[0];
+      try {
+         stockCards[i] = allCards.getCardsByRankAndSuit(stockCards[i].getRank(), stockCards[i].getSuit())[0];
+      } catch (PinochleException &e) {
+         std::cout << e.what();
+         std::cout << "The card " << stockCards[i].getShortCardStr() << " could not be extracted. There may one or more "
+                     << "extra instances of this card in the serialization file. Make sure there are only two instances of this card.\n\n";
+         exit(1);
+      }
+      
       //remove the card from allCards
       allCards.removeCardById(stockCards[i].getId());
       stock.putCardAtTop(stockCards[i]);
@@ -583,6 +591,7 @@ void Round::continueRound(int &roundNumber, int &hGameScore, int &cGameScore) {
          allCards = szs[i].setPlayerStrings(loadedHandStrs[i], loadedMeldStrs[i], loadedCaptureStrs[i], allCards, trumpSuit);
       } catch(PinochleException &e) {
          std::cout << e.what() << std::endl;
+         exit(1);
       }
       
    }

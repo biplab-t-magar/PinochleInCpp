@@ -94,11 +94,15 @@ std::vector<Card> GroupOfCards::getCardsBySuit(Suit suit) const {
 }
 
 std::vector<Card> GroupOfCards::getCardsByRankAndSuit(Rank rank, Suit suit) const {
+
    std::vector<Card> foundCards;
    for(int i = 0; i < cards.size(); i++) {
       if(cards[i].getRank() == rank && cards[i].getSuit() == suit) {
          foundCards.push_back(cards[i]);
       }
+   }
+   if(foundCards.size() == 0) {
+      throw PinochleException("Card not found.");
    }
    return foundCards;
 }

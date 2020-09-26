@@ -281,7 +281,13 @@ GroupOfCards Serialization::meldStrToObject(GroupOfCards allRemCards, Suit trump
          }
          //if the card was not previously extracted, extract it from allRemCards
          if(cardWasExtracted == false) {
-            cardsWithAstrk[n] = allRemCards.getCardsByRankAndSuit(cardsWithAstrk[n].getRank(), cardsWithAstrk[n].getSuit())[0];
+            try {
+               cardsWithAstrk[n] = allRemCards.getCardsByRankAndSuit(cardsWithAstrk[n].getRank(), cardsWithAstrk[n].getSuit())[0];
+            } catch (PinochleException& e) {
+               throw PinochleException(e.what() + "The card " + cardsWithoutAstrk[n].getShortCardStr() + " could not be extracted. There may one or more "
+                     + "extra instances of this card in the serialization file. Make sure there are only two instances of this card.\n\n");
+            }
+
             allRemCards.removeCardById(cardsWithAstrk[n].getId());
             cardsExtracted.push_back(cardsWithAstrk[n]);
             //each time a card is extracted, also add it to the hand
@@ -292,7 +298,12 @@ GroupOfCards Serialization::meldStrToObject(GroupOfCards allRemCards, Suit trump
       }
       //now, extracting all non-asterisk cards from allRemCards
       for(int n = 0; n < cardsWithoutAstrk.size(); n++) {
-         cardsWithoutAstrk[n] = allRemCards.getCardsByRankAndSuit(cardsWithoutAstrk[n].getRank(), cardsWithoutAstrk[n].getSuit())[0];
+         try {
+            cardsWithoutAstrk[n] = allRemCards.getCardsByRankAndSuit(cardsWithoutAstrk[n].getRank(), cardsWithoutAstrk[n].getSuit())[0];
+         } catch (PinochleException& e) {
+            throw PinochleException(e.what() + "The card " + cardsWithoutAstrk[n].getShortCardStr() + " could not be extracted. There may one or more "
+                  + "extra instances of this card in the serialization file. Make sure there are only two instances of this card.\n\n");
+         }
          allRemCards.removeCardById(cardsWithoutAstrk[n].getId());
          cardsExtracted.push_back(cardsWithoutAstrk[n]);
          meldInstance.addCard(cardsWithoutAstrk[n], trumpSuit);

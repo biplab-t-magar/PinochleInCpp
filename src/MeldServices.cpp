@@ -44,7 +44,7 @@ bool MeldServices::meldIsNotARepeat(MeldInstance meldInstance) {
 }
 
 bool MeldServices::meldHasANewCard(MeldInstance meldInstance) {
-   return !meldsPlayed.cardsUsedForSameMeld(meldInstance, meldInstance.getMeldType());
+   return !meldsPlayed.cardsUsedForSameMeld(meldInstance);
 }
 
 bool MeldServices::storeMeld(GroupOfCards hand, MeldInstance meldInstance) {
@@ -605,7 +605,7 @@ std::vector<MeldInstance> MeldServices::getSameSuitMelds(Meld meld, GroupOfCards
          royalMarriagePair.push_back(cardsOfEachRank[1][0]);
 
          //if both cards have been used for same meld, switch the cards out if there are other equivalent cards available
-         if(meldsPlayed.cardsUsedForSameMeld(royalMarriagePair, meld)) {
+         if(meldsPlayed.cardsUsedForSameMeld(royalMarriagePair)) {
             if(cardsOfEachRank[0].size() > 1) {
                Card temp = cardsOfEachRank[0][0];
                cardsOfEachRank[0][0] = cardsOfEachRank[0][1];
