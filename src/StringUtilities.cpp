@@ -146,11 +146,13 @@ std::vector<std::vector<std::string>> splitMeldsInString(std::string str) {
       }
    }
    //store last meld in the string
-   allMelds.push_back(std::vector<std::string>());
-   try {
-      allMelds[meldIndex] = splitCardsInString(meldStr);
-   } catch(PinochleException &e) {
-      throw e;
+   if(meldStr.size() != 0) {
+      allMelds.push_back(std::vector<std::string>());
+      try {
+         allMelds[meldIndex] = splitCardsInString(meldStr);
+      } catch(PinochleException &e) {
+         throw e;
+      }
    }
    return allMelds;
 

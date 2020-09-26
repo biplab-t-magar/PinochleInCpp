@@ -575,7 +575,12 @@ void Round::continueRound(int &roundNumber, int &hGameScore, int &cGameScore) {
    //important to receive the version of allCards returned by the Serialization::setPlayerStrings in order to reflect true stock pile
    Serialization szs[numOfPlayers];
    for(int i = 0; i < numOfPlayers; i++) {
-      allCards = szs[i].setPlayerStrings(loadedHandStrs[i], loadedMeldStrs[i], loadedCaptureStrs[i], allCards, trumpSuit);
+      try {
+         allCards = szs[i].setPlayerStrings(loadedHandStrs[i], loadedMeldStrs[i], loadedCaptureStrs[i], allCards, trumpSuit);
+      } catch(PinochleException &e) {
+         std::cout << e.what() << std::endl;
+      }
+      
    }
 
    //now create the player objects

@@ -268,7 +268,7 @@ GroupOfCards Serialization::meldStrToObject(GroupOfCards allRemCards, Suit trump
       
       //checking if all the cards with asterisks have already been extracted from allRemCards or not
       for(int n = 0; n < cardsWithAstrk.size(); n++) {
-         //go through cardsExracted to search
+         //go through cardsExracted to search for unextracted cards
          cardWasExtracted = false;
          for(int m = 0; m < cardsExtracted.size(); m++) {
             //if the card was previously extracted
@@ -283,6 +283,8 @@ GroupOfCards Serialization::meldStrToObject(GroupOfCards allRemCards, Suit trump
             cardsWithAstrk[n] = allRemCards.getCardsByRankAndSuit(cardsWithAstrk[n].getRank(), cardsWithAstrk[n].getSuit())[0];
             allRemCards.removeCardById(cardsWithAstrk[n].getId());
             cardsExtracted.push_back(cardsWithAstrk[n]);
+            //each time a card is extracted, also add it to the hand
+            hand.addCard(cardsWithAstrk[n]);
          }
          //add the card to the meld instance object
          meldInstance.addCard(cardsWithAstrk[n], trumpSuit);
@@ -291,8 +293,10 @@ GroupOfCards Serialization::meldStrToObject(GroupOfCards allRemCards, Suit trump
       for(int n = 0; n < cardsWithoutAstrk.size(); n++) {
          cardsWithoutAstrk[n] = allRemCards.getCardsByRankAndSuit(cardsWithoutAstrk[n].getRank(), cardsWithoutAstrk[n].getSuit())[0];
          allRemCards.removeCardById(cardsWithoutAstrk[n].getId());
-         cardsExtracted.push_back(cardsWithAstrk[n]);
+         cardsExtracted.push_back(cardsWithoutAstrk[n]);
          meldInstance.addCard(cardsWithoutAstrk[n], trumpSuit);
+         //each time a card is extracted, also add it to the hand
+         hand.addCard(cardsWithoutAstrk[n]);
       }
       //check if valid meld instance has been created
       if(meldInstance.isValidMeld() == false) {
