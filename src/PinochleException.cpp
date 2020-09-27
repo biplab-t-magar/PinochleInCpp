@@ -17,7 +17,3 @@ std::string PinochleException::what() {
    return message;
    //
 }
-
-// PinochleException::~PinochleException() {
-   
-// }

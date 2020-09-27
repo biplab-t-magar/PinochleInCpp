@@ -56,8 +56,6 @@ private:
    std::vector<std::string> meldStrRep;
    std::vector<std::string> capturePileStrRep;
    
-   // Card playCard(int position);
-   // bool cardsArePresentInHand(std::vector<Card> cards);
 };
 
 #endif

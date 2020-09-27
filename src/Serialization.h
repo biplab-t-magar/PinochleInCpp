@@ -12,13 +12,13 @@ public:
    void setPlayerObjects(GroupOfCards hand, MeldsStorage meldsPlayed, GroupOfCards capturePile);
    GroupOfCards setPlayerStrings(std::string handSerialization, std::string meldSerialization, std::string captureSerialization, GroupOfCards allRemCards, Suit trumpSuit);
 
-   std::string getHandString();
-   std::string getCaptureString();
-   std::string getMeldString();
+   std::string getHandString() const;
+   std::string getCaptureString() const;
+   std::string getMeldString() const;
 
-   GroupOfCards getHand();
-   MeldsStorage getMeldsPlayed();
-   GroupOfCards getCapturePile();
+   GroupOfCards getHand() const;
+   MeldsStorage getMeldsPlayed()const ;
+   GroupOfCards getCapturePile() const;
 private:
    bool playerObjectsEntered;
    bool playerStringsEntered;
@@ -29,10 +29,6 @@ private:
    std::string handString;
    std::string meldString;
    std::string captureString;
-
-   // void handObjectsToString();
-   // void meldObjectsToString();
-   // void captureObjectsToString();
 
    GroupOfCards convertStringsToObjects(GroupOfCards allCards);
    GroupOfCards handStrToObject(GroupOfCards allCards);

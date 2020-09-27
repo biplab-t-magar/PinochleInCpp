@@ -6,10 +6,13 @@
 
 #define numOfPlayers 2
 
-Game::Game() {}
+Game::Game() {
+   currentRound = 1;
+   gameScores[0] = 0;
+   gameScores[1] = 0;
+}
 
 void Game::start() {
-
    std::cout << "Welcome to Pinochle!" << std::endl;
    if(newGameOrLoad() == 1) {
       startNewGame();
@@ -19,9 +22,6 @@ void Game::start() {
 }
 
 void Game::startNewGame() {
-   currentRound = 1;
-   gameScores[0] = 0;
-   gameScores[1] = 0;
    while(true) {
       startAnotherRound();
       if(playAnotherRound() == false) {
@@ -79,7 +79,7 @@ int Game::newGameOrLoad() {
    std::string userResponse;
    while(true) {
       getline(std::cin, userResponse);
-      userResponse = stripString(userResponse);
+      userResponse = StringUtilities::stripString(userResponse);
       if(userResponse != "1" && userResponse != "2" ) {
          std::cout << "You must enter either 1 or 2: ";
          continue;
@@ -98,7 +98,7 @@ bool Game::playAnotherRound(){
    while(true) {
       std::cout << "Would you like to play another round? (y/n)" << std::endl;
       getline(std::cin, userResponse);
-      userResponse = stripString(userResponse);
+      userResponse = StringUtilities::stripString(userResponse);
       if(userResponse != "y" && userResponse != "n" ) {
          std::cout << "You must enter either y or n" << std::endl;
          continue;

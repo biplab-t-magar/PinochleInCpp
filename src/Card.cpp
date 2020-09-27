@@ -1,4 +1,7 @@
 #include "Card.h"
+#define numOfRanks 6
+#define numOfSuits 4
+
 
 /* *********************************************************************
 Function Name: Card
@@ -32,6 +35,13 @@ Algorithm:
 Assistance Received: none
 ********************************************************************* */
 Card::Card(int id, Rank rank, Suit suit) {
+   if(static_cast<int>(rank) >= numOfRanks || static_cast<int>(rank) < 0) {
+      throw PinochleException("invalid rank");
+   }
+   if(static_cast<int>(suit) >= numOfSuits || static_cast<int>(suit) < 0) {
+      throw PinochleException("invalid suit");
+   }
+
    this->id = id;
    this->rank = rank;
    this->suit = suit;
@@ -263,6 +273,9 @@ Algorithm:
 Assistance Received: none
 ********************************************************************* */
 bool Card::setRank(Rank rank) {
+   if(static_cast<int>(rank) >= numOfRanks || static_cast<int>(rank) < 0) {
+      throw PinochleException("invalid rank");
+   }
    this->rank = rank;
    //mark rank as being initialized for the card
    rankInitialized = true;
@@ -284,6 +297,9 @@ Algorithm:
 Assistance Received: none
 ********************************************************************* */
 bool Card::setSuit(Suit suit) {
+   if(static_cast<int>(suit) >= numOfSuits || static_cast<int>(suit) < 0) {
+      throw PinochleException("invalid suit");
+   }
    this->suit = suit;
    //mark suit as being initialized
    suitInitialized = true;

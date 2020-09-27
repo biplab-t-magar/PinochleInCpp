@@ -3,7 +3,7 @@
 #include <vector>
 #include "PinochleException.h"
 
-std::string stripString(std::string str) {
+std::string StringUtilities::stripString(std::string str) {
    std::string strippedString;
    //strip from front
    for(int i = 0; i < str.length(); i++) {
@@ -23,17 +23,7 @@ std::string stripString(std::string str) {
    return strippedString;
 }
 
-// std::string removeWhiteSpace(std::string str) {
-//    std::string cleanString = "";
-//    for(int i = 0; i < str.length(); i++) {
-//       if(str[i] != ' ' && str[i] != '\n' && str[i] != '\t') {
-//          cleanString += str[i];
-//       }
-//    }
-//    return cleanString;
-// }
-
-bool isAValidCardStr(std::string str) {
+bool StringUtilities::isAValidCardStr(std::string str) {
    //all cards are represented by two characters
    if(str.size() != 2) {
       return false;
@@ -49,21 +39,21 @@ bool isAValidCardStr(std::string str) {
    return true;
 }
 
-bool isAValidRankStr(char rank) {
+bool StringUtilities::isAValidRankStr(char rank) {
    if(rank != 'A' && rank != 'X' && rank != 'K' && rank != 'Q' && rank != 'J' && rank != '9') {
       return false;
    }
    return true;
 }
 
-bool isAValidSuitStr(char suit) {
+bool StringUtilities::isAValidSuitStr(char suit) {
    if(suit != 'C' && suit != 'D' && suit != 'H' && suit != 'S') {
       return false;
    }
    return true;
 }
 
-bool checkCardStrValidity(std::string str) {
+bool StringUtilities::checkCardStrValidity(std::string str) {
    //check if character has asterisk
    if(str.size() == 3 && str[2] != '*') {
       return false;
@@ -79,7 +69,7 @@ bool checkCardStrValidity(std::string str) {
    return true;
 }
 
-std::vector<std::string> splitCardsInString(std::string str) {
+std::vector<std::string> StringUtilities::splitCardsInString(std::string str) {
    //extract card strings (including asterisk if present)
    //throw exception if any string besides card, white space, or * occurs
 
@@ -113,7 +103,7 @@ std::vector<std::string> splitCardsInString(std::string str) {
 
 }
 
-std::vector<Card> strToVectorOfCards(std::string str) {
+std::vector<Card> StringUtilities::strToVectorOfCards(std::string str) {
    std::vector<Card> cards;
    std::vector<std::string> cardStrs = splitCardsInString(str);
    for(int i = 0; i < cardStrs.size(); i++) {
@@ -122,7 +112,7 @@ std::vector<Card> strToVectorOfCards(std::string str) {
    return cards;
 }
 
-std::vector<std::vector<std::string>> splitMeldsInString(std::string str) {
+std::vector<std::vector<std::string>> StringUtilities::splitMeldsInString(std::string str) {
    //extract all individual cards of all individual melds
    //throw exception if not a valid meld string
 
@@ -160,7 +150,7 @@ std::vector<std::vector<std::string>> splitMeldsInString(std::string str) {
 }
 
 
-Card strToCard(std::string str) {
+Card StringUtilities::strToCard(std::string str) {
    if(!isAValidCardStr(str)) {
       throw PinochleException(str + " is not a valid card");
    }
@@ -176,7 +166,7 @@ Card strToCard(std::string str) {
    return card;
 }
 
-Rank strToRank(char rank) {
+Rank StringUtilities::strToRank(char rank) {
    switch (rank) {
       case 'A':
          return Rank::Ace;
@@ -202,7 +192,7 @@ Rank strToRank(char rank) {
    }
 }
 
-Suit strToSuit(char suit) {
+Suit StringUtilities::strToSuit(char suit) {
    switch (suit) {
       case 'C':
          return Suit::Clubs;

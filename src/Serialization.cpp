@@ -154,7 +154,7 @@ GroupOfCards Serialization::handStrToObject(GroupOfCards allRemCards) {
    Card handCard;
    std::vector<std::string> handCardStrs;
    try {
-      handCardStrs = splitCardsInString(handString);
+      handCardStrs = StringUtilities::splitCardsInString(handString);
    } catch(PinochleException &e) {
       throw e;
    }
@@ -165,7 +165,7 @@ GroupOfCards Serialization::handStrToObject(GroupOfCards allRemCards) {
          throw PinochleException(handCardStrs[i] + " is an invalid card to put in the hand serialization");
       }
       try {
-         handCard = strToCard(handCardStrs[i]);
+         handCard = StringUtilities::strToCard(handCardStrs[i]);
          //find first instance of the card in allRemCards 
          if(allRemCards.getCardsByRankAndSuit(handCard.getRank(), handCard.getSuit()).size() == 0) {
             throw PinochleException("This card cannot be present in the because it has already been used somewhere else");
@@ -190,7 +190,7 @@ GroupOfCards Serialization::captureStrToObject(GroupOfCards allRemCards) {
    Card captureCard;
    std::vector<std::string> captureCardStrs;
    try {
-      captureCardStrs = splitCardsInString(captureString);
+      captureCardStrs = StringUtilities::splitCardsInString(captureString);
    } catch(PinochleException &e) {
       throw e;
    }
@@ -201,7 +201,7 @@ GroupOfCards Serialization::captureStrToObject(GroupOfCards allRemCards) {
          throw PinochleException(captureCardStrs[i] + " is an invalid card to put in the hand serialization");
       }
       try {
-         captureCard = strToCard(captureCardStrs[i]);
+         captureCard = StringUtilities::strToCard(captureCardStrs[i]);
          //find first instance of the card in allRemCards 
          if(allRemCards.getCardsByRankAndSuit(captureCard.getRank(), captureCard.getSuit()).size() == 0) {
             throw PinochleException("This card cannot be present in the because it has already been used somewhere else");
@@ -222,7 +222,7 @@ GroupOfCards Serialization::meldStrToObject(GroupOfCards allRemCards, Suit trump
    //first split the string into component melds
    std::vector<std::vector<std::string>> meldVector;
    try {
-      meldVector = splitMeldsInString(meldString);
+      meldVector = StringUtilities::splitMeldsInString(meldString);
    } catch(PinochleException &e) {
       throw e;
    }
@@ -259,10 +259,10 @@ GroupOfCards Serialization::meldStrToObject(GroupOfCards allRemCards, Suit trump
          //if the card is valid
          if(meldVector[i][j].size() == 2 || meldVector[i][j].size() == 3) {
             if(cardHasAsterisk) {
-               cardHolder = strToCard(meldVector[i][j].substr(0, 2));
+               cardHolder = StringUtilities::strToCard(meldVector[i][j].substr(0, 2));
                cardsWithAstrk.push_back(cardHolder);
             } else {
-               cardHolder = strToCard(meldVector[i][j]);
+               cardHolder = StringUtilities::strToCard(meldVector[i][j]);
                cardsWithoutAstrk.push_back(cardHolder);
             }
          } else {
@@ -328,104 +328,6 @@ GroupOfCards Serialization::meldStrToObject(GroupOfCards allRemCards, Suit trump
    return allRemCards;
 }
 
-// GroupOfCards Serialization::meldStrToObject(GroupOfCards allRemCards, Suit trumpSuit) {
-//    //first split the string into component melds
-//    std::vector<std::vector<std::string>> meldVector;
-//    try {
-//       meldVector = splitMeldsInString(meldString);
-//    } catch(PinochleException &e) {
-//       throw e;
-//    }
-   
-
-//    //for handling repetition of cards in mmeld
-//    bool cardHasAsterisk;
-//    Card card;
-//    MeldInstance meldInstance;
-//    std::vector<Card> cardsWithAstrk;
-//    std::vector<Card> cardsWithoutAstrk;
-//    std::vector<Card> cardsExtracted;
-//    std::vector<MeldInstance> meldsToBeStored;
-//    bool cardWasExtracted;
-//    //loop through each meld instance
-//    for(int i = 0; i < meldVector.size(); i++) {
-//       cardsWithAstrk.clear();
-//       cardsWithoutAstrk.clear();
-//       meldInstance.removeAllCards();
-//       //loop through all the cards in a meld instance
-//       for(int j = 0; j < meldVector[i].size(); j++) {
-//          cardHasAsterisk = false;
-//          //check if card string is valid
-//          if(meldVector[i][j].size() == 3) {
-//             if(meldVector[i][j][2] == '*') {
-//                cardHasAsterisk = true;
-//             } else {
-//                throw PinochleException("Invalid card in meld string");
-//             }
-//          } 
-//          //if the card is valid
-//          if(meldVector[i][j].size() == 2 || meldVector[i][j].size() == 3) {
-//             card = strToCard(meldVector[i][j]);
-//             if(cardHasAsterisk) {
-//                cardsWithAstrk.push_back(card);
-//             } else {
-//                cardsWithoutAstrk.push_back(card);
-//             }
-//          } else {
-//             throw PinochleException("Invalid card in meld string");
-//          }
-//       }
-      
-//       //checking if all the cards with asterisks have already been extracted from allRemCards or not
-//       for(int n = 0; n < cardsWithAstrk.size(); n++) {
-//          //go through cardsExracted to search
-//          cardWasExtracted = false;
-//          for(int m = 0; m < cardsExtracted.size(); m++) {
-//             //if the card was previously extracted
-//             if(cardsExtracted[m].compareRankAndSuit(cardsWithAstrk[n]) == true) {
-//                cardWasExtracted = true;
-//                cardsWithAstrk[n] = cardsExtracted[m];
-//                break;
-//             } 
-//          }
-//          //if the card was not previously extracted, extract it from allRemCards
-//          if(cardWasExtracted == false) {
-//             cardsWithAstrk[n] = allRemCards.getCardsByRankAndSuit(cardsWithAstrk[n].getRank(), cardsWithAstrk[n].getSuit())[0];
-//             allRemCards.removeCardById(cardsWithAstrk[n].getId());
-//             cardsExtracted.push_back(cardsWithAstrk[n]);
-//          }
-//          //add the card to the meld instance object
-//          meldInstance.addCard(cardsWithAstrk[n], trumpSuit);
-//       }
-//       //now, extracting all non-asterisk cards from allRemCards
-//       for(int n = 0; n < cardsWithoutAstrk.size(); n++) {
-//          cardsWithoutAstrk[n] = allRemCards.getCardsByRankAndSuit(cardsWithoutAstrk[n].getRank(), cardsWithoutAstrk[n].getSuit())[0];
-//          allRemCards.removeCardById(cardsWithoutAstrk[n].getId());
-//          cardsExtracted.push_back(cardsWithAstrk[n]);
-//          meldInstance.addCard(cardsWithoutAstrk[n]);
-//       }
-//       //check if valid meld instance has been created
-//       if(meldInstance.isValidMeld() == false) {
-//          throw PinochleException("Error in serialization. Invalid meld is listed.");
-//       }
-//       //check if a meld type has already been declared before in which this card has been declared
-      
-//    }
-// }
-
-//every time asterisk is encountered, check if a meld with that card has already been declared
-//if it has not been declared, then it is a new card, 
-//if it has been declared, it is a repeat of an already played card
-//if four asterick count is reached (this can only happen in the case of Queen of Spades), then a state of ambiguity arises.
-//These four asterisks could represent a single Queen of Spades or two Queen of Spades
-
-
-
-//if a card is missing, one card of one meld must probably be repeated. 
-
-
-
-
 bool Serialization::isACompleteMeldInstance(MeldInstance meldInstance) {
    for(int i = 0; i < meldInstance.getNumOfCards(); i++) {
       if(!hand.searchCardById(meldInstance.getCardByPosition(i).getId())) {
@@ -436,32 +338,41 @@ bool Serialization::isACompleteMeldInstance(MeldInstance meldInstance) {
 }
 
 
-std::string Serialization::getHandString() {
+std::string Serialization::getHandString() const {
    if(playerObjectsEntered == false) {
       throw PinochleException("Player cards have not been entered yet");
    }
    return handString;
 }
-std::string Serialization::getCaptureString() {
+std::string Serialization::getCaptureString() const{
    if(playerObjectsEntered == false) {
       throw PinochleException("Player cards have not been entered yet");
    }
    return captureString;
 }
-std::string Serialization::getMeldString() {
+std::string Serialization::getMeldString() const{
    if(playerObjectsEntered == false) {
       throw PinochleException("Player cards have not been entered yet");
    }
    return meldString;
 }
 
-GroupOfCards Serialization::getHand() {
+GroupOfCards Serialization::getHand() const {
+   if(playerStringsEntered == false) {
+      throw PinochleException("Player card strings have not been entered yet");
+   }
    return hand;
 }
-MeldsStorage Serialization::getMeldsPlayed() {
+MeldsStorage Serialization::getMeldsPlayed() const {
+   if(playerStringsEntered == false) {
+      throw PinochleException("Player card strings have not been entered yet");
+   }
    return meldsPlayed;
 }
-GroupOfCards Serialization::getCapturePile() {
+GroupOfCards Serialization::getCapturePile() const{
+   if(playerStringsEntered == false) {
+      throw PinochleException("Player card strings have not been entered yet");
+   }
    return capturePile;
 }
 

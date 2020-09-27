@@ -2,6 +2,7 @@
 #include <iostream>
 
 #define numOfMeldTypes 9
+#define numOfSuits 4
 
 // Player::Player() { 
 
@@ -41,6 +42,9 @@ GroupOfCards Player::getCapturePile() const {
 }
 
 bool Player::setTrumpSuit(Suit trumpSuit) {
+   if(static_cast<int>(trumpSuit) >= numOfSuits || static_cast<int>(trumpSuit) < 0 ) {
+      throw PinochleException("invalid trump suit");
+   }
    this->trumpSuit = trumpSuit;
    meldServices.setTrumpSuit(trumpSuit);
    return true;
@@ -405,26 +409,3 @@ MeldInstance Player::createMeld(MeldInstance meldInstance) {
    return meldInstance;
 }
 
-// void Player::getHelpForLeadCard() {
-//    throw PinochleException("Non-human players cannot ask for help for moves.");
-// }
-// void Player::getHelpForChaseCard(Card opponentCard) {
-//    throw PinochleException("Non-human players cannot ask for help for moves.");
-// }
-// void Player::getHelpForMeld() {
-//    throw PinochleException("Non-human players cannot ask for help for moves.");
-// }
-
-// Card Player::playLeadCard(){
-//    std::string reasoning;
-//    return suggestLeadCard(reasoning);
-// }
-// Card Player::playChaseCard(Card opponentCard){
-//    std::string reasoning;
-//    return suggestChaseCard(reasoning, opponentCard);
-// }
-
-// MeldInstance Player::playMeld() {
-//    std::string reasoning;
-//    return suggestMeld(reasoning);
-// }

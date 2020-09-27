@@ -280,7 +280,7 @@ bool Round::coinToss() {
    while(true) {
       std::cin.clear();
       getline(std::cin, userResponse);
-      userResponse = stripString(userResponse);
+      userResponse = StringUtilities::stripString(userResponse);
       if(userResponse != "heads" && userResponse != "tails" ) {
          std::cout << "You must enter either 'heads' or 'tails' exactly. Please enter your guess again:";
          continue;
@@ -324,7 +324,7 @@ int Round::promptUser() {
    while(true) {
       std::cin.clear();
       std::getline(std::cin, userAction);
-      userAction = stripString(userAction);
+      userAction = StringUtilities::stripString(userAction);
       if(userAction.length() != 1) {
          std::cout << "Invalid action. You must enter a number between 1 and " << numOfOptions << ". Please try again." << std::endl;
          continue;
@@ -375,7 +375,7 @@ int Round::promptUserForMeld(Player *human) {
    while(true) {
       std::cin.clear();
       std::getline(std::cin, userAction);
-      userAction = stripString(userAction);
+      userAction = StringUtilities::stripString(userAction);
       if(userAction.length() != 1) {
          std::cout << "Invalid action. You must enter a number between 1 and 2. Please try again." << std::endl;
          continue;
@@ -479,7 +479,7 @@ void Round::promptSaveGame() {
    std::string userResponse;
    while(true) {
       getline(std::cin, userResponse);
-      userResponse = stripString(userResponse);
+      userResponse = StringUtilities::stripString(userResponse);
       if(userResponse != "y" && userResponse != "n" ) {
          std::cout << "You must enter either y or n: ";
          continue;
@@ -570,7 +570,7 @@ void Round::continueRound(int &roundNumber, int &hGameScore, int &cGameScore) {
    }
    //now, get a vector of all the stock pile cards from the string
    //this only creates "ghost" cards, with no ids, only rank and suit defined
-   std::vector<Card> stockCards = strToVectorOfCards(loadedStockStr);
+   std::vector<Card> stockCards = StringUtilities::strToVectorOfCards(loadedStockStr);
 
    stock.clear();
 
@@ -660,7 +660,7 @@ void Round::loadGameData() {
    }
    //get round number
    lines[lineNumber] = lines[lineNumber].substr(6);
-   lines[lineNumber] = stripString(lines[lineNumber]);
+   lines[lineNumber] = StringUtilities::stripString(lines[lineNumber]);
    try {
       roundNumber = std::stoi(lines[lineNumber]);
    } catch (std::invalid_argument &e) {
@@ -675,7 +675,7 @@ void Round::loadGameData() {
    for(int i = 0; i < numOfPlayers; i++) {
       //skip the "Computer:" / "Human:" lines
       if(lineNumber == 1 || lineNumber == (1 + 5)) {
-         if(stripString(lines[lineNumber]) != "Computer:" && stripString(lines[lineNumber]) != "Human:") {
+         if(StringUtilities::stripString(lines[lineNumber]) != "Computer:" && StringUtilities::stripString(lines[lineNumber]) != "Human:") {
             throw("This is not a valid save file. Player's label (computer/human) is missing from save file");
          }
          
@@ -687,7 +687,7 @@ void Round::loadGameData() {
          throw PinochleException("This is not a valid save file. 'Score:' label is missing.");
       }
       lines[lineNumber] = lines[lineNumber].substr(6);
-      lines[lineNumber] = stripString(lines[lineNumber]);
+      lines[lineNumber] = StringUtilities::stripString(lines[lineNumber]);
       index = lines[lineNumber].find("/");
       data = lines[lineNumber].substr(0, index);
       //game score
@@ -697,7 +697,7 @@ void Round::loadGameData() {
          throw PinochleException("This is not a valid save file. Game score is invalid");
       }
       lines[lineNumber] = lines[lineNumber].substr(index + 1);
-      lines[lineNumber] = stripString(lines[lineNumber]); 
+      lines[lineNumber] = StringUtilities::stripString(lines[lineNumber]); 
       //round score
       try {
          roundScores[i] = std::stoi(lines[lineNumber]);
@@ -712,7 +712,7 @@ void Round::loadGameData() {
          throw PinochleException("This is not a valid save file. 'Hand' label is missing");
       }
       lines[lineNumber] = lines[lineNumber].substr(5);
-      lines[lineNumber] = stripString(lines[lineNumber]);
+      lines[lineNumber] = StringUtilities::stripString(lines[lineNumber]);
       loadedHandStrs[i] = lines[lineNumber];
 
 
@@ -723,7 +723,7 @@ void Round::loadGameData() {
          throw PinochleException("This is not a valid save file. 'Capture' label is missing");
       }
       lines[lineNumber] = lines[lineNumber].substr(13);
-      lines[lineNumber] = stripString(lines[lineNumber]);
+      lines[lineNumber] = StringUtilities::stripString(lines[lineNumber]);
       loadedCaptureStrs[i] = lines[lineNumber];
       
       //next line
@@ -733,7 +733,7 @@ void Round::loadGameData() {
          throw PinochleException("This is not a valid save file. 'Melds' label is missing");
       }
       lines[lineNumber] = lines[lineNumber].substr(6);
-      lines[lineNumber] = stripString(lines[lineNumber]);
+      lines[lineNumber] = StringUtilities::stripString(lines[lineNumber]);
       loadedMeldStrs[i] = lines[lineNumber];
       //next line
       lineNumber++;
@@ -744,20 +744,20 @@ void Round::loadGameData() {
       throw PinochleException("This is not a valid save file. 'Trump Card: label is missing" );
    }
    lines[lineNumber] = lines[lineNumber].substr(11);
-   lines[lineNumber] = stripString(lines[lineNumber]);
+   lines[lineNumber] = StringUtilities::stripString(lines[lineNumber]);
    if(lines[lineNumber].size() == 1) {
-      if(!isAValidSuitStr(lines[lineNumber][0])) {
+      if(!StringUtilities::isAValidSuitStr(lines[lineNumber][0])) {
          throw PinochleException("This is not a valid save file. The trump suit specified is not valid."); 
       }
-      trumpCard.setSuit(strToSuit(lines[lineNumber][0]));
-      trumpSuit = strToSuit(lines[lineNumber][0]);
+      trumpCard.setSuit(StringUtilities::strToSuit(lines[lineNumber][0]));
+      trumpSuit = StringUtilities::strToSuit(lines[lineNumber][0]);
    } else if(lines[lineNumber].size() == 2) {
-      if(!isAValidCardStr(lines[lineNumber])) {
+      if(!StringUtilities::isAValidCardStr(lines[lineNumber])) {
          throw PinochleException("This is not a valid save file. The trump card specified is invalid."); 
       }
-      trumpCard.setRank(strToRank(lines[lineNumber][0]));
-      trumpCard.setSuit(strToSuit(lines[lineNumber][1]));
-      trumpSuit = strToSuit(lines[lineNumber][1]);
+      trumpCard.setRank(StringUtilities::strToRank(lines[lineNumber][0]));
+      trumpCard.setSuit(StringUtilities::strToSuit(lines[lineNumber][1]));
+      trumpSuit = StringUtilities::strToSuit(lines[lineNumber][1]);
    } else {
       throw PinochleException("This is not a valid save file. The Trump card specified is invalid."); 
    }
@@ -770,7 +770,7 @@ void Round::loadGameData() {
       throw PinochleException("This is not a valid save file. 'Stock' label is missing.");
    }
    lines[lineNumber] = lines[lineNumber].substr(6);
-   lines[lineNumber] = stripString(lines[lineNumber]);
+   lines[lineNumber] = StringUtilities::stripString(lines[lineNumber]);
    loadedStockStr = lines[lineNumber];
 
    //next line
@@ -781,7 +781,7 @@ void Round::loadGameData() {
       throw PinochleException("This is not a valid save file. 'Next Player' label is missing.");
    }
    lines[lineNumber] = lines[lineNumber].substr(12);
-   lines[lineNumber] = stripString(lines[lineNumber]);
+   lines[lineNumber] = StringUtilities::stripString(lines[lineNumber]);
    if(lines[lineNumber] != "Human" && lines[lineNumber] != "Computer") {
       throw PinochleException("This is not a valid save file. 'Next Player' must be either 'Human' or 'Computer'");
    }
@@ -795,7 +795,6 @@ std::vector<std::string> Round::getSaveFileContent() {
    while(true) {
       std::cout << "Enter save file name: ";
       getline(std::cin, userResponse);
-      // userResponse = stripString(userResponse);
       try {
          saveFile.open(userResponse.c_str());
          if(!saveFile.is_open()) {
@@ -812,7 +811,7 @@ std::vector<std::string> Round::getSaveFileContent() {
    std::string nextLine;
    //read game data
    while(getline(saveFile, nextLine)) {
-      nextLine = stripString(nextLine);
+      nextLine = StringUtilities::stripString(nextLine);
 
       //ignore empty line
       if(nextLine.length() == 0) {

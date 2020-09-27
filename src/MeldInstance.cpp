@@ -246,24 +246,6 @@ Meld MeldInstance::typeOfMarriage() {
       return Meld::RoyalMarriage;
    } else {
       return Meld::Marriage;
-      //return appropriate marriage
-      // switch(cards[0].getSuit()) {
-      //    case(Suit::Clubs):
-      //       return Meld::MarriageClubs;
-      //       break;
-      //    case(Suit::Diamonds):
-      //       return Meld::MarriageHearts;
-      //       break;
-      //    case(Suit::Hearts):
-      //       return Meld::MarriageHearts;
-      //       break;
-      //    case(Suit::Spades):
-      //       return Meld::MarriageSpades;
-      //       break;
-      //    default:
-      //       throw PinochleException("Undefined suit type for card");
-      //       break;
-      // } 
    }
 
 }

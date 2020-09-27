@@ -41,25 +41,6 @@ bool GroupOfCards::searchCardById(int id) const{
    return false;
 }
 
-// bool GroupOfCards::searchCardByRankAndSuit(Rank rank, Suit suit) {
-//     for(int i = 0; i < cards.size(); i++) {
-//       if(cards[i].getRank() == rank && cards[i].getSuit() == suit) {
-//          return true;
-//       }
-//    }
-//    return false;
-// }
-
-
-// bool GroupOfCards::searchCard(Card card) {
-//    for(int i = 0; i < cards.size(); i++) {
-//       if(cards[i] == card) {
-//          return true;
-//       }
-//    }
-//    return false;
-// }
-
 Card GroupOfCards::getCardById(int id) const {
    if(searchCardById(id) == false) {
       throw PinochleException("Card with given id is not in this group of cards. Make sure the card is in this group by calling searchCardById()");
@@ -112,7 +93,7 @@ Card GroupOfCards::getCardByPosition(int position) const {
    return cards[position];
 }
 
-int GroupOfCards::getCardPosition(Card card) {
+int GroupOfCards::getCardPosition(Card card){
    for(int i = 0; i < cards.size(); i++) {
       if(cards[i] == card) {
          return i;

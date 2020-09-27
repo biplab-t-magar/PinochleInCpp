@@ -40,51 +40,8 @@ bool MeldsStorage::removeMeld(MeldInstance meldInstance) {
          return true;
       }
    }
-   return false;
-   // switch (meldInstance.getMeldType()) {
-   //    case Meld::Flush:
-   //       return removeMeldFromStorage(meldInstance, FlushStorage);
-   //       break;
-   //    case Meld::RoyalMarriage:
-   //       return removeMeldFromStorage(meldInstance, RoyalMarriageStorage);
-   //       break;
-   //    case Meld::Marriage:
-   //       return removeMeldFromStorage(meldInstance, MarriageStorage);
-   //       break;
-   //    case Meld::Dix:
-   //       return removeMeldFromStorage(meldInstance, DixStorage);
-   //       break;
-   //    case Meld::FourAces:
-   //       return removeMeldFromStorage(meldInstance, FourAceStorage);
-   //       break;
-   //    case Meld::FourKings:
-   //       return removeMeldFromStorage(meldInstance, FourKingStorage);
-   //       break;
-   //    case Meld::FourQueens:
-   //       return removeMeldFromStorage(meldInstance, FourQueenStorage);
-   //       break;
-   //    case Meld::FourJacks:
-   //       return removeMeldFromStorage(meldInstance, FourJackStorage);
-   //       break;
-   //    case Meld::Pinochle:
-   //       return removeMeldFromStorage(meldInstance, PinochleStorage);
-   //       break;
-   //    default:
-   //       return false;
-   // }
-   // return true;
+   return false;  
 }
-
-
-// bool MeldsStorage::removeMeldFromStorage(MeldInstance meldInstance, std::vector<MeldInstance> &storage) {
-//    for(int i = 0; i < storage.size(); i++) {
-//       if(storage[i] == meldInstance) {
-//          storage.erase(storage.begin() + i);
-//          return true;
-//       }
-//    }
-//    return false;
-// }
 
 int MeldsStorage::getNumOfMeldsByType(Meld meldType) {
    return storage[static_cast<int>(meldType)].size();
@@ -99,17 +56,6 @@ int MeldsStorage::getNumOfMelds() {
 }
 
 std::vector<std::vector<MeldInstance>> MeldsStorage::getAllMelds() const {
-   // std::vector<std::vector<MeldInstance>> allPlayedMelds;
-   // allPlayedMelds.push_back(FlushStorage);
-   // allPlayedMelds.push_back(RoyalMarriageStorage);
-   // allPlayedMelds.push_back(MarriageStorage);
-   // allPlayedMelds.push_back(DixStorage);
-   // allPlayedMelds.push_back(FourAceStorage);
-   // allPlayedMelds.push_back(FourKingStorage);
-   // allPlayedMelds.push_back(FourQueenStorage);
-   // allPlayedMelds.push_back(FourJackStorage);
-   // allPlayedMelds.push_back(PinochleStorage);
-
    return storage;
 }
 std::vector<MeldInstance> MeldsStorage::getAllMeldsByType(Meld meldType) const {
@@ -196,27 +142,3 @@ bool MeldsStorage::isCardUsedByAnyMeld(Card card) {
    return false;
 }
 
-
-// bool MeldsStorage::isCardTypeUsedByAnyMeld(Rank rank, Suit suit) {
-//    for(int meldType = 0; meldType < numOfMeldTypes; meldType++) {
-//       if(isCardTypeUsedByMeld(rank, suit, static_cast<Meld>(meldType))) {
-//          return true;
-//       }
-//    }
-//    return false;
-// }
-// bool MeldsStorage::isCardTypeUsedByMeld(Rank rank, Suit suit, Meld meldType) {
-//    //get int representation of the given meld
-//    int meldTypeInt = static_cast<int>(meldType);
-//    //get the number of instances of that particular meld type
-//    int numOfMeldsPlayed = storage[meldTypeInt].size();
-
-//    for(int i = 0; i < numOfMeldsPlayed; i++) {
-//       //if that card is found in a meld instance, return true
-//       if(storage[meldTypeInt][i].searchCardByRankAndSuit(rank, suit) == true) {
-//          return true;
-//       }
-//    }
-//    //return false;
-//    return false;
-// }

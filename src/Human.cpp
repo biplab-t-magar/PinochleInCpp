@@ -90,58 +90,6 @@ MeldInstance Human::playMeld() {
 }
 
 
-// int Human::promptUser() {
-//    std::cout << "Pick an action:" << std::endl << std::endl;
-//    std::cout << "1.  Save the game" << std::endl;
-//    std::cout << "2.  Make a move" << std::endl;
-//    std::cout << "3.  Ask for help" << std::endl;
-//    std::cout << "4.  Quit the game" << std::endl;
-//    std::cout << std::endl;
-
-//    std::string userAction;
-//    int userActionInt;
-//    while(true) {
-//       std::getline(std::cin, userAction);
-//       userAction = removeWhiteSpace(userAction);
-//       if(userAction.length() != 1) {
-//          std::cout << "Invalid action. You must enter a number between 1 and 4. Please try again." << std::endl;
-//       }
-
-//       try {
-//          userActionInt = std::stoi(userAction);
-//       } catch(const std::invalid_argument &e) {
-//          std::cout << "You must enter a valid number. Please try again." << std::endl;
-//          continue;
-//       }
-      
-//       if (userActionInt < 1 || userActionInt > 4) {
-//          std::cout << "You must enter a number between 1 and 4. Please try again." << std::endl; 
-//       } else {
-//          break;
-//       }
-//    }
-
-//    switch(userActionInt) {
-//       case 1:
-//          std::cout << "Saving game..." << std::endl;
-//          saveGameProgress();
-//          break;
-//       case 2:
-//          break;
-//       case 3:
-//          break;
-//       case 4:
-//          std::cout << "Thank you for playing Pinochle" << std::endl;
-//          exit(0);
-//          break;
-//       default:
-//          std::cout << "Error: invalid input from user" << std::endl;
-//          break;
-//    }
-//    return userActionInt;
-   
-// }
-
 
 int Human::promptCardThrow() {
    std::cout << "What card do you want to throw?" << std::endl;
@@ -153,7 +101,7 @@ int Human::promptCardThrow() {
    while(true) {
       std::cin.clear();
       std::getline(std::cin, cardToThrow);
-      cardToThrow = stripString(cardToThrow);
+      cardToThrow = StringUtilities::stripString(cardToThrow);
       try {
          cardToThrowInt = parsePosition(cardToThrow);
          break;
@@ -196,7 +144,7 @@ int Human::parsePosition(std::string str) {
 std::vector<int> Human::parseMeldPositions(std::string str) {
    std::vector<int> positions;
    std::string numInString = "";
-   str = stripString(str);
+   str = StringUtilities::stripString(str);
    int num;
    for(int i = 0; i < str.length(); i++) {
       //if the character is a number
@@ -230,33 +178,3 @@ std::vector<int> Human::parseMeldPositions(std::string str) {
    }
    return positions;
 }
-
-// std::string stripString(std::string str) {
-//    std::string strippedString;
-//    //strip from front
-//    for(int i = 0; i < str.length(); i++) {
-//       if(str[i] != ' ') {
-//          strippedString = str.substr(i);
-//          break;
-//       }
-//    }
-//    //strip from back
-//    str = strippedString;
-//    for(int i = str.length() - 1; i >= 0; i--) {
-//       if(str[i] != ' ') {
-//          strippedString = str.substr(0, i + 1);
-//          break;
-//       }
-//    }
-//    return strippedString;
-// }
-
-// std::string removeWhiteSpace(std::string str) {
-//    std::string cleanString = "";
-//    for(int i = 0; i < str.length(); i++) {
-//       if(str[i] != ' ') {
-//          cleanString += str[i];
-//       }
-//    }
-//    return cleanString;
-// }

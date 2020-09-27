@@ -25,17 +25,6 @@ public:
    int getNumOfMelds();
 private:
    std::vector<std::vector<MeldInstance>> storage;
-   // std::vector<MeldInstance> FlushStorage;
-   // std::vector<MeldInstance> RoyalMarriageStorage;
-   // std::vector<MeldInstance> MarriageStorage;
-   // std::vector<MeldInstance> DixStorage;
-   // std::vector<MeldInstance> FourAceStorage;
-   // std::vector<MeldInstance> FourKingStorage;
-   // std::vector<MeldInstance> FourQueenStorage;
-   // std::vector<MeldInstance> FourJackStorage;
-   // std::vector<MeldInstance> PinochleStorage;
-
-   // bool removeMeldFromStorage(MeldInstance meldInstance, std::vector<MeldInstance> &storage);
 };
 
 #endif

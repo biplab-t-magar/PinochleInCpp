@@ -10,12 +10,12 @@ public:
    Deck(int numOfEachCard  = 2);
    void shuffle();
    Card takeOneFromTop();
-   //function to be used during serialization
+   void putCardAtTop(Card card);
    void removeCards(std::vector<Card> cards);
 
-   size_t getNumRemaining();
-   std::vector<Card> getAllRemainingCards();
-   void putCardAtTop(Card card);
+   int getNumRemaining() const;
+   std::vector<Card> getAllRemainingCards() const;
+   
    void clear();
 private:
    std::vector<Card> cards;

@@ -11,7 +11,6 @@ public:
    PinochleException(std::string message);
    bool setMessage(std::string message);
    std::string what() ;
-   // ~PinochleException();
 private:
    std::string message;
 };

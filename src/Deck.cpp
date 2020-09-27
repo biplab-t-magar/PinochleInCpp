@@ -120,7 +120,7 @@ Local Variables:
 Algorithm: 
       1)return the size of the vector holding the cards
 ********************************************************************* */
-size_t Deck::getNumRemaining() {
+int Deck::getNumRemaining() const{
    //return size of vector of cards
    return cards.size();
 }
@@ -155,7 +155,7 @@ Card Deck::takeOneFromTop() {
    return cardAtTop;
 }
 
-std::vector<Card> Deck::getAllRemainingCards() {
+std::vector<Card> Deck::getAllRemainingCards() const{
    return cards;
 }
 
