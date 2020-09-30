@@ -3,6 +3,17 @@
 #include <vector>
 #include "PinochleException.h"
 
+/* *********************************************************************
+Function Name: stripString
+Purpose: Removes all white space from the beginning and end of a string
+Parameters: 
+      str, the string which is to be stripped of white space on both ends
+Return Value:
+      the string without white space on either end
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 std::string StringUtilities::stripString(std::string str) {
    std::string strippedString;
    //strip from front
@@ -23,6 +34,17 @@ std::string StringUtilities::stripString(std::string str) {
    return strippedString;
 }
 
+/* *********************************************************************
+Function Name: isAValidCardStr
+Purpose: checks if a string represents a valid card (does not include asterisked cards)
+Parameters: 
+      str, the string whose validity is to be checked
+Return Value:
+      true if string is a valid card, false otherwise
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 bool StringUtilities::isAValidCardStr(std::string str) {
    //all cards are represented by two characters
    if(str.size() != 2) {
@@ -39,6 +61,17 @@ bool StringUtilities::isAValidCardStr(std::string str) {
    return true;
 }
 
+/* *********************************************************************
+Function Name: isAValidRankStr
+Purpose: Checks if a character represents a valid rank
+Parameters: 
+      rank, the character to be checked for validity
+Return Value:
+      true if the character represent a valid rank, false otherwise
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 bool StringUtilities::isAValidRankStr(char rank) {
    if(rank != 'A' && rank != 'X' && rank != 'K' && rank != 'Q' && rank != 'J' && rank != '9') {
       return false;
@@ -46,6 +79,17 @@ bool StringUtilities::isAValidRankStr(char rank) {
    return true;
 }
 
+/* *********************************************************************
+Function Name: isAValidSuitStr
+Purpose: Checks if a character represents a valid suit
+Parameters: 
+      suit, the character to be checked for validity
+Return Value:
+      true if the character represent a valid suit, false otherwise
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 bool StringUtilities::isAValidSuitStr(char suit) {
    if(suit != 'C' && suit != 'D' && suit != 'H' && suit != 'S') {
       return false;
@@ -53,6 +97,17 @@ bool StringUtilities::isAValidSuitStr(char suit) {
    return true;
 }
 
+/* *********************************************************************
+Function Name: checkCardStrValidity
+Purpose: Checks if a string representa valid card (also includes asterisked cards)
+Parameters: 
+      str, the string to be checked for validity
+Return Value:
+      true if the string represents a valid card string, false otherwise
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 bool StringUtilities::checkCardStrValidity(std::string str) {
    //check if character has asterisk
    if(str.size() == 3 && str[2] != '*') {
@@ -69,6 +124,16 @@ bool StringUtilities::checkCardStrValidity(std::string str) {
    return true;
 }
 
+/* *********************************************************************
+Function Name: splitCardsInString
+Purpose: 
+      splits a string of cards into a vector of individual card strings
+Parameters: 
+      str, the string to be split into component card strings
+Return Value:
+      the vector of individual card strings
+Assistance Received: None
+********************************************************************* */
 std::vector<std::string> StringUtilities::splitCardsInString(std::string str) {
    //extract card strings (including asterisk if present)
    //throw exception if any string besides card, white space, or * occurs
@@ -88,7 +153,6 @@ std::vector<std::string> StringUtilities::splitCardsInString(std::string str) {
          separatedCardStrs.push_back(cardStr);
          cardStr = "";
       }
-      
    }
    //store last card string
    if(cardStr != "") {
@@ -98,11 +162,19 @@ std::vector<std::string> StringUtilities::splitCardsInString(std::string str) {
       //if the string is valid, add it the result
       separatedCardStrs.push_back(cardStr);
    }
-
    return separatedCardStrs;
-
 }
 
+/* *********************************************************************
+Function Name: strToVectorOfCards
+Purpose: 
+      gets a vector of cards from a string representing a series of cards
+Parameters: 
+      str, the string containing the cards
+Return Value:
+      the vector consisting of each card extracted from the string
+Assistance Received: None
+********************************************************************* */
 std::vector<Card> StringUtilities::strToVectorOfCards(std::string str) {
    std::vector<Card> cards;
    std::vector<std::string> cardStrs = splitCardsInString(str);
@@ -112,6 +184,15 @@ std::vector<Card> StringUtilities::strToVectorOfCards(std::string str) {
    return cards;
 }
 
+/* *********************************************************************
+Function Name: splitMeldsInString
+Purpose: separates each meld listed in a string into individual meld strings
+Parameters: 
+      str, the string representation of melds
+Return Value:
+      vector containing each individual meld in the string, which are in turn stored as vectors of individual card strings
+Assistance Received: None
+********************************************************************* */
 std::vector<std::vector<std::string>> StringUtilities::splitMeldsInString(std::string str) {
    //extract all individual cards of all individual melds
    //throw exception if not a valid meld string
@@ -149,7 +230,15 @@ std::vector<std::vector<std::string>> StringUtilities::splitMeldsInString(std::s
 
 }
 
-
+/* *********************************************************************
+Function Name: strToCard
+Purpose: converts a string representation of a card to a Card object
+Parameters: 
+      str, the string representation of the card
+Return Value:
+      the card object represented by the string
+Assistance Received: None
+********************************************************************* */
 Card StringUtilities::strToCard(std::string str) {
    if(!isAValidCardStr(str)) {
       throw PinochleException(str + " is not a valid card");
@@ -166,6 +255,15 @@ Card StringUtilities::strToCard(std::string str) {
    return card;
 }
 
+/* *********************************************************************
+Function Name: strToRank
+Purpose: converts a string representation of a rank to a Rank enum type
+Parameters: 
+      rank, the caracter representation of the rank
+Return Value:
+      the Rank represented by the string
+Assistance Received: None
+********************************************************************* */
 Rank StringUtilities::strToRank(char rank) {
    switch (rank) {
       case 'A':
@@ -192,6 +290,15 @@ Rank StringUtilities::strToRank(char rank) {
    }
 }
 
+/* *********************************************************************
+Function Name: strToSuit
+Purpose: converts a string representation of a suit to a Suit enum type
+Parameters: 
+      suit, the caracter representation of the suit
+Return Value:
+      the Suit represented by the string
+Assistance Received: None
+********************************************************************* */
 Suit StringUtilities::strToSuit(char suit) {
    switch (suit) {
       case 'C':

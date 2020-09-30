@@ -21,8 +21,6 @@ Parameters:
       meldsPlayed, the melds played by a player, of MeldsStorage data type
       capturePile, the capture pile of a player, of GroupOfCards type
 Return Value:
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 void Serialization::setPlayerObjects(GroupOfCards hand, MeldsStorage meldsPlayed, GroupOfCards capturePile) {
@@ -39,12 +37,23 @@ void Serialization::setPlayerObjects(GroupOfCards hand, MeldsStorage meldsPlayed
 }
 
 /* *********************************************************************
-Function Name: 
-Purpose: 
+Function Name: setPlayerStrings
+Purpose: Receives the string representation of the player's hand, melds, and capture pile, (along with other information needed to 
+         determine the player's information) in order to convert them object form
 Parameters: 
+      handString: the string representation of the player's hand pile 
+      meldString: the string representation of the player's meld pile
+      captureString: the string representation of the player's capture pile
+      allRemCards: a GroupOfCards object representing all the cards that are not in the stock pile
+      suit: the trump suit of the round
 Return Value:
+      return a GroupOfCards that includes all the cards except those in the stock pile and except those possessed by the player
 Local Variables: 
 Algorithm: 
+      1) Generate the player's hand object and store the returned group of cards
+      2) Generate the player's capture pile object (supplying it with the group of cards returned from step 1) and store the returned group of cards
+      3) Generate the player's meld pile object (supplying it with the group of cards returned from step 2) and store the returned group of cards
+      4) Return the group of cards stored in step 3
 Assistance Received: None
 ********************************************************************* */
 GroupOfCards Serialization::setPlayerStrings(std::string handString, std::string meldString, std::string captureString, GroupOfCards allRemCards, Suit trumpSuit) {
@@ -81,12 +90,28 @@ GroupOfCards Serialization::setPlayerStrings(std::string handString, std::string
 }
 
 /* *********************************************************************
-Function Name: 
+Function Name: convertObjectsToStrings
 Purpose: 
+      Converts the stored hand, capturePile, and meldsPlayed object into string representation
 Parameters: 
 Return Value:
 Local Variables: 
+      meldInstanceCount, to hold the number of meld instances that a card is part of
+      allMeldsUsingCard, to hold all the meld instances that a card is part of
+      completeMelds, to hold all the "complete melds", i.e. those meld instances that have all their constituent cards still in hand
+      meldEncounteredBefore, to keep track of whether a card has been encountered before in the hand
 Algorithm: 
+      1) for each card in hand:
+      2)    for each meld instance that the card is part of
+      3)         if the meld instance is a "complete meld instance", as defined above, then 
+      4)               check if the meld instance has already been encountered before (through another card in hand)
+      5)                   if not encountered before, then store the meld instance
+      6)                   if encountered before, then do not store the meld instance
+      7)               increment the count for the number of meld instances that the card is part of
+      8) create a hand string representation from the hand object, comprising of only those cards that have meld instance count of 0
+      9) create a capture string from the capturePile object
+      10) create a meld string representation of all the cards in hand with more than 0 meld instances,
+               and if the card has more than 1 meld instances, add an asterick next to it 
 Assistance Received: None
 ********************************************************************* */
 void Serialization::convertObjectsToStrings() {
@@ -184,12 +209,21 @@ void Serialization::convertObjectsToStrings() {
 }
 
 /* *********************************************************************
-Function Name: 
-Purpose: 
+Function Name: handStrToObject
+Purpose: Converts string representation of hand to hand object
 Parameters: 
+      allRemCards, all the cards that have not yet been used up to create other card piles (like stock, other player's hand, etc) in the round
 Return Value:
+      group of all the cards remaining after removing the cards needed by the player's hand
 Local Variables: 
+      handCard, stores a card to be assigned to the player's hand
+      handCardStrs, to store, as elements in a vector, all the cards (int string form) of the hand player
 Algorithm: 
+      1) Split the hand string into individual cards (these cards have only rank and suit, but no id. They are only used for finding an actual game card with a proper id)
+      2) Extract the first instance of each card from the string with the needed rank and suit from the given group of all remaining cards.
+               This is the instance that represents the actual card to be added to hand. 
+      3) Put each of the extracted cards into hand
+      4) return the group of all cards remaining after extracting cards for the hand 
 Assistance Received: None
 ********************************************************************* */
 GroupOfCards Serialization::handStrToObject(GroupOfCards allRemCards) {
@@ -229,12 +263,21 @@ GroupOfCards Serialization::handStrToObject(GroupOfCards allRemCards) {
 }
 
 /* *********************************************************************
-Function Name: 
-Purpose: 
+Function Name: captureStrToObject
+Purpose: Converts string representation of capture pile to capture pile object
 Parameters: 
+      allRemCards, all the cards that have not yet been used up to create other card piles (like stock, other player's hand, etc) in the round
 Return Value:
+      group of all the cards remaining after removing the cards needed by the player's capture pile
 Local Variables: 
+      captureCard, to hold a card from the capture pile
+      captureCardStrs, a vector of all the cards in the capture file, in string form
 Algorithm: 
+      1) Split the capture string into individual cards (these cards have only rank and suit, but no id. They are only used for finding an actual game card with a proper id)
+      2) Extract the first instance of the card with the needed rank and suit from the given group of all remaining cards .
+               This is the instance that represents the actual card to be added to the capture pile 
+      3) Put each of the extracted cards into capture pile
+      4) return the group of all cards remaining after extracting cards for the capture pile 
 Assistance Received: None
 ********************************************************************* */
 GroupOfCards Serialization::captureStrToObject(GroupOfCards allRemCards) {
@@ -274,12 +317,32 @@ GroupOfCards Serialization::captureStrToObject(GroupOfCards allRemCards) {
 }
 
 /* *********************************************************************
-Function Name: 
-Purpose: 
+Function Name: meldStrToObject
+Purpose: Converts string representation of melds to meld pile object and also adds cards from the string to hand 
 Parameters: 
+      allRemCards, all the cards that have not yet been used up to create other card piles (like stock, other player's hand, etc) in the round
 Return Value:
+      group of all the cards remaining after removing the cards needed by the player's meld and hands
 Local Variables: 
+      meldVector, to separately store all melds instances from the meld string in string form
+      cardHasAsterisk, to check if a card has an asterisk symbol, in order to decide if it is a repeated card
+      cardsHolder, to temprorarily hold a collection of cards
+      meldInstance, to hold a meld instance parsed from the meld string
+      cardsWithAsterisk, to hold all the cards that appear with an asterisk
+      cardsWithoutAsterisk, to hold all the cards that do not appear with an asterisk
+      cardsExtracted, to hold the cards extracted from the group of remaining cards
+      cardWasExtracted, to keep track of whether a card has been extracted from the group of remaining cards
 Algorithm: 
+      1) get the individual meld instance strings from the meld string and store them
+      2) for each individual meld instance string
+      3)       loop through all the cards in the instance and keep track of whether each card has asterisk or not
+      4)       for each card with an asterisk in the meld instance, check if the card has already been extracted or not
+      5)             if a card with an asterisk has not already been extracted, extract it and put it into the list of extracted cards and into the player's hand
+      6)             whether or not the cards were already been extracted, add them to the same meld instance 
+      7)       extract each non-asterisk card from the group of all remaining cards and add it the same meld instance and to the hand
+      8)       check if the meld instance created from adding all asterisk and non-asterisk cards form a valid meld
+      9)             if they do, add the meld instance to the meldsPlayed object
+      10)return the group of all cards remaining after extracting cards for the meld and hand cards
 Assistance Received: None
 ********************************************************************* */
 GroupOfCards Serialization::meldStrToObject(GroupOfCards allRemCards, Suit trumpSuit) {
@@ -393,12 +456,13 @@ GroupOfCards Serialization::meldStrToObject(GroupOfCards allRemCards, Suit trump
 }
 
 /* *********************************************************************
-Function Name: 
-Purpose: 
+Function Name: isACompleteMeldInstance
+Purpose: Checks whether a meld instance is "complete", i.e. whether all the cards
+            that comprise the meld instance are still in the player's hand
 Parameters: 
+      meldInstance, the instance of the meld to be checked for completeness
 Return Value:
-Local Variables: 
-Algorithm: 
+      true if meld instance is complete, false otherwise
 Assistance Received: None
 ********************************************************************* */
 bool Serialization::isACompleteMeldInstance(MeldInstance meldInstance) {
@@ -411,12 +475,11 @@ bool Serialization::isACompleteMeldInstance(MeldInstance meldInstance) {
 }
 
 /* *********************************************************************
-Function Name: 
-Purpose: 
+Function Name: getHandString
+Purpose: Returns the string representation of the player's hand
 Parameters: 
 Return Value:
-Local Variables: 
-Algorithm: 
+      string representation of the player's hand
 Assistance Received: None
 ********************************************************************* */
 std::string Serialization::getHandString() const {
@@ -425,12 +488,30 @@ std::string Serialization::getHandString() const {
    }
    return handString;
 }
+
+/* *********************************************************************
+Function Name: getCaptureString
+Purpose: Returns the string representation of the player's capture pile
+Parameters: 
+Return Value:
+      string representation of the player's capture pile
+Assistance Received: None
+********************************************************************* */
 std::string Serialization::getCaptureString() const{
    if(playerObjectsEntered == false) {
       throw PinochleException("Player cards have not been entered yet");
    }
    return captureString;
 }
+
+/* *********************************************************************
+Function Name: getMeldString
+Purpose: Returns the string representation of the player's melds
+Parameters: 
+Return Value:
+      string representation of the player's melds
+Assistance Received: None
+********************************************************************* */
 std::string Serialization::getMeldString() const{
    if(playerObjectsEntered == false) {
       throw PinochleException("Player cards have not been entered yet");
@@ -438,18 +519,44 @@ std::string Serialization::getMeldString() const{
    return meldString;
 }
 
+/* *********************************************************************
+Function Name: getHand
+Purpose: Returns the object representation of the player's hand
+Parameters: 
+Return Value:
+      object representation of the player's hand
+Assistance Received: None
+********************************************************************* */
 GroupOfCards Serialization::getHand() const {
    if(playerStringsEntered == false) {
       throw PinochleException("Player card strings have not been entered yet");
    }
    return hand;
 }
+
+/* *********************************************************************
+Function Name: getMeldsPlayed
+Purpose: Returns the object representation of the player's melds played
+Parameters: 
+Return Value:
+      object representation of the player's melds played
+Assistance Received: None
+********************************************************************* */
 MeldsStorage Serialization::getMeldsPlayed() const {
    if(playerStringsEntered == false) {
       throw PinochleException("Player card strings have not been entered yet");
    }
    return meldsPlayed;
 }
+
+/* *********************************************************************
+Function Name: getCapturePile
+Purpose: Returns the object representation of the player's capture pile
+Parameters: 
+Return Value:
+      object representation of the player's capture pile
+Assistance Received: None
+********************************************************************* */
 GroupOfCards Serialization::getCapturePile() const{
    if(playerStringsEntered == false) {
       throw PinochleException("Player card strings have not been entered yet");
