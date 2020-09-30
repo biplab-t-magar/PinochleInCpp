@@ -8,14 +8,13 @@
 class Deck {
 public:
    Deck(int numOfEachCard  = 2);
+   int getNumRemaining() const;
+   std::vector<Card> getAllRemainingCards() const;
+
    void shuffle();
    Card takeOneFromTop();
    void putCardAtTop(Card card);
    void removeCards(std::vector<Card> cards);
-
-   int getNumRemaining() const;
-   std::vector<Card> getAllRemainingCards() const;
-   
    void clear();
 private:
    std::vector<Card> cards;

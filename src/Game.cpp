@@ -6,12 +6,32 @@
 
 #define numOfPlayers 2
 
+/* *********************************************************************
+Function Name: Game
+Purpose: 
+      Constructor for Game class. Initializes member variables
+Parameters: 
+Return Value: 
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 Game::Game() {
    currentRound = 1;
    gameScores[0] = 0;
    gameScores[1] = 0;
 }
 
+/* *********************************************************************
+Function Name: start
+Purpose: 
+      Starts a game of Pinochle
+Parameters: 
+Return Value: 
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 void Game::start() {
    std::cout << "Welcome to Pinochle!" << std::endl;
    if(newGameOrLoad() == 1) {
@@ -21,6 +41,16 @@ void Game::start() {
    }
 }
 
+/* *********************************************************************
+Function Name: startNewGame
+Purpose: 
+      Begins a brand new game of Pinochle
+Parameters: 
+Return Value: 
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 void Game::startNewGame() {
    while(true) {
       startAnotherRound();
@@ -40,8 +70,24 @@ void Game::startNewGame() {
    }
 }
 
+
+/* *********************************************************************
+Function Name: loadGame
+Purpose: 
+      Loads a game from a save file
+Parameters: 
+Return Value: 
+Local Variables: 
+      round, to start a round of Pinochle, of type Round
+Algorithm: 
+      1) Resume a round using data loaded from save file
+      2) After resumed round is ended, loop the following:
+      3)          Display prompt
+      4)          If user wants to play another round, start a brand new round
+      5)          If not, end loop
+Assistance Received: None
+********************************************************************* */
 void Game::loadGame() {
-   
    //for the first round, we call Round::countinueRound()
    Round round;
    round.continueRound(currentRound, gameScores[1], gameScores[0]);
@@ -65,6 +111,16 @@ void Game::loadGame() {
    }
 }
 
+/* *********************************************************************
+Function Name: startAnotherRound
+Purpose: 
+      Sets up and starts a new Round
+Parameters: 
+Return Value: 
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 void Game::startAnotherRound() {
 
    Round round;
@@ -74,6 +130,18 @@ void Game::startAnotherRound() {
    round.startNewRound(currentRound, gameScores[1], gameScores[0]);
 }
 
+
+/* *********************************************************************
+Function Name: newGameOrLoad
+Purpose: 
+      Prompts the user if they want to play a new game or load a previous game
+Parameters: 
+Return Value: 
+      user's response, of type Int, could be 1 or 2 but no other value
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 int Game::newGameOrLoad() {
    std::cout << "Would you like to (1) start a new game or (2) load a previous game? Enter 1 or 2: ";
    std::string userResponse;
@@ -93,6 +161,16 @@ int Game::newGameOrLoad() {
    }
 }
  
+/* *********************************************************************
+Function Name: playAnotherRound
+Purpose: asks the user if they want to play another round, and returns the response
+Parameters: 
+Return Value: 
+      true or false, depening on the user's response, of type bool
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 bool Game::playAnotherRound(){
    std::string userResponse;
    while(true) {

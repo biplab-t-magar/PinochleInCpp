@@ -5,12 +5,12 @@
 
 /* *********************************************************************
 Function Name: Card
-Purpose: Default constructor for Card class that initializes a card object. Creates a Card with undefined rank and suit
+Purpose: Default constructor for Card class that initializes a card object. Creates a Card with undefined rank, suit, and id
 Parameters: 
 Return Value: 
 Local Variables: 
 Algorithm: 
-      1) Mark card as have undefined rank and suit
+      1) Mark card as having undefined rank, suit, and id
 Assistance Received: None
 ********************************************************************* */
 Card::Card() {
@@ -22,16 +22,15 @@ Card::Card() {
 /* *********************************************************************
 Function Name: Card
 Purpose: Overloaded constructor for Card class that initializes a card object. 
-      Creates a Card with a rank and suit based on the values sent into the parameter
+      Creates a Card with a rank, suit, and id based on the values sent into the parameter
 Parameters: 
+      id, the id to be assigned to the card
       rank, the rank to be assigned to the card
       suit, the suit to be assigned to the card
 Return Value: 
 Local Variables: 
 Algorithm: 
-      1) Assign card's rank to what was defined in the function argument
-      2) Assign card's suit to what was defined at the function argument
-      3) Mard card as having defined suit and rank
+      1) initialize id, rank, and suit member variales of Card
 Assistance Received: none
 ********************************************************************* */
 Card::Card(int id, Rank rank, Suit suit) {
@@ -50,6 +49,19 @@ Card::Card(int id, Rank rank, Suit suit) {
    suitInitialized = true;
 }
 
+/* *********************************************************************
+Function Name: getRank
+Purpose: a selector function that returns the id of the card
+Parameters: 
+Return Value: 
+      the id of the card, an int value
+Local Variables: 
+Algorithm: 
+      1) Check if id has been defined for the card
+      2) if id has been defined, return id
+      3) else: throw an exception
+Assistance Received: none
+********************************************************************* */
 int Card::getId() const {
    if(!idInitialized) {
       throw PinochleException("Id for this card has not been specified");
@@ -58,13 +70,6 @@ int Card::getId() const {
    return id;
     
 }
-
-bool Card::setId(int id) {
-   this->id = id;
-   idInitialized = true;
-   return true;
-}
-
 
 
 /* *********************************************************************
@@ -111,6 +116,11 @@ Suit Card::getSuit() const {
       throw PinochleException("Suit for this card has not been specified");
    }
 }
+
+
+
+
+
 
 /* *********************************************************************
 Function Name: getRankString
@@ -201,6 +211,7 @@ Parameters:
 Return Value: 
       the rank and suit of the card, as a single string, in "<rank> of <suit>"" formation
 Local Variables: 
+      cardString, to hold the card string to the returned
 Algorithm: 
       1) Check if rank and string have both been initialized for the card
       2) if not, throw exception
@@ -226,6 +237,23 @@ std::string Card::getCardString() const {
       return cardString;
    }
 }
+
+/* *********************************************************************
+Function Name: getShortCardStr
+Purpose: a selector function to that returns the rank and suit of the card in shortened string format
+Parameters: 
+Return Value: 
+      the rank and suit of the card, as a single string, in "<rank> of <suit>"" formation
+Local Variables: 
+      cardString, to hold the card's string to be returned
+      rankStr, to hold the card's rank's string value
+      suitStr, to hold the card's suit's string value
+Algorithm: 
+      1) Check if rank and string have both been initialized for the card
+      3) Get the card's rank and string and form corresponding shortform strings
+      4) return the combined string
+Assistance Received: none
+********************************************************************* */
 
 std::string Card::getShortCardStr() const {
    //check if suit or rank has not been initialized 
@@ -258,6 +286,27 @@ std::string Card::getShortCardStr() const {
    }
 }
 
+
+/* *********************************************************************
+Function Name: setId
+Purpose: a mutator function to set the id of the card
+Parameters: 
+      id, the id to be assigned to the card
+Return Value: 
+      returns true if mutation was successful, false if not
+Local Variables: 
+Algorithm: 
+      1) assign rank of card to the value sent as argument
+      2) mark card's rank as being initialized
+Assistance Received: none
+********************************************************************* */
+bool Card::setId(int id) {
+   this->id = id;
+   idInitialized = true;
+   return true;
+}
+
+
 /* *********************************************************************
 Function Name: setRank
 Purpose: a mutator function to that set the rank of the card
@@ -269,7 +318,6 @@ Local Variables:
 Algorithm: 
       1) assign rank of card to the value sent as argument
       2) mark card's rank as being initialized
-      3) return true
 Assistance Received: none
 ********************************************************************* */
 bool Card::setRank(Rank rank) {
@@ -293,7 +341,6 @@ Local Variables:
 Algorithm: 
       1) assign suit of card to the value sent as argument
       2) mark card's suit as being initialized
-      3) return true
 Assistance Received: none
 ********************************************************************* */
 bool Card::setSuit(Suit suit) {
@@ -306,6 +353,21 @@ bool Card::setSuit(Suit suit) {
    return true;
 }
 
+
+
+/* *********************************************************************
+Function Name: hasGreaterRankThan
+Purpose: to know if a card has greater rank than another card
+Parameters: 
+      otherCard, the card that this card will be compared to
+Return Value: 
+      returns true if this card has greater rank, false otherwise
+Local Variables: 
+Algorithm: 
+      1) compare the ranks of the two cards
+      2) return true if this card has greater rank, false otherwise
+Assistance Received: none
+********************************************************************* */
 bool Card::hasGreaterRankThan(Card otherCard) {
    if(static_cast<int>(this->rank) > static_cast<int>(otherCard.getRank())) {
       return true;
@@ -314,6 +376,19 @@ bool Card::hasGreaterRankThan(Card otherCard) {
    }
 }
 
+/* *********************************************************************
+Function Name: hasLessRankThan
+Purpose: to know if a card has less rank than another card
+Parameters: 
+      otherCard, the card that this card will be compared to
+Return Value: 
+      returns true if this card has less rank, false otherwise
+Local Variables: 
+Algorithm: 
+      1) compare the ranks of the two cards
+      2) return true if this card has less rank, false otherwise
+Assistance Received: none
+********************************************************************* */
 bool Card::hasLessRankThan(Card otherCard) {
    if(static_cast<int>(this->rank) < static_cast<int>(otherCard.getRank())) {
       return true;

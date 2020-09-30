@@ -8,6 +8,7 @@ class Human : public Player{
 public:
    Human();
    Human(GroupOfCards hand, GroupOfCards capturePile, MeldsStorage meldsPlayed, Suit trumpSuit) : Player(hand, capturePile, meldsPlayed, trumpSuit) {}
+   
    Card playLeadCard();
    Card playChaseCard(Card opponentCard);
    MeldInstance playMeld();

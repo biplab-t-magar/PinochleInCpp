@@ -12,18 +12,18 @@ class MeldServices {
 public:
    MeldServices();
    MeldServices(MeldsStorage meldsPlayed, Suit trumpSuit);
-   MeldsStorage getMeldsPlayed() const;
 
-   bool setTrumpSuit(Suit trumpSuit);
-   
+   MeldsStorage getMeldsPlayed() const;
    int getMeldPoints(Meld meld) const;
-   bool storeMeld(GroupOfCards hand, MeldInstance meldInstance);
+   MeldsStorage getMeldsFromHand(GroupOfCards hand);
+   std::vector<int> potentialPointsFromHand(GroupOfCards hand);
    bool allCardsPresentInHand(GroupOfCards hand, MeldInstance meldInstance);
    bool meldIsNotARepeat(MeldInstance meldInstance);
    bool meldHasANewCard(MeldInstance meldInstance);
    int compareHandsForMelds(GroupOfCards hand1, GroupOfCards hand2);
-   std::vector<int> potentialPointsFromHand(GroupOfCards hand);
-   MeldsStorage getMeldsFromHand(GroupOfCards hand);
+
+   bool setTrumpSuit(Suit trumpSuit);
+   bool storeMeld(GroupOfCards hand, MeldInstance meldInstance);
 private:
    MeldsStorage meldsPlayed;
    Suit trumpSuit;

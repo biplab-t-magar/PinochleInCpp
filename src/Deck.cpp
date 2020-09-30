@@ -9,15 +9,12 @@ Function Name: Deck
 Purpose: 
       Constructor for Deck class. It can be called without parameters, owing to default constructors.
       So, it acts as a default constructor as well. Initializes the deck with at least one card of each type.
-      The number of cards of each type depends on what is sent as argument to constructor. Default is 2, abiding
-      with the rules of Pinochle. Cards are also shuffled.
 Parameters: 
       numOfEachCard, the number of repetitions each distinct card should have in the deck
 Return Value: 
 Local Variables: 
 Algorithm: 
-      1) Check if the number of each card is less than 1
-      2) If yes, throw exception
+      1) Check that the number of each card is at least 1
       3) Populate the deck with cards, taking into account the specified number of duplicates of each distinct card
       4) Shuffle the cards
 Assistance Received: None
@@ -44,24 +41,13 @@ Purpose:
 Parameters: 
 Return Value: 
 Local Variables: 
-      i, index in loop that corresponds to each Rank type
-      j, index in loop that corresponds to each Suit type
-      k, index in loop used to keep track of repetition of each card type 
+      id, for storing and incrementing unique id's to all generated cards
 Algorithm: 
-      1) initialize i to 0
-      2) if i is not less than 6, go to step 14
-      3)     initialize j to 0
-      4)     if j is not less than 4, go to step 12
-      5)          initialize k to 0
-      6)          if k is not less than numOfEachCard, go to step 10
-      7)              push into cards vector a new Card object with arguments i and j respectively
-      8)              increase value of k by one
-      9)              go to step 6
-      10)         increase value of j by 1
-      11)         go to step 4
-      12)     increase value of i by 1
-      13)     go to step 2
-      14)     end    
+      1) for each rank
+      2)      for each suit
+      3)             for each iteration of the same card
+      4)                   create a new card to the cards vector, with the rank, suit, and id being currently looped over
+      5)                   increment id value
 Assistance Received: None
 ********************************************************************* */
 
@@ -155,15 +141,48 @@ Card Deck::takeOneFromTop() {
    return cardAtTop;
 }
 
+
+/* *********************************************************************
+Function Name: getAllRemainingCards
+Purpose: 
+      To return copy of all the cards that are still stored in the deck object 
+Parameters: 
+Return Value: 
+      cards, the vector containing all the cards
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 std::vector<Card> Deck::getAllRemainingCards() const{
    return cards;
 }
 
-
+/* *********************************************************************
+Function Name: putCardAtTop
+Purpose: 
+      Puts the given card at the top of the deck. 
+Parameters: 
+      card, the card to be put on top of the deck, of Card type
+Return Value: 
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 void Deck::putCardAtTop(Card card) {
    cards.push_back(card);
 }
 
+
+/* *********************************************************************
+Function Name: clear
+Purpose: 
+      Removes all the card from the deck
+Parameters: 
+Return Value: 
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 void Deck::clear() {
    cards.clear();
 }

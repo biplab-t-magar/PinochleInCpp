@@ -25,16 +25,19 @@ class Card {
 public:
    Card();
    Card(int id, Rank rank, Suit suit);
+
    int getId() const;
-   bool setId(int id);
    Rank getRank() const;
    Suit getSuit() const;
    std::string getRankString() const;
    std::string getSuitString() const;
    std::string getCardString() const;
    std::string getShortCardStr() const;
+   
+   bool setId(int id);
    bool setRank(Rank rank);
    bool setSuit(Suit suit);
+
    bool hasGreaterRankThan(Card otherCard);
    bool hasLessRankThan(Card otherCard);
    inline bool operator==(const Card& otherCard) {

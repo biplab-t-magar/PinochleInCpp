@@ -12,14 +12,15 @@ class MeldInstance : public GroupOfCards {
 public:
    MeldInstance();
    MeldInstance(std::vector<Card> cards, Suit trumpSuit);
+   int getMeldPoints() const;
+   Meld getMeldType() const;
+   bool isValidMeld() const;
+   std::string getMeldTypeString() const;
+
    bool addCard(Card card, Suit trumpSuit);
    bool removeCardById(int id); 
    bool removeCardByPosition(int position);
    bool removeAllCards();
-   Meld getMeldType() const;
-   std::string getMeldTypeString() const;
-   bool isValidMeld() const;
-   int getMeldPoints() const;
 private:
    Meld meldType;
    bool meldIsValid;

@@ -1,21 +1,64 @@
 #include "MeldInstance.h"
 
-
+/* *********************************************************************
+Function Name: MeldInstance
+Purpose: Default constructor for the MeldInstance class
+Parameters: 
+Return Value: 
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 MeldInstance::MeldInstance() {
    meldIsValid = false;
 }
 
+/* *********************************************************************
+Function Name: MeldInstance
+Purpose: Constructor for the MeldInstance clas
+Parameters: 
+      cards, the vector of all cards that are part of the MeldInstance object
+      trumpSuit, the trumpSuit of the current round
+Return Value: 
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 MeldInstance::MeldInstance(std::vector<Card> cards, Suit trumpSuit) : GroupOfCards(cards) {
    this->trumpSuit = trumpSuit;
    meldIsValid = checkMeldValidity();
 }
 
+/* *********************************************************************
+Function Name: addCard
+Purpose: adds a card to the meld instance and checks the validity of the new meld formed
+Parameters: 
+      card, the card to be added
+      trumpSuit, the trump suit of the round
+Return Value: 
+      true when card is added successfully
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 bool MeldInstance::addCard(Card card, Suit trumpSuit) {
    cards.push_back(card);
    this->trumpSuit = trumpSuit;
    meldIsValid = checkMeldValidity();
    return true;
 }
+
+/* *********************************************************************
+Function Name: removeCardById
+Purpose: removes a card of the given id from this meld instance
+Parameters: 
+      id, the id of the card to be removed
+Return Value: 
+      true if the card was found and removed, false otherwise
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 bool MeldInstance::removeCardById(int id) {
    for(int i = 0; i < cards.size(); i++) {
       if(cards[i].getId() == id) {
@@ -27,6 +70,19 @@ bool MeldInstance::removeCardById(int id) {
    
    return false;
 }
+
+
+/* *********************************************************************
+Function Name: removeCardByPosition
+Purpose: removes the card in the given position 
+Parameters: 
+      position, the position of the card to be removed
+Return Value: 
+      true when the card is removed successfully, false otherwise
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 bool MeldInstance::removeCardByPosition(int position) {
    if(position >= cards.size() || position < 0) {
       throw PinochleException("Given position is out of bounds");
@@ -39,12 +95,34 @@ bool MeldInstance::removeCardByPosition(int position) {
    return true;
 }
 
+
+/* *********************************************************************
+Function Name: removeAllCards
+Purpose: 
+      empties the meld intance object of all cards
+Parameters: 
+Return Value: 
+      returns true when successfully emptied
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 bool MeldInstance::removeAllCards() {
    meldIsValid = false;
    cards.clear();
    return true;
 }
 
+/* *********************************************************************
+Function Name: getMeldType
+Purpose: returns the Meld type of this meld instance
+Parameters: 
+Return Value: 
+      the meld type of this current instance, of enum type Meld
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 Meld MeldInstance::getMeldType() const {
    if(meldIsValid == false) {
       throw PinochleException("This is not a valid meld");
@@ -52,6 +130,16 @@ Meld MeldInstance::getMeldType() const {
    return meldType;
 }
 
+/* *********************************************************************
+Function Name: getMeldTypeString
+Purpose: to get the string representation of the meld formed by this meldinstance
+Parameters: 
+Return Value: 
+      the string representation of the meld type
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 std::string MeldInstance::getMeldTypeString() const {
    if(!meldIsValid) {
       throw PinochleException("This is not a valid meld");
@@ -92,6 +180,16 @@ std::string MeldInstance::getMeldTypeString() const {
    }
 }
 
+/* *********************************************************************
+Function Name: getMeldPoints
+Purpose: returns the points corresponding to this meld instance
+Parameters: 
+Return Value: 
+      the points that playig this meld instance would yield, of type int
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 int MeldInstance::getMeldPoints() const {
    if(!meldIsValid) {
       throw PinochleException("This is not a valid meld");
@@ -130,10 +228,32 @@ int MeldInstance::getMeldPoints() const {
    }
 }
 
+/* *********************************************************************
+Function Name: isValidMeld
+Purpose: checks if this meld instance forms a valid meld or not
+Parameters: 
+Return Value: 
+      true if the meld intance forms a valid meld, false if not
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 bool MeldInstance::isValidMeld() const {
    return meldIsValid;
 }
 
+/* *********************************************************************
+Function Name: checkMeldValidity
+Purpose: determines, given all the cards stored in the object, if a valid meld is formed by them
+Parameters: 
+Return Value: 
+      true if valid meld is formed by the cards, false otherwise
+Local Variables: 
+Algorithm: 
+      1) check one by one if the cards represent any of meld type
+      2)return true if one of the melds is represented
+Assistance Received: None
+********************************************************************* */
 bool MeldInstance::checkMeldValidity() {
    //if the number of cards does not correspond to any possible meld, return false
    if(cards.size() < 1 || cards.size() == 3 || cards.size() > 5) {
@@ -194,6 +314,17 @@ bool MeldInstance::checkMeldValidity() {
 
 }
 
+
+/* *********************************************************************
+Function Name: isDix
+Purpose: determines whether the cards stored form a Dix meld
+Parameters: 
+Return Value: 
+      true if the cards form a Dix, false otherwise
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 bool MeldInstance::isDix() {
    //Note: A Dix is a card of rank Nine and a suit the same as the trump suit
 
@@ -209,8 +340,17 @@ bool MeldInstance::isDix() {
    return true;
 }
 
+/* *********************************************************************
+Function Name: isAnyMarriage
+Purpose: determines whether the cards stored form any type of marriage meld (royal or otherwise)
+Parameters: 
+Return Value: 
+      true if the cards form any type of marriage, false otherwise
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 bool MeldInstance::isAnyMarriage() {
-
    //check size of meld
    if(cards.size() != 2) {
       return false;
@@ -233,6 +373,16 @@ bool MeldInstance::isAnyMarriage() {
    return false;
 }
 
+/* *********************************************************************
+Function Name: typeOfMarriage
+Purpose: determines what type of marriage meld the cards stored make
+Parameters: 
+Return Value: 
+      the type of marriage meld that the cards comprise
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 Meld MeldInstance::typeOfMarriage() {
    //Note: A Marriage contains a King and Queen of any other suit besides the Trump suit
 
@@ -250,7 +400,16 @@ Meld MeldInstance::typeOfMarriage() {
 
 }
 
-
+/* *********************************************************************
+Function Name: isPinochle
+Purpose: determines whether the cards stored form a Pinochle meld
+Parameters: 
+Return Value: 
+      true if the cards form a Pinochle, false otherwise
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 bool MeldInstance::isPinochle() {
    //Note: A flush contains Queen of Spades and Jack of Diamonds 
    
@@ -275,13 +434,21 @@ bool MeldInstance::isPinochle() {
 }
 
 
-
+/* *********************************************************************
+Function Name: isFours
+Purpose: determines whether the cards stored forms any one of the Fours melds (Four Kings, Four Aces, Four Queens, or Four Jacks)
+Parameters: 
+Return Value: 
+      true if the cards form a Fours meld, false otherwise
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 bool MeldInstance::isFours() {
    //Note: Fours are types of melds consisting of Four melds of the same Rank but of different suits
    //These melds are: Four Aces, Four Kings, Four Queens, and Four Jacks
    //This general function checks only checks whether it is a Fours type of meld, 
    //it does not care what the specific meld is
-
    //check card size
    if(cards.size() != 4) {
       return false;
@@ -304,12 +471,10 @@ bool MeldInstance::isFours() {
       if(cards[i].getRank() != whatRank) {
          return false;
       }
-
       //if the suit has already been encountered before, return false
       if(flags[static_cast<int>(cards[i].getSuit())] == true) {
          return false;
       } 
-
       //switch flag
       flags[static_cast<int>(cards[i].getSuit())] = !flags[static_cast<int>(cards[i].getSuit())];
    }
@@ -318,6 +483,16 @@ bool MeldInstance::isFours() {
 
 }
 
+/* *********************************************************************
+Function Name: isFlush
+Purpose: determines whether the cards stored form a Flush meld
+Parameters: 
+Return Value: 
+      true if the cards form a Flush, false otherwise
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 bool MeldInstance::isFlush() {
    //checking if the meld is a Flush
    //Note: A flush contains five cards: Ace, Ten, King, Queen, and Jack, all of Trump suit
