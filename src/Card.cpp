@@ -1,3 +1,10 @@
+/************************************************************
+ * Name:  Biplab Thapa Magar                                *
+ * Project:  Pinochle in C++                                *
+ * Class:  OPL Fall 2020                                    *
+ * Date:  09/30/2020                                        *
+************************************************************/
+
 #include "Card.h"
 #define numOfRanks 6
 #define numOfSuits 4

@@ -1,3 +1,9 @@
+/************************************************************
+ * Name:  Biplab Thapa Magar                                *
+ * Project:  Pinochle in C++                                *
+ * Class:  OPL Fall 2020                                    *
+ * Date:  09/30/2020                                        *
+************************************************************/
 #pragma once
 #ifndef MELD_INSTANCE_H
 #define MELD_INSTANCE_H
@@ -12,7 +18,7 @@ class MeldInstance : public GroupOfCards {
 public:
    MeldInstance();
    MeldInstance(std::vector<Card> cards, Suit trumpSuit);
-   
+
    int getMeldPoints() const;
    Meld getMeldType() const;
    bool isValidMeld() const;

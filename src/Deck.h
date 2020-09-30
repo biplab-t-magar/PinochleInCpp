@@ -1,3 +1,9 @@
+/************************************************************
+ * Name:  Biplab Thapa Magar                                *
+ * Project:  Pinochle in C++                                *
+ * Class:  OPL Fall 2020                                    *
+ * Date:  09/30/2020                                        *
+************************************************************/
 #pragma once
 #ifndef DECK_H
 #define DECK_H

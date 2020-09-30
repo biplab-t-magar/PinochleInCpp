@@ -1,10 +1,9 @@
-/* Card.h
-   Card.h contains the Card class and enums used to list hte different ranks
-   and suits a card can have.
-   The Card class represents a "card" in a game of Pinochle. A card is identified
-   by its rank and suit. It can have Nine, Jack, Queen, King, Ten, or Ace as its
-   rank, and Clubs, Diamonds, Hearts, or Spades as its suit.
-*/
+/************************************************************
+ * Name:  Biplab Thapa Magar                                *
+ * Project:  Pinochle in C++                                *
+ * Class:  OPL Fall 2020                                    *
+ * Date:  09/30/2020                                        *
+************************************************************/
 
 #pragma once
 #ifndef CARD_H
