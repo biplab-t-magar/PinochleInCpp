@@ -1,11 +1,30 @@
 #include "Serialization.h"
 #include "StringUtilities.h"
 
+/* *********************************************************************
+Function Name: Serialization
+Purpose: Constructor for the Serialization object
+Parameters: 
+Return Value:
+Assistance Received: None
+********************************************************************* */
 Serialization::Serialization(){
    playerStringsEntered = false;
    playerObjectsEntered = false;
 }
 
+/* *********************************************************************
+Function Name: setPlayerObjects
+Purpose: Receives player hand, meldsPlayed, and capturePile objects in order to serialize them to string form
+Parameters: 
+      hand, the hand of a player, of GroupOfCards type
+      meldsPlayed, the melds played by a player, of MeldsStorage data type
+      capturePile, the capture pile of a player, of GroupOfCards type
+Return Value:
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 void Serialization::setPlayerObjects(GroupOfCards hand, MeldsStorage meldsPlayed, GroupOfCards capturePile) {
    //first, store all the cards
    this->hand = hand;
@@ -19,6 +38,15 @@ void Serialization::setPlayerObjects(GroupOfCards hand, MeldsStorage meldsPlayed
    }
 }
 
+/* *********************************************************************
+Function Name: 
+Purpose: 
+Parameters: 
+Return Value:
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 GroupOfCards Serialization::setPlayerStrings(std::string handString, std::string meldString, std::string captureString, GroupOfCards allRemCards, Suit trumpSuit) {
    //first, store all the strings
    this->handString = handString;
@@ -52,6 +80,15 @@ GroupOfCards Serialization::setPlayerStrings(std::string handString, std::string
    return allRemCards;
 }
 
+/* *********************************************************************
+Function Name: 
+Purpose: 
+Parameters: 
+Return Value:
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 void Serialization::convertObjectsToStrings() {
    if(!playerObjectsEntered) {
       throw PinochleException("Player Objects has not been specifiec, and so cannot be serialized.");
@@ -146,6 +183,15 @@ void Serialization::convertObjectsToStrings() {
 
 }
 
+/* *********************************************************************
+Function Name: 
+Purpose: 
+Parameters: 
+Return Value:
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 GroupOfCards Serialization::handStrToObject(GroupOfCards allRemCards) {
    //first, get the invidual cards from the hand string and add them to hand
    //none of the cards in the hand string are assumed to be a part of the meld
@@ -182,6 +228,15 @@ GroupOfCards Serialization::handStrToObject(GroupOfCards allRemCards) {
    return allRemCards;
 }
 
+/* *********************************************************************
+Function Name: 
+Purpose: 
+Parameters: 
+Return Value:
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 GroupOfCards Serialization::captureStrToObject(GroupOfCards allRemCards) {
    //first, get the invidual cards from the capture string and add them to capturePile
    //none of the cards in the capture string are assumed to be a part of the meld
@@ -218,6 +273,15 @@ GroupOfCards Serialization::captureStrToObject(GroupOfCards allRemCards) {
    return allRemCards;
 }
 
+/* *********************************************************************
+Function Name: 
+Purpose: 
+Parameters: 
+Return Value:
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 GroupOfCards Serialization::meldStrToObject(GroupOfCards allRemCards, Suit trumpSuit) {
    //first split the string into component melds
    std::vector<std::vector<std::string>> meldVector;
@@ -328,6 +392,15 @@ GroupOfCards Serialization::meldStrToObject(GroupOfCards allRemCards, Suit trump
    return allRemCards;
 }
 
+/* *********************************************************************
+Function Name: 
+Purpose: 
+Parameters: 
+Return Value:
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 bool Serialization::isACompleteMeldInstance(MeldInstance meldInstance) {
    for(int i = 0; i < meldInstance.getNumOfCards(); i++) {
       if(!hand.searchCardById(meldInstance.getCardByPosition(i).getId())) {
@@ -337,7 +410,15 @@ bool Serialization::isACompleteMeldInstance(MeldInstance meldInstance) {
    return true;
 }
 
-
+/* *********************************************************************
+Function Name: 
+Purpose: 
+Parameters: 
+Return Value:
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 std::string Serialization::getHandString() const {
    if(playerObjectsEntered == false) {
       throw PinochleException("Player cards have not been entered yet");

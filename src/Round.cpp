@@ -5,12 +5,26 @@
 
 #define numOfPlayers 2
 
+/* *********************************************************************
+Function Name: Round
+Purpose: The default constructor for the Round Class
+Parameters: 
+Return Value:
+Assistance Received: None
+********************************************************************* */
 Round::Round() {
    for(int i = 0; i < numOfPlayers; i++) {
       players[i] = NULL;
    }
 }
 
+/* *********************************************************************
+Function Name: ~Round
+Purpose: The destructor for the Round class
+Parameters: 
+Return Value:
+Assistance Received: None
+********************************************************************* */
 Round::~Round() {
 
    for(int i = 0; i < numOfPlayers; i++) {
@@ -18,6 +32,26 @@ Round::~Round() {
    }
 }
 
+/* *********************************************************************
+Function Name: startNewRound
+Purpose: Starts a fresh round of Pinochle
+Parameters: 
+      roundNumber, which is the current round number; passed by reference
+      hGameScore, the human player's current game score; passed by reference
+      cGameScore, the computer player's current game score, passed by reference
+Return Value:
+Local Variables: 
+Algorithm: 
+      1) set round scores and game scores
+      2) set up human and computer players
+      3) distribute cards to both players
+      4) if the game scores for computer and human are the same, ask human for coin toss call
+      5) assign the player who has the higher game score or who wins the coin toss as the player who goes next 
+      6) begin the round loop
+      7) after round ends, display points and winner
+      8) update the human game score, computer game score, and round number
+Assistance Received: None
+********************************************************************* */
 void Round::startNewRound(int &roundNumber, int &hGameScore, int &cGameScore) {
    std::cout << "Let's begin the round." << std::endl << std::endl << std::endl;
    //storing players and scores for the round:
@@ -88,6 +122,31 @@ void Round::startNewRound(int &roundNumber, int &hGameScore, int &cGameScore) {
    roundNumber++;
 }
 
+/* *********************************************************************
+Function Name: beginRoundLoop()
+Purpose: Runs the round loop until all player cards are exhausted
+Parameters: 
+Return Value:
+Local Variables: 
+      leadCard, to hold the leadCard thrown by a player
+      chaseCard, to hold the chaseCard thrown by a player
+      meld, to hold the meld instance played by a player
+      promptResponse, to hold the responses made by a user
+Algorithm: 
+      1)loop until both players' cards are exhausted
+      2)    display round table and prompt user for next step to take
+      3)    player whose turn it is plays the lead card
+      4)    ask the user what action to take
+      5)    the other player plays the chase card, if the user decides to proceed with the round
+      6)    find the winner between the lead and chase cards, and assign points to the winner of the turn
+      7)    give the winner the lead and chase card to put in their capture pile
+      8)    if a meld is possible from the winner's hand, ask them to play a meld
+      9)    Give points for meld, if one was played
+      10)   Each player takes card from stock. It no card in stock, player takes Trump Card.
+                If no trump card, player's play until their cards are exhausted
+      11)   if there are still cards left in the players' hands, go to step 2
+Assistance Received: None
+********************************************************************* */
 void Round::beginRoundLoop() {
    Card leadCard;
    Card chaseCard;
@@ -177,6 +236,21 @@ void Round::beginRoundLoop() {
    }
 }
 
+/* *********************************************************************
+Function Name: findWinnerAndGivePoints
+Purpose: finds the winner between the lead card and chase card and assigns 
+            points to the winner
+Parameters: 
+      leadCard, the lead card played in the turn
+      chaseCard, the chase card played in the turn
+Return Value: 
+Local Variables:
+      pointsWon, the points won by the winner of the turn
+Algorithm: 
+      1)Find out whether the chase or the lead card wins and display winner in console accordingly
+      2)Add the points each card is worth, display it, and add that to the winner's round score
+Assistance Received: None
+********************************************************************* */
 void Round::findWinnerAndGivePoints(Card leadCard, Card chaseCard) {
    //find out who wins
    if(leadCardWins(leadCard, chaseCard)) {
@@ -212,6 +286,29 @@ void Round::findWinnerAndGivePoints(Card leadCard, Card chaseCard) {
 
 }
 
+/* *********************************************************************
+Function Name: leadCardWins
+Purpose: finds out whether the lead card is the winner of the turn or not
+Parameters: 
+      leadCard, the lead card played in the turn
+      chaseCard, the chase card played in the turn
+Return Value:
+      true if lead card wins, false otherwise
+Local Variables: 
+Algorithm: 
+      1) if the lead card is of trump suit
+      2)       check if the chase card is of trump suit and has higher rank
+      3)          if not, return true
+      4)          else, return false
+      5) if lead card is not of trump suit
+      6)       check if the chase card is of trump suit
+      7)           if yes, return false
+      8)           if no, then check if chase card is of same suit as lead card
+      9)                  if no, return true
+      10)                 if yes, check if chase card has higher rank than lead card
+      11)                     if no return false, else return true
+Assistance Received: None
+********************************************************************* */
 bool Round::leadCardWins(Card leadCard, Card chaseCard) {
    if(leadCard.getSuit() == trumpSuit) {
       //if the chase card is of trump suit
@@ -239,6 +336,17 @@ bool Round::leadCardWins(Card leadCard, Card chaseCard) {
    }
 }
 
+/* *********************************************************************
+Function Name: cardPoints
+Purpose: returns the points a card yields during a turn
+Parameters: 
+      card, the card whose point is to be returned
+Return Value:
+      the points a card is worth
+Local Variables: 
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 int Round::cardPoints(Card card){
    switch (card.getRank()) {
    case Rank::Ace:
@@ -265,6 +373,22 @@ int Round::cardPoints(Card card){
    }
 }
 
+
+/* *********************************************************************
+Function Name: coinToss
+Purpose: Tosses a coin and asks for user prediction
+Parameters: 
+Return Value:
+      return true if user prediction was correct, false if not
+Local Variables: 
+      toss, which hold the coin toss result, in int form (0 for heads, 1 for tails)
+      userResponse, holds the user response
+Algorithm: 
+      1) generate 0 or 1 randomly
+      2) prompt user for prediciton
+      3) if user prediction was correct, return true, else return false
+Assistance Received: None
+********************************************************************* */
 bool Round::coinToss() {
    srand(time(NULL));
    int toss = rand() % 2;
@@ -299,7 +423,17 @@ bool Round::coinToss() {
 }
 
 
-
+/* *********************************************************************
+Function Name: promptUser
+Purpose: Prompts user for next action to take during a turn
+Parameters: 
+Return Value:
+      the number corresponding to the option the user picked 
+Local Variables: 
+      numOfOptions, the number of options to display to the user
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 int Round::promptUser() {
    int numOfOptions;
    if(humansTurn) {
@@ -358,6 +492,18 @@ int Round::promptUser() {
    return userActionInt;
 }
 
+/* *********************************************************************
+Function Name: promptUserForMeld
+Purpose: asks the user to play a meld or ask for help
+Parameters: 
+      human, the pointer to the human player
+Return Value:
+      the number (i.e. 1 or 2) representing what action the user wants to take
+Local Variables: 
+      userAction, to hold user's answer to prompt
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 int Round::promptUserForMeld(Player *human) {
    std::cout << "You won this turn, so you can create a meld." << std::endl;
    std::cout << "Pick cards from your hand to create a meld: " << std::endl;
@@ -398,6 +544,16 @@ int Round::promptUserForMeld(Player *human) {
    return userActionInt;
 }
 
+/* *********************************************************************
+Function Name: displayTable
+Purpose: to display the current state of the round 
+Parameters: 
+Return Value:
+Local Variables: 
+      stockCards, to hold all the cards left in the stock
+Algorithm: 
+Assistance Received: None
+********************************************************************* */
 void Round::displayTable() {
    std::cout << "\n\n---------------------------------------------------------------------------------------\n";
    std::cout << "Current Game Table: \n\n";
@@ -430,6 +586,15 @@ void Round::displayTable() {
    std::cout << "---------------------------------------------------------------------------------------\n\n";
 }
 
+/* *********************************************************************
+Function Name: getHandString
+Purpose: returns the string representation of a player's hand
+Parameters: 
+      player, the pointer to the player object whose hand's string representation is to be returned
+Return Value:
+      the string representation of the player's hand
+Assistance Received: None
+********************************************************************* */
 std::string Round::getHandString(Player* player) {   
    std::string handString ="";
    GroupOfCards hand = player->getHand();
@@ -439,6 +604,15 @@ std::string Round::getHandString(Player* player) {
    return handString;
 }
 
+/* *********************************************************************
+Function Name: getCaptureString
+Purpose: returns the string representation of a player's capture pile
+Parameters: 
+      player, the pointer to the player object whose capture pile's string representation is to be returned
+Return Value:
+      the string representation of the player's capture pile
+Assistance Received: None
+********************************************************************* */
 std::string Round::getCaptureString(Player* player) {   
    std::string captureString ="";
    GroupOfCards capturePile = player->getCapturePile();
@@ -448,6 +622,15 @@ std::string Round::getCaptureString(Player* player) {
    return captureString;
 }
 
+/* *********************************************************************
+Function Name: getMeldsString
+Purpose: to return the string representation of the player's melds
+Parameters: 
+      player, the pointer to the player object whose melds' string representation is to be returned
+Return Value:
+      the string representation of the player's melds 
+Assistance Received: None
+********************************************************************* */
 std::string Round::getMeldsString(Player* player) {   
    std::string meldsString ="";
    // MeldsStorage meldsPlayed = player.getMeldsPlayed();
@@ -474,6 +657,13 @@ std::string Round::getMeldsString(Player* player) {
    return meldsString;
 }
 
+/* *********************************************************************
+Function Name: promptSaveGame
+Purpose: Prompts the user if they want to save the game progress 
+Parameters: 
+Return Value:
+Assistance Received: None
+********************************************************************* */
 void Round::promptSaveGame() {
    std::cout << "Would you like to save your progress so far? (y/n): ";
    std::string userResponse;
@@ -503,6 +693,14 @@ void Round::promptSaveGame() {
    exit(0);
 }
 
+/* *********************************************************************
+Function Name: saveGame
+Purpose: Generates the string representation of the current game state
+Parameters: 
+Return Value:
+      the string representation of the current game state
+Assistance Received: None
+********************************************************************* */
 std::string Round::saveGame() {
    //prepare data to save to file
    std::string saveData = "";
@@ -542,6 +740,30 @@ std::string Round::saveGame() {
 
 }
 
+/* *********************************************************************
+Function Name: contintueRound
+Purpose: Continues a round by loading game state from a state file
+Parameters: 
+      roundNumber, the round number, passed by reference, which is to be populated by the value loaded from the save file
+      hGameScore, the human game score, passed by reference, which is to be populated by the value loaded from the save file
+      cGameScore, the computer game score, passed by reference, which is to be populated by the value loaded from the save file
+Return Value: 
+Local Variables: 
+      deck, to generate all the cards in the game
+      allCards, to store all the cards in the game
+      cardsHolder, to temporarily hold cards
+Algorithm: 
+      1) get save file data
+      2) set the round numbers and game scores 
+      3) generate all the cards to be played in the round
+      4) generate the stock cards from the stock string representation
+      5) generate players' hands, capture piles, and meldsPlayed from save file string
+      6) intialize players with the loaded data
+      7) begin the round loop
+      8) after round ends, display points and winner
+      9) update the human game score, computer game score, and round number
+Assistance Received: None
+********************************************************************* */
 void Round::continueRound(int &roundNumber, int &hGameScore, int &cGameScore) {
    try {
       loadGameData();
@@ -647,7 +869,13 @@ void Round::continueRound(int &roundNumber, int &hGameScore, int &cGameScore) {
 
 }
 
-
+/* *********************************************************************
+Function Name: loadGameData
+Purpose: Goes through each line in the save file and parses relevant information from it
+Parameters: 
+Return Value:
+Assistance Received: None
+********************************************************************* */
 void Round::loadGameData() {
    std::vector<std::string> lines = getSaveFileContent();
    std::string data;
@@ -789,6 +1017,14 @@ void Round::loadGameData() {
 
 }
 
+/* *********************************************************************
+Function Name: getSaveFileContent
+Purpose: prompts user for save file name and returns all the lines in the ifle
+Parameters: 
+Return Value:
+      vector of lines in the save file
+Assistance Received: None
+********************************************************************* */
 std::vector<std::string> Round::getSaveFileContent() {
    std::string userResponse;
    std::ifstream saveFile;
