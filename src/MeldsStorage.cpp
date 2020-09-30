@@ -7,8 +7,6 @@ Function Name: MeldsStorage
 Purpose: Constructor for MeldsStorage class
 Parameters: 
 Return Value: 
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 MeldsStorage::MeldsStorage() {
@@ -24,8 +22,6 @@ Parameters:
       meldInstance, the meld instance to be added
 Return Value: 
       true if successfully added, false if not added
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool MeldsStorage::addMeld(MeldInstance meldInstance) {
@@ -44,8 +40,6 @@ Parameters:
       meldInstances, a vector of all the meld instances
 Return Value: 
       true if melds were successfully added, false otherwise
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool MeldsStorage::addMelds(std::vector<MeldInstance> meldInstances) {
@@ -66,8 +60,6 @@ Parameters:
       meldInstance, the meld instance to be removed
 Return Value: 
       returns true of removal was successful, false otherwise
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool MeldsStorage::removeMeld(MeldInstance meldInstance) {
@@ -91,8 +83,6 @@ Parameters:
       meldType, the meld whose instances are to be counted
 Return Value: 
       the number of meld instances of the given meld
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 int MeldsStorage::getNumOfMeldsByType(Meld meldType) {
@@ -105,8 +95,6 @@ Purpose: gets the number of meld instances stored
 Parameters: 
 Return Value: 
       the number of meld instances stored
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 int MeldsStorage::getNumOfMelds() {
@@ -123,8 +111,6 @@ Purpose: Returns the vector of all the meld instances stored
 Parameters: 
 Return Value: 
       vector of vectors of MeldInstance objects, comprising all the meld instances stored 
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 std::vector<std::vector<MeldInstance>> MeldsStorage::getAllMelds() const {
@@ -138,8 +124,6 @@ Parameters:
       meldType, the meld whose instances are to be returned
 Return Value: 
       all the meld instances of the given type
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 std::vector<MeldInstance> MeldsStorage::getAllMeldsByType(Meld meldType) const {
@@ -155,8 +139,6 @@ Parameters:
       meldType, the meld whose instances the card is to be checked in
 Return Value: 
       true if card is used by a meld instance of the given meld, false otherwise
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool MeldsStorage::isCardUsedByMeld(Card card, Meld meldType) {
@@ -182,8 +164,6 @@ Parameters:
       card, the card which is part of the meld instances to be returned
 Return Value: 
       vector of MeldInstances that make use of the cards
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 std::vector<MeldInstance> MeldsStorage::getAllMeldsUsingCard(Card card) {
@@ -258,8 +238,6 @@ Parameters:
       meldInstance, a MeldInstance object storing the cards to be checked
 Return Value:
       true if the group of cards comprising the meld intance have together been used to create a meld before, false otherwise
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool MeldsStorage::cardsUsedForSameMeld(MeldInstance meldInstance) {
@@ -278,8 +256,6 @@ Parameters:
       card, the card to be checked for use by meld instances
 Return Value:
       true if the card has been used by a meld instance, false if not
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool MeldsStorage::isCardUsedByAnyMeld(Card card) {

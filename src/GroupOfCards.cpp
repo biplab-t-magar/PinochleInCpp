@@ -5,8 +5,6 @@ Function Name: GroupOfCards
 Purpose: Constructor for GroupOfCards class
 Parameters: 
 Return Value: 
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 GroupOfCards::GroupOfCards() {}
@@ -17,8 +15,6 @@ Purpose: Constructor that initializes all the cards in the GroupOfCards object
 Parameters: 
       cards, the vector of cards to be stored
 Return Value: 
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 GroupOfCards::GroupOfCards(std::vector<Card> cards) {
@@ -32,8 +28,6 @@ Parameters:
       card, the card to be added, of Card type
 Return Value: 
       bool, true when card was added succesfully
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool GroupOfCards::addCard(Card card) {
@@ -48,8 +42,6 @@ Parameters:
       id, the id of the card to be removed, of type id
 Return Value: 
       return true when card is removed successfully
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool GroupOfCards::removeCardById(int id) {
@@ -68,8 +60,6 @@ Parameters:
       position, the position of the card in the group of cards, of int type
 Return Value: 
       true when card is successfully removed
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool GroupOfCards::removeCardByPosition(int position) {
@@ -89,8 +79,6 @@ Parameters:
       id, the id of the card to be checked
 Return Value: 
       true if card is found, false otherwise
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool GroupOfCards::searchCardById(int id) const{
@@ -109,8 +97,6 @@ Parameters:
       id, the id of the card to be returned
 Return Value: 
       the card whose id has been passed as argument
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 Card GroupOfCards::getCardById(int id) const {
@@ -133,8 +119,6 @@ Parameters:
       rank, the rank of the cards to be returned
 Return Value: 
       vector of all the cards with the given rank
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 std::vector<Card> GroupOfCards::getCardsByRank(Rank rank) const{
@@ -154,8 +138,6 @@ Parameters:
       suit, the suit of the cards to be returned
 Return Value: 
       vector of all the cards with the given suit
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 std::vector<Card> GroupOfCards::getCardsBySuit(Suit suit) const {
@@ -177,8 +159,6 @@ Parameters:
       suit, the suit of the cards to be returned
 Return Value: 
       vector of cards of the given rank and suit that are found in this group of cards
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 std::vector<Card> GroupOfCards::getCardsByRankAndSuit(Rank rank, Suit suit) const {
@@ -199,8 +179,6 @@ Parameters:
       position, the position of the needed card in this group of cards
 Return Value: 
       the card in the given position
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 Card GroupOfCards::getCardByPosition(int position) const {
@@ -217,8 +195,6 @@ Parameters:
       card, the card whose position is to be returned
 Return Value: 
       the position of the given card, of type int
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 int GroupOfCards::getCardPosition(Card card){
@@ -237,8 +213,6 @@ Purpose: to get the number of cards in this Group of Cards
 Parameters: 
 Return Value: 
       the number of cards contained in this group of cards
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 int GroupOfCards::getNumOfCards() const {
@@ -251,8 +225,6 @@ Purpose: function for overloading == operator
 Parameters: another GroupOfCards object
 Return Value: 
       true if both the Group of Cards have identical cards, false otherwise
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool GroupOfCards::operator==(const GroupOfCards& otherGroupOfCards) {
@@ -274,8 +246,6 @@ Purpose: function for overloading != operator
 Parameters: another GroupOfCards object
 Return Value: 
       true if any of the cards do not match between the two GroupOfCards
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool GroupOfCards::operator!=(const GroupOfCards& otherGroupOfCards) {

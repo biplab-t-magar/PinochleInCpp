@@ -10,8 +10,6 @@ Function Name: Human
 Purpose: constructor for Human class
 Parameters: 
 Return Value: 
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 Human::Human() {
@@ -23,8 +21,6 @@ Function Name: getHelpForLeadCard
 Purpose: Gets suggestion for lead card and outputs the reasoning behind it for user to see
 Parameters: 
 Return Value: 
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 void Human::getHelpForLeadCard() {
@@ -41,8 +37,6 @@ Purpose: get suggestion for what chase card to play and outputs the reasoning be
 Parameters: 
       opponentCard, the lead card played by the opponent
 Return Value: 
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 void Human::getHelpForChaseCard(Card opponentCard) {
@@ -58,8 +52,6 @@ Function Name: getHelpForMeld
 Purpose: get suggestion for what meld to play and outputs the reasoning behind the choice for user to see
 Parameters: 
 Return Value: 
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 void Human::getHelpForMeld() {
@@ -90,8 +82,6 @@ Purpose: Plays a lead card, returning the card
 Parameters: 
 Return Value: 
       the card played as lead card
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 Card Human::playLeadCard() {
@@ -108,8 +98,6 @@ Purpose: Plays a chase card, returning the card in the process
 Parameters: 
 Return Value: 
       the card played as chase card
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 Card Human::playChaseCard(Card opponentCard) {
@@ -168,8 +156,6 @@ Purpose: Prompts the user to specify what card to throw
 Parameters: 
 Return Value: 
       Returns the position of the card to throw, as specified by the user
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 int Human::promptCardThrow() {

@@ -12,10 +12,15 @@ public:
    Player();
    Player(GroupOfCards hand, GroupOfCards capturePile, MeldsStorage meldsPlayed, Suit trumpSuit);
    virtual ~Player();
-   // virtual void nextMove() = 0;
-   void takeOneCard(Card card);
-   // void takeCards(std::vector<Card> cards);
+
+   GroupOfCards getHand() const;
+   MeldsStorage getMeldsPlayed() const;
+   GroupOfCards getCapturePile() const;
+   int numCardsInHand();
+
    bool setTrumpSuit(Suit trumpSuit);
+
+   void takeOneCard(Card card);
    virtual Card playLeadCard() = 0;
    virtual Card playChaseCard(Card opponentCard) = 0;
    virtual MeldInstance playMeld() = 0;
@@ -23,11 +28,8 @@ public:
    virtual void getHelpForLeadCard() = 0;
    virtual void getHelpForChaseCard(Card opponentCard) = 0;
    virtual void getHelpForMeld() = 0;
-   int numCardsInHand();
    bool isMeldPossible();
-   GroupOfCards getHand() const;
-   MeldsStorage getMeldsPlayed() const;
-   GroupOfCards getCapturePile() const;
+   
 
 protected:
    int getCardPositionInHand(Card card);
@@ -36,25 +38,22 @@ protected:
    MeldInstance suggestMeld(std::string &reasoning);
    Card playFromHand(int position);
    Card playFromHand(Card card);
-   
-
-   //throw exception if not valid meld
    MeldInstance createMeld(std::vector<int> positions);
-
-   //throws exception if not valid meld
    MeldInstance createMeld(MeldInstance meldInstance);
 private:
    GroupOfCards hand;
    GroupOfCards capturePile;
    Suit trumpSuit; 
    MeldServices meldServices;
-   std::vector<Card> bestCardsForLeadThrow();
-   Card getLeastRankedCard();
-   Card getLeastRankedFrom(std::vector<Card> cards);
-   MeldInstance findBestMeldToPlay(std::vector<MeldInstance> meldsToCompare);
    std::vector<std::string> handPile;
    std::vector<std::string> meldStrRep;
    std::vector<std::string> capturePileStrRep;
+
+   Card getLeastRankedCard();
+   Card getLeastRankedFrom(std::vector<Card> cards);
+   std::vector<Card> bestCardsForLeadThrow();
+   MeldInstance findBestMeldToPlay(std::vector<MeldInstance> meldsToCompare);
+   
    
 };
 

@@ -7,8 +7,6 @@ Function Name: Computer
 Purpose: Default constructor for Card class that initializes a computer object.
 Parameters: 
 Return Value: 
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 Computer::Computer() {
@@ -24,9 +22,6 @@ Parameters:
       meldPlayed, the record of all the melds that the computer player has played
       trumpSuit, the trump suit of the current round
 Return Value: 
-Local Variables: 
-Algorithm: 
-      1) Pass all parameter values to base class constructor
 Assistance Received: None
 ********************************************************************* */
 Computer::Computer(GroupOfCards hand, GroupOfCards capturePile, MeldsStorage meldsPlayed, Suit trumpSuit) : Player(hand, capturePile, meldsPlayed, trumpSuit) {
@@ -39,12 +34,6 @@ Function Name: playLeadCard
 Purpose: To play a lead card during a turn
 Parameters: 
 Return Value: The card that is to be played as the lead card, of type Card
-Local Variables: 
-      reasoning, to store the reasoning for picking the card
-Algorithm: 
-      1) Store the suggested card and reasoning from suggestLeadCard
-      2) output a string explaining the reasoning
-      3)) return the card to play
 Assistance Received: None
 ********************************************************************* */
 Card Computer::playLeadCard() {
@@ -63,12 +52,6 @@ Parameters:
       opponentCard, the card of the opponent player, of type Card
 Return Value: 
       The chase card to be played by the computer player during the turn, of type Card
-Local Variables: 
-      reasoning, to store the reasoning for picking the card
-Algorithm: 
-      1)Get the suggested chase card and the reasoning for suggestion and store them
-      2)Output reasoning
-      3)return suggested chase card
 Assistance Received: None
 ********************************************************************* */
 Card Computer::playChaseCard(Card opponentCard) {

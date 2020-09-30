@@ -10,8 +10,6 @@ Function Name: MeldServices
 Purpose: Constructor for MeldServices class
 Parameters: 
 Return Value: 
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 MeldServices::MeldServices() {
@@ -25,8 +23,6 @@ Parameters:
       meldsPlayed, the melds that have already been played by the player
       trumpSuit, the trump suit for the current round
 Return Value: 
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 MeldServices::MeldServices(MeldsStorage meldsPlayed, Suit trumpSuit) {
@@ -41,8 +37,6 @@ Purpose: supplies the vector storing all the player's melds
 Parameters: 
 Return Value: 
       the vector storing all the player's melds
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 MeldsStorage MeldServices::getMeldsPlayed() const {
@@ -56,8 +50,6 @@ Parameters:
       trumpSuit, the suit that's to be set as the trump suit
 Return Value: 
       true if successfully set as trump suit
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool MeldServices::setTrumpSuit(Suit trumpSuit) {
@@ -77,8 +69,6 @@ Parameters:
       meldInstance, the MeldInstance object containing the cards that are to be looked for in the hand
 Return Value: 
       true if all cards were found in hand, false otherwise
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool MeldServices::allCardsPresentInHand(GroupOfCards hand, MeldInstance meldInstance) {
@@ -99,8 +89,6 @@ Parameters:
       meldInstance, the meld instance that is to be checked for duplication
 Return Value: 
       true if the meld instance has not been played yet, false otherwise
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool MeldServices::meldIsNotARepeat(MeldInstance meldInstance) {
@@ -120,8 +108,6 @@ Parameters:
 Return Value: 
       true if at least one card from the meld instance has not been played with the other cards in the meld instance to create a meld before
       false otherwise
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool MeldServices::meldHasANewCard(MeldInstance meldInstance) {
@@ -135,8 +121,6 @@ Parameters:
       hand, the hand of the player creating the meld
       meldInstance, the instance of the meld to be created
 Return Value: 
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool MeldServices::storeMeld(GroupOfCards hand, MeldInstance meldInstance) {
@@ -223,8 +207,6 @@ Parameters:
       hand, the hand of the player
 Return Value: 
       the vector containing the possible points in descending order
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 std::vector<int> MeldServices::potentialPointsFromHand(GroupOfCards hand) {
@@ -255,8 +237,6 @@ Parameters:
 Return Value: 
       a vector of the number of meld instances of a particular meld type, 
          with each index in the vector corresponding to each meld type
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 std::vector<int> MeldServices::countMeldsFromHand(GroupOfCards hand) {
@@ -299,8 +279,6 @@ Parameters:
       hand, the hand of the player from which melds are to be calculated
 Return Value: 
       a MeldsStorage object consisting of all the MeldInstances found in the hand
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 MeldsStorage MeldServices::getMeldsFromHand(GroupOfCards hand) {
@@ -341,8 +319,6 @@ Parameters:
       hand, the hand of the player in which Dixes are to be searched
 Return Value: 
       a vector containg all the Dixes found in the hand
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 std::vector<MeldInstance> MeldServices::getDixes(GroupOfCards hand) {
@@ -420,8 +396,6 @@ Parameters:
       hand, the hand of the player in which Dixes are to be searched
 Return Value: 
       a vector containg all the Marriages found in the hand
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 std::vector<MeldInstance> MeldServices::getMarriages(GroupOfCards hand) {
@@ -676,8 +650,6 @@ Parameters:
       meld, the meld type whose point is to be returned
 Return Value: 
       the points of the  given meld type
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 int MeldServices::getMeldPoints(Meld meld) const{

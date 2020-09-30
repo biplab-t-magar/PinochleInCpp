@@ -12,6 +12,7 @@ class MeldInstance : public GroupOfCards {
 public:
    MeldInstance();
    MeldInstance(std::vector<Card> cards, Suit trumpSuit);
+   
    int getMeldPoints() const;
    Meld getMeldType() const;
    bool isValidMeld() const;

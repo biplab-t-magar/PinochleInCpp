@@ -10,8 +10,6 @@ Parameters:
       str, the string which is to be stripped of white space on both ends
 Return Value:
       the string without white space on either end
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 std::string StringUtilities::stripString(std::string str) {
@@ -41,8 +39,6 @@ Parameters:
       str, the string whose validity is to be checked
 Return Value:
       true if string is a valid card, false otherwise
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool StringUtilities::isAValidCardStr(std::string str) {
@@ -68,8 +64,6 @@ Parameters:
       rank, the character to be checked for validity
 Return Value:
       true if the character represent a valid rank, false otherwise
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool StringUtilities::isAValidRankStr(char rank) {
@@ -86,8 +80,6 @@ Parameters:
       suit, the character to be checked for validity
 Return Value:
       true if the character represent a valid suit, false otherwise
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool StringUtilities::isAValidSuitStr(char suit) {
@@ -104,8 +96,6 @@ Parameters:
       str, the string to be checked for validity
 Return Value:
       true if the string represents a valid card string, false otherwise
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool StringUtilities::checkCardStrValidity(std::string str) {

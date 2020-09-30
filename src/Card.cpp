@@ -8,9 +8,6 @@ Function Name: Card
 Purpose: Default constructor for Card class that initializes a card object. Creates a Card with undefined rank, suit, and id
 Parameters: 
 Return Value: 
-Local Variables: 
-Algorithm: 
-      1) Mark card as having undefined rank, suit, and id
 Assistance Received: None
 ********************************************************************* */
 Card::Card() {
@@ -28,9 +25,6 @@ Parameters:
       rank, the rank to be assigned to the card
       suit, the suit to be assigned to the card
 Return Value: 
-Local Variables: 
-Algorithm: 
-      1) initialize id, rank, and suit member variales of Card
 Assistance Received: none
 ********************************************************************* */
 Card::Card(int id, Rank rank, Suit suit) {
@@ -55,11 +49,6 @@ Purpose: a selector function that returns the id of the card
 Parameters: 
 Return Value: 
       the id of the card, an int value
-Local Variables: 
-Algorithm: 
-      1) Check if id has been defined for the card
-      2) if id has been defined, return id
-      3) else: throw an exception
 Assistance Received: none
 ********************************************************************* */
 int Card::getId() const {
@@ -79,10 +68,6 @@ Parameters:
 Return Value: 
       the rank of the card, of type Rank
 Local Variables: 
-Algorithm: 
-      1) Check if rank has been defined for the card
-      2) if rank has been defined: return the rank
-      3) else: throw an exception
 Assistance Received: none
 ********************************************************************* */
 Rank Card::getRank() const {
@@ -101,11 +86,6 @@ Purpose: a selector function to that returns the suit of the card
 Parameters: 
 Return Value: 
       the suit of the card, of type Suit
-Local Variables: 
-Algorithm: 
-      1) Check if suit has been defined for the card
-      2) if suit has been defined: return the suit
-      3) else: throw an exception
 Assistance Received: none
 ********************************************************************* */
 Suit Card::getSuit() const {
@@ -117,22 +97,12 @@ Suit Card::getSuit() const {
    }
 }
 
-
-
-
-
-
 /* *********************************************************************
 Function Name: getRankString
 Purpose: a selector function that returns the rank of the card in string format
 Parameters: 
 Return Value: 
       the rank of the card, as a string
-Local Variables: 
-Algorithm: 
-      1) Check if rank has been initialized for the card
-      2) if yes, send a string corresponding to the rank
-      3) else: throw an exception
 Assistance Received: none
 ********************************************************************* */
 std::string Card::getRankString() const {
@@ -172,11 +142,6 @@ Purpose: a selector function that returns the suit of the card in string format
 Parameters: 
 Return Value: 
       the suit of the card, as a string
-Local Variables: 
-Algorithm: 
-      1) Check if suit has been initialized for the card
-      2) if yes, return a string corresponding to the suit
-      3) else: throw an exception
 Assistance Received: none
 ********************************************************************* */
 std::string Card::getSuitString() const {
@@ -294,10 +259,6 @@ Parameters:
       id, the id to be assigned to the card
 Return Value: 
       returns true if mutation was successful, false if not
-Local Variables: 
-Algorithm: 
-      1) assign rank of card to the value sent as argument
-      2) mark card's rank as being initialized
 Assistance Received: none
 ********************************************************************* */
 bool Card::setId(int id) {
@@ -314,10 +275,6 @@ Parameters:
       rank, the rank to be assigned to the card
 Return Value: 
       returns true if mutation was successful, false if not
-Local Variables: 
-Algorithm: 
-      1) assign rank of card to the value sent as argument
-      2) mark card's rank as being initialized
 Assistance Received: none
 ********************************************************************* */
 bool Card::setRank(Rank rank) {
@@ -337,10 +294,6 @@ Parameters:
       suit, the suit to be assigned to the card
 Return Value: 
       returns true if mutation was successful, false if not
-Local Variables: 
-Algorithm: 
-      1) assign suit of card to the value sent as argument
-      2) mark card's suit as being initialized
 Assistance Received: none
 ********************************************************************* */
 bool Card::setSuit(Suit suit) {
@@ -362,10 +315,6 @@ Parameters:
       otherCard, the card that this card will be compared to
 Return Value: 
       returns true if this card has greater rank, false otherwise
-Local Variables: 
-Algorithm: 
-      1) compare the ranks of the two cards
-      2) return true if this card has greater rank, false otherwise
 Assistance Received: none
 ********************************************************************* */
 bool Card::hasGreaterRankThan(Card otherCard) {
@@ -383,10 +332,6 @@ Parameters:
       otherCard, the card that this card will be compared to
 Return Value: 
       returns true if this card has less rank, false otherwise
-Local Variables: 
-Algorithm: 
-      1) compare the ranks of the two cards
-      2) return true if this card has less rank, false otherwise
 Assistance Received: none
 ********************************************************************* */
 bool Card::hasLessRankThan(Card otherCard) {

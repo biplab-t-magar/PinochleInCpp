@@ -12,8 +12,6 @@ Purpose:
       Constructor for Game class. Initializes member variables
 Parameters: 
 Return Value: 
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 Game::Game() {
@@ -28,8 +26,6 @@ Purpose:
       Starts a game of Pinochle
 Parameters: 
 Return Value: 
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 void Game::start() {
@@ -47,8 +43,6 @@ Purpose:
       Begins a brand new game of Pinochle
 Parameters: 
 Return Value: 
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 void Game::startNewGame() {
@@ -117,8 +111,6 @@ Purpose:
       Sets up and starts a new Round
 Parameters: 
 Return Value: 
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 void Game::startAnotherRound() {
@@ -138,8 +130,6 @@ Purpose:
 Parameters: 
 Return Value: 
       user's response, of type Int, could be 1 or 2 but no other value
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 int Game::newGameOrLoad() {
@@ -167,8 +157,6 @@ Purpose: asks the user if they want to play another round, and returns the respo
 Parameters: 
 Return Value: 
       true or false, depening on the user's response, of type bool
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool Game::playAnotherRound(){

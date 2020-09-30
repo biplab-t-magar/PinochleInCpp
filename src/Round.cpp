@@ -343,8 +343,6 @@ Parameters:
       card, the card whose point is to be returned
 Return Value:
       the points a card is worth
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 int Round::cardPoints(Card card){

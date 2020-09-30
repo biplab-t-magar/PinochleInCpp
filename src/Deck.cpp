@@ -12,11 +12,6 @@ Purpose:
 Parameters: 
       numOfEachCard, the number of repetitions each distinct card should have in the deck
 Return Value: 
-Local Variables: 
-Algorithm: 
-      1) Check that the number of each card is at least 1
-      3) Populate the deck with cards, taking into account the specified number of duplicates of each distinct card
-      4) Shuffle the cards
 Assistance Received: None
 ********************************************************************* */
 Deck::Deck(int numOfEachCard):numOfEachCard(numOfEachCard) {
@@ -81,11 +76,6 @@ Purpose:
       Shuffles the order of the cards in the deck
 Parameters: 
 Return Value: 
-Local Variables: 
-      randomEngine, to hold the object returned by default_random_engine
-Algorithm: 
-      1) get an instance of default_random_engine
-      2) shuffle the vector
 ********************************************************************* */
 
 void Deck::shuffle() {
@@ -102,9 +92,6 @@ Purpose:
 Parameters: 
 Return Value: 
       returns the number of cards currently in the deck, in size_t form
-Local Variables: 
-Algorithm: 
-      1)return the size of the vector holding the cards
 ********************************************************************* */
 int Deck::getNumRemaining() const{
    //return size of vector of cards
@@ -119,13 +106,6 @@ Purpose:
 Parameters: 
 Return Value: 
       returns the a single card from the top of the deck
-Local Variables: 
-      cardAtTop, the card to be returned at the top of the deck
-Algorithm: 
-      1)if the number of cards left is 0 or less, throw exception
-      2)copy card at the end of vector to local variable cardAtTop
-      3)remove card from end of vector
-      4)return local variable cardAtTop
 ********************************************************************* */
 Card Deck::takeOneFromTop() {
    //throw error if there aren't any cards left
@@ -149,8 +129,6 @@ Purpose:
 Parameters: 
 Return Value: 
       cards, the vector containing all the cards
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 std::vector<Card> Deck::getAllRemainingCards() const{
@@ -164,8 +142,6 @@ Purpose:
 Parameters: 
       card, the card to be put on top of the deck, of Card type
 Return Value: 
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 void Deck::putCardAtTop(Card card) {
@@ -179,8 +155,6 @@ Purpose:
       Removes all the card from the deck
 Parameters: 
 Return Value: 
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 void Deck::clear() {

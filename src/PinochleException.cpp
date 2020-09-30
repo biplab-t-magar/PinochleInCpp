@@ -5,8 +5,6 @@ Function Name: PinochleException
 Purpose: Construction for PinochleException class
 Parameters: 
 Return Value:
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 PinochleException::PinochleException() {
@@ -20,8 +18,6 @@ Parameters:
       card, the card to be checked for use by meld instances
 Return Value:
       true if the card has been used by a meld instance, false if not
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 PinochleException::PinochleException(std::string message) {
@@ -34,8 +30,6 @@ Purpose: sets the exception message
 Parameters: 
       message, the exception message
 Return Value:
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool PinochleException::setMessage(std::string message) {
@@ -49,8 +43,6 @@ Purpose: gets the exception message
 Parameters: 
 Return Value:
       returns the exception message
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 std::string PinochleException::what() {

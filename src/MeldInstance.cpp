@@ -5,8 +5,6 @@ Function Name: MeldInstance
 Purpose: Default constructor for the MeldInstance class
 Parameters: 
 Return Value: 
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 MeldInstance::MeldInstance() {
@@ -20,8 +18,6 @@ Parameters:
       cards, the vector of all cards that are part of the MeldInstance object
       trumpSuit, the trumpSuit of the current round
 Return Value: 
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 MeldInstance::MeldInstance(std::vector<Card> cards, Suit trumpSuit) : GroupOfCards(cards) {
@@ -37,8 +33,6 @@ Parameters:
       trumpSuit, the trump suit of the round
 Return Value: 
       true when card is added successfully
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool MeldInstance::addCard(Card card, Suit trumpSuit) {
@@ -55,8 +49,6 @@ Parameters:
       id, the id of the card to be removed
 Return Value: 
       true if the card was found and removed, false otherwise
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool MeldInstance::removeCardById(int id) {
@@ -79,8 +71,6 @@ Parameters:
       position, the position of the card to be removed
 Return Value: 
       true when the card is removed successfully, false otherwise
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool MeldInstance::removeCardByPosition(int position) {
@@ -103,8 +93,6 @@ Purpose:
 Parameters: 
 Return Value: 
       returns true when successfully emptied
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool MeldInstance::removeAllCards() {
@@ -119,8 +107,6 @@ Purpose: returns the Meld type of this meld instance
 Parameters: 
 Return Value: 
       the meld type of this current instance, of enum type Meld
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 Meld MeldInstance::getMeldType() const {
@@ -136,8 +122,6 @@ Purpose: to get the string representation of the meld formed by this meldinstanc
 Parameters: 
 Return Value: 
       the string representation of the meld type
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 std::string MeldInstance::getMeldTypeString() const {
@@ -186,8 +170,6 @@ Purpose: returns the points corresponding to this meld instance
 Parameters: 
 Return Value: 
       the points that playig this meld instance would yield, of type int
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 int MeldInstance::getMeldPoints() const {
@@ -234,8 +216,6 @@ Purpose: checks if this meld instance forms a valid meld or not
 Parameters: 
 Return Value: 
       true if the meld intance forms a valid meld, false if not
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool MeldInstance::isValidMeld() const {
@@ -321,8 +301,9 @@ Purpose: determines whether the cards stored form a Dix meld
 Parameters: 
 Return Value: 
       true if the cards form a Dix, false otherwise
-Local Variables: 
-Algorithm: 
+Local variables:
+      whatRank, the rank of the first card
+
 Assistance Received: None
 ********************************************************************* */
 bool MeldInstance::isDix() {
@@ -346,8 +327,9 @@ Purpose: determines whether the cards stored form any type of marriage meld (roy
 Parameters: 
 Return Value: 
       true if the cards form any type of marriage, false otherwise
-Local Variables: 
-Algorithm: 
+Local variables:
+      whatRank, the rank of the first card
+
 Assistance Received: None
 ********************************************************************* */
 bool MeldInstance::isAnyMarriage() {
@@ -379,8 +361,9 @@ Purpose: determines what type of marriage meld the cards stored make
 Parameters: 
 Return Value: 
       the type of marriage meld that the cards comprise
-Local Variables: 
-Algorithm: 
+Local variables:
+      whatRank, the rank of the first card
+
 Assistance Received: None
 ********************************************************************* */
 Meld MeldInstance::typeOfMarriage() {
@@ -406,8 +389,9 @@ Purpose: determines whether the cards stored form a Pinochle meld
 Parameters: 
 Return Value: 
       true if the cards form a Pinochle, false otherwise
-Local Variables: 
-Algorithm: 
+Local variables:
+      whatRank, the rank of the first card
+
 Assistance Received: None
 ********************************************************************* */
 bool MeldInstance::isPinochle() {
@@ -440,8 +424,14 @@ Purpose: determines whether the cards stored forms any one of the Fours melds (F
 Parameters: 
 Return Value: 
       true if the cards form a Fours meld, false otherwise
-Local Variables: 
-Algorithm: 
+Local variables:
+      whatRank, the rank of the first card, and if it is valid Fours Meld, then the rank of all the cards
+      flags, to keep track of the suits encountered
+Algorithm:
+      1) keep track of the rank of the first card
+      2) go through all the cards and keep track of their suit
+      3) if any card is not the same rank as that of the first card or if any suit is repeated more than once, return false
+      4) else return true
 Assistance Received: None
 ********************************************************************* */
 bool MeldInstance::isFours() {
@@ -489,8 +479,13 @@ Purpose: determines whether the cards stored form a Flush meld
 Parameters: 
 Return Value: 
       true if the cards form a Flush, false otherwise
-Local Variables: 
-Algorithm: 
+Local variables:
+      flags, to keep tracks of the ranks encountered
+Algorithm:
+      1) Go through each card, keeping track of the rank of each card
+      2) If a card is a 9 card or if the card does not have trump suit, return false
+      3) if any of the ranks are repeated, return false
+      4) else return true
 Assistance Received: None
 ********************************************************************* */
 bool MeldInstance::isFlush() {

@@ -9,8 +9,6 @@ Function Name: Player
 Purpose: Constructor for Player class
 Parameters: 
 Return Value:
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 Player::Player() {
@@ -21,8 +19,6 @@ Function Name: ~Player
 Purpose: Destructor for Player class
 Parameters: 
 Return Value:
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 Player::~Player() {
@@ -38,8 +34,6 @@ Parameters:
       meldsPlayed, the melds storage containing melds that the player has already played
       trumpSuit, the trump suit of the current round
 Return Value:
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 
@@ -56,8 +50,6 @@ Purpose: takes the card passed to it and stores it in player hand
 Parameters: 
       card, the Card to be added to hand
 Return Value:
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 void Player::takeOneCard(Card card) {
@@ -70,8 +62,6 @@ Purpose: Returns the player's current hand
 Parameters: 
 Return Value:
       the player's current hand, as a GroupOfCards objects
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 GroupOfCards Player::getHand() const {
@@ -85,8 +75,6 @@ Purpose:
 Parameters: 
 Return Value:
       the melds played by the player, as a MeldsStorage object
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 MeldsStorage Player::getMeldsPlayed() const {
@@ -99,8 +87,6 @@ Purpose: To get the player's capture pile
 Parameters: 
 Return Value:
       the player's capture pile, as a GroupOfCards object
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 GroupOfCards Player::getCapturePile() const {
@@ -114,8 +100,6 @@ Parameters:
       trumpSuit, the trump suit for the current round
 Return Value:
       return true when trump suit has been set
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool Player::setTrumpSuit(Suit trumpSuit) {
@@ -135,8 +119,6 @@ Parameters:
       position, the position of the card in hand to be played
 Return Value:
       the card that the player chooses to play
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 Card Player::playFromHand(int position) {
@@ -155,8 +137,6 @@ Parameters:
       card, the card that is to be played from hand
 Return Value:
       the card that was played from hand
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 Card Player::playFromHand(Card card) {
@@ -174,8 +154,6 @@ Parameters:
       card1, the first card to add to the capture pile
       card2, the second card to add to the capture pile
 Return Value:
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 void Player::addToCapturePile(Card card1, Card card2) {
@@ -373,8 +351,6 @@ Parameters:
       cards, the cards from which to find the least ranked card
 Return Value:
       the card with the least value
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 Card Player::getLeastRankedFrom(std::vector<Card> cards) {
@@ -604,8 +580,6 @@ Purpose: returns the number of cards left in the player's hand
 Parameters: 
 Return Value:
       number of cards left in player's hand
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 int Player::numCardsInHand() {
@@ -618,8 +592,6 @@ Purpose: returns whether there are any possible melds the player can play with r
 Parameters: 
 Return Value:
    true if meld is possible, false in not
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 bool Player::isMeldPossible() {
@@ -637,8 +609,6 @@ Parameters:
       card, the card whose position in hand is to be returned
 Return Value:
       the position of the card
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 int Player::getCardPositionInHand(Card card) {
@@ -653,8 +623,6 @@ Parameters:
       positions, a vector of positions, the cards corresponding to which will be used to create the meld instance
 Return Value:
       the meld instance created from the cards in the given positions
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 MeldInstance Player::createMeld(std::vector<int> positions) {
@@ -687,8 +655,6 @@ Parameters:
       meldinstance, the meld instance to be used to create the player's meld
 Return Value:
       the meld instance created 
-Local Variables: 
-Algorithm: 
 Assistance Received: None
 ********************************************************************* */
 MeldInstance Player::createMeld(MeldInstance meldInstance) {
