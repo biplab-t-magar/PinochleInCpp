@@ -51,7 +51,7 @@ Card::Card(int id, Rank rank, Suit suit) {
 }
 
 /* *********************************************************************
-Function Name: getId
+Function Name: getRank
 Purpose: a selector function that returns the id of the card
 Parameters: 
 Return Value: 

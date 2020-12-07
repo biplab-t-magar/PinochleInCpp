@@ -51,9 +51,9 @@ private:
    GroupOfCards capturePile;
    Suit trumpSuit; 
    MeldServices meldServices;
-   // std::vector<std::string> handPile;
-   // std::vector<std::string> meldStrRep;
-   // std::vector<std::string> capturePileStrRep;
+   std::vector<std::string> handPile;
+   std::vector<std::string> meldStrRep;
+   std::vector<std::string> capturePileStrRep;
 
    Card getLeastRankedCard();
    Card getLeastRankedFrom(std::vector<Card> cards);
