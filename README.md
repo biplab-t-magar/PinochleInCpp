@@ -13,3 +13,4 @@ likewise obtain hints (along with reasonings) from the AI as to what card to pla
 3)	Enter “./pinochle” into the terminal to run the game of pinochle
 4)	Enter “make clean” into the terminal once you are done with the game
 
+Read manual for more details and visual guides
