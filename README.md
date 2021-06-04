@@ -7,7 +7,7 @@ Winners of a turn can also create Melds for extra points. Melds represent a comb
 This is a text-based implementation of Pinochle. The program also implements an AI that makes informed calculations on what card to throw next. The player can 
 likewise obtain hints (along with reasonings) from the AI as to what card to play or what meld to create.
 
-# Hot to run
+# How to run
 1)	In terminal, navigate into the src directory
 2)	Enter “make” into the terminal and press enter
 3)	Enter “./pinochle” into the terminal to run the game of pinochle
