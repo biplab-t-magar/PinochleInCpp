@@ -1,9 +1,9 @@
 **/.DS_Store
 .vscode
 logs.*
-cppRubric.doc
 *.o
 *.zip
 ~$pRubric.doc
 pinochle
 *.p
+cppRubric.doc
